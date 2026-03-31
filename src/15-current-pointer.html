@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .menu {
+        --active-anchor: --item-1;
+        position: relative;
+        display: grid;
+        gap: 8px;
+        width: min(320px, 100%);
+        padding-inline-start: 20px;
+
+        &:has(#item-2:checked) {
+          --active-anchor: --item-2;
+        }
+
+        &:has(#item-3:checked) {
+          --active-anchor: --item-3;
+        }
+
+        &:has(#item-4:checked) {
+          --active-anchor: --item-4;
+        }
+
+        &:has(#item-1:checked) label[for='item-1'],
+        &:has(#item-2:checked) label[for='item-2'],
+        &:has(#item-3:checked) label[for='item-3'],
+        &:has(#item-4:checked) label[for='item-4'] {
+          color: var(--text);
+          border-color: rgb(50 35 179 / 28%);
+          translate: 6px 0;
+        }
+
+        &::before {
+          content: '';
+          position: absolute;
+          position-anchor: var(--active-anchor);
+          top: anchor(top);
+          left: 0;
+          width: 8px;
+          height: anchor-size(height);
+          border-radius: 999px;
+          background: var(--accent);
+          transition:
+            top 0.9s var(--spring-anchor),
+            height 0.9s var(--spring-anchor);
+        }
+      }
+
+      .item-input {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+
+      .item {
+        min-height: 52px;
+        padding-inline: 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        display: grid;
+        align-items: center;
+        color: var(--muted);
+        cursor: pointer;
+        transition:
+          color 0.2s,
+          border-color 0.2s,
+          translate 0.8s var(--spring-anchor);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="menu">
+          <input class="item-input" id="item-1" name="current-item" type="radio" checked />
+          <label class="item" for="item-1" style="anchor-name: --item-1">Overview</label>
+          <input class="item-input" id="item-2" name="current-item" type="radio" />
+          <label class="item" for="item-2" style="anchor-name: --item-2">Publishing</label>
+          <input class="item-input" id="item-3" name="current-item" type="radio" />
+          <label class="item" for="item-3" style="anchor-name: --item-3">Members</label>
+          <input class="item-input" id="item-4" name="current-item" type="radio" />
+          <label class="item" for="item-4" style="anchor-name: --item-4">Archive</label>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

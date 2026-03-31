@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .segmented {
+        --active-anchor: --segment-1;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        width: fit-content;
+        padding: 6px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          position-anchor: var(--active-anchor);
+          top: anchor(top);
+          left: anchor(left);
+          width: anchor-size(width);
+          height: anchor-size(height);
+          border-radius: 999px;
+          background: var(--accent);
+          transition: 1s var(--spring-anchor);
+        }
+
+        &:has(#segment-2:checked) {
+          --active-anchor: --segment-2;
+        }
+
+        &:has(#segment-3:checked) {
+          --active-anchor: --segment-3;
+        }
+
+        &:has(#segment-4:checked) {
+          --active-anchor: --segment-4;
+        }
+
+        &:has(#segment-1:checked) label[for='segment-1'],
+        &:has(#segment-2:checked) label[for='segment-2'],
+        &:has(#segment-3:checked) label[for='segment-3'],
+        &:has(#segment-4:checked) label[for='segment-4'] {
+          color: var(--accent-contrast);
+        }
+      }
+
+      .segment-input {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+
+      .segment {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        min-height: 48px;
+        padding-inline: 20px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="segmented">
+          <input class="segment-input" id="segment-1" name="segment" type="radio" checked />
+          <label class="segment" for="segment-1" style="anchor-name: --segment-1">All</label>
+          <input class="segment-input" id="segment-2" name="segment" type="radio" />
+          <label class="segment" for="segment-2" style="anchor-name: --segment-2">Unread</label>
+          <input class="segment-input" id="segment-3" name="segment" type="radio" />
+          <label class="segment" for="segment-3" style="anchor-name: --segment-3">Saved</label>
+          <input class="segment-input" id="segment-4" name="segment" type="radio" />
+          <label class="segment" for="segment-4" style="anchor-name: --segment-4">Archive</label>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

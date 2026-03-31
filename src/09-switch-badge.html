@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .switch-input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .switch {
+        display: inline-block;
+        cursor: pointer;
+      }
+
+      .track {
+        display: block;
+        width: 64px;
+        height: 36px;
+        padding: 4px;
+        border-radius: 18px;
+        background: var(--line);
+        transition: background-color 0.8s var(--spring-anchor);
+      }
+
+      .knob {
+        display: block;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        translate: 0 0;
+        transition:
+          translate 0.8s var(--spring-anchor),
+          scale 0.8s var(--spring-anchor);
+      }
+
+      .switch-input:checked + .switch .track {
+        background: var(--accent);
+      }
+
+      .switch-input:checked + .switch .knob {
+        translate: 28px 0;
+        scale: 1.06;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <input class="switch-input" id="switch-badge" type="checkbox" />
+        <label class="switch" for="switch-badge">
+          <span class="track">
+            <span class="knob"></span>
+          </span>
+        </label>
+      </section>
+    </main>
+  </body>
+</html>

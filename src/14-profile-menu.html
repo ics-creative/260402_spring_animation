@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .stage {
+        align-content: center;
+        justify-items: center;
+      }
+
+      .avatar {
+        width: 56px;
+        height: 56px;
+        padding: 0;
+        border-radius: 28px;
+      }
+
+      .menu {
+        margin: 0;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+        box-shadow: 0 10px 24px rgb(0 0 0 / 8%);
+        position-anchor: --profile-trigger;
+        position-area: bottom span-right;
+        margin-block-start: 10px;
+        position-try-fallbacks:
+          flip-block,
+          flip-inline,
+          flip-block flip-inline;
+        opacity: 0;
+        scale: 0.84;
+        transform-origin: top right;
+        transition:
+          opacity 0.24s,
+          scale 0.8s var(--spring-anchor),
+          inset 0.8s var(--spring-anchor),
+          display 0.24s allow-discrete,
+          overlay 0.24s allow-discrete;
+
+        &:popover-open {
+          opacity: 1;
+          scale: 1;
+
+          @starting-style {
+            opacity: 0;
+            scale: 0.84;
+          }
+        }
+
+        .menu__user {
+          display: grid;
+          gap: 2px;
+          padding: 4px 6px 10px;
+        }
+
+        .menu__name,
+        .menu__mail {
+          margin: 0;
+        }
+
+        .menu__mail {
+          color: var(--muted);
+        }
+
+        .menu__list {
+          display: grid;
+          gap: 6px;
+        }
+
+        .menu__item {
+          justify-content: flex-start;
+          min-width: 220px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <button
+          class="button avatar"
+          commandfor="profile-menu"
+          command="toggle-popover"
+          style="anchor-name: --profile-trigger"
+        >
+          IK
+        </button>
+      </section>
+      <div class="menu" id="profile-menu" popover>
+        <div class="menu__user">
+          <p class="menu__name">Ikeda</p>
+          <p class="menu__mail">ikeda@example.com</p>
+        </div>
+        <div class="menu__list">
+          <button class="button menu__item">Account</button>
+          <button class="button menu__item">Notifications</button>
+          <button class="button menu__item">Sign out</button>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

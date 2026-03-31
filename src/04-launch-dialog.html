@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .dialog {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        position: fixed;
+        inset: auto;
+        position-anchor: var(--dialog-anchor);
+        left: anchor(center);
+        top: anchor(center);
+        translate: -50% -50%;
+        opacity: 0;
+        scale: 0.12;
+        transition:
+          opacity 0.24s,
+          scale 1.2s var(--spring-anchor),
+          left 1.2s var(--spring-anchor),
+          top 1.2s var(--spring-anchor),
+          display 0.24s allow-discrete,
+          overlay 0.24s allow-discrete;
+
+        &[open] {
+          left: 50%;
+          top: 50%;
+          opacity: 1;
+          scale: 1;
+
+          @starting-style {
+            left: anchor(center);
+            top: anchor(center);
+            opacity: 0;
+            scale: 0.12;
+          }
+        }
+
+        &::backdrop {
+          background: rgb(0 0 0 / 40%);
+          opacity: 0;
+          transition: opacity 0.24s;
+        }
+
+        &[open]::backdrop {
+          opacity: 1;
+
+          @starting-style {
+            opacity: 0;
+          }
+        }
+      }
+
+      .dialog__inner {
+        width: min(420px, calc(100vw - 24px));
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--surface);
+        display: grid;
+        gap: 12px;
+
+        h2,
+        p {
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="row">
+          <button
+            class="button launcher"
+            commandfor="dialog-1"
+            command="show-modal"
+            style="anchor-name: --dialog-1"
+          >
+            Profile
+          </button>
+          <button
+            class="button launcher"
+            commandfor="dialog-2"
+            command="show-modal"
+            style="anchor-name: --dialog-2"
+          >
+            Billing
+          </button>
+          <button
+            class="button launcher"
+            commandfor="dialog-3"
+            command="show-modal"
+            style="anchor-name: --dialog-3"
+          >
+            Review
+          </button>
+        </div>
+      </section>
+      <dialog class="dialog" id="dialog-1" style="--dialog-anchor: --dialog-1">
+        <div class="dialog__inner">
+          <h2>Profile updated</h2>
+          <p>This panel grows from the pressed button, then settles at center.</p>
+          <div class="row">
+            <button class="button" commandfor="dialog-1" command="close">Close</button>
+          </div>
+        </div>
+      </dialog>
+      <dialog class="dialog" id="dialog-2" style="--dialog-anchor: --dialog-2">
+        <div class="dialog__inner">
+          <h2>Invoice sent</h2>
+          <p>This panel grows from the pressed button, then settles at center.</p>
+          <div class="row">
+            <button class="button" commandfor="dialog-2" command="close">Close</button>
+          </div>
+        </div>
+      </dialog>
+      <dialog class="dialog" id="dialog-3" style="--dialog-anchor: --dialog-3">
+        <div class="dialog__inner">
+          <h2>Review requested</h2>
+          <p>This panel grows from the pressed button, then settles at center.</p>
+          <div class="row">
+            <button class="button" commandfor="dialog-3" command="close">Close</button>
+          </div>
+        </div>
+      </dialog>
+    </main>
+  </body>
+</html>

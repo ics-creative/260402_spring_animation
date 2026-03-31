@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .tabs {
+        --active-anchor: --tab-1;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        width: fit-content;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--line);
+
+        &::before {
+          content: '';
+          position: absolute;
+          position-anchor: var(--active-anchor);
+          top: anchor(bottom);
+          left: anchor(left);
+          width: anchor-size(width);
+          height: 4px;
+          border-radius: 4px;
+          background: var(--accent);
+          transition: 1s var(--spring-anchor);
+        }
+
+        &:has(#tab-2:checked) {
+          --active-anchor: --tab-2;
+        }
+
+        &:has(#tab-3:checked) {
+          --active-anchor: --tab-3;
+        }
+
+        &:has(#tab-4:checked) {
+          --active-anchor: --tab-4;
+        }
+
+        &:has(#tab-1:checked) label[for='tab-1'],
+        &:has(#tab-2:checked) label[for='tab-2'],
+        &:has(#tab-3:checked) label[for='tab-3'],
+        &:has(#tab-4:checked) label[for='tab-4'] {
+          color: var(--accent);
+        }
+      }
+
+      .tab-input {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+
+      .tab {
+        display: inline-flex;
+        align-items: center;
+        padding: 0;
+        color: var(--muted);
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="tabs">
+          <input class="tab-input" id="tab-1" name="tab" type="radio" checked />
+          <label class="tab" for="tab-1" style="anchor-name: --tab-1">Motion</label>
+          <input class="tab-input" id="tab-2" name="tab" type="radio" />
+          <label class="tab" for="tab-2" style="anchor-name: --tab-2">Layout</label>
+          <input class="tab-input" id="tab-3" name="tab" type="radio" />
+          <label class="tab" for="tab-3" style="anchor-name: --tab-3">Feedback</label>
+          <input class="tab-input" id="tab-4" name="tab" type="radio" />
+          <label class="tab" for="tab-4" style="anchor-name: --tab-4">Release</label>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

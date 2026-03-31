@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .stage {
+        align-content: center;
+      }
+
+      .popover {
+        position: fixed;
+        inset: auto;
+        margin: 0;
+        width: min(280px, calc(100vw - 32px));
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+        position-anchor: var(--current-anchor);
+        position-area: bottom center;
+        margin-block-start: 16px;
+        position-try-fallbacks:
+          flip-block,
+          flip-inline,
+          flip-block flip-inline;
+        transform-origin: center;
+        opacity: 0;
+        scale: 0.88;
+        transition:
+          opacity 0.24s,
+          inset 0.8s var(--spring-anchor),
+          margin 0.8s var(--spring-anchor),
+          scale 0.8s var(--spring-anchor),
+          display 0.24s allow-discrete,
+          overlay 0.24s allow-discrete;
+
+        &:popover-open {
+          opacity: 1;
+          scale: 1;
+
+          @starting-style {
+            opacity: 0;
+            scale: 0.88;
+          }
+        }
+
+        h2,
+        p {
+          margin: 0;
+        }
+
+        h2 {
+          margin-bottom: 8px;
+          font-size: var(--text-base);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="row">
+          <button
+            class="button action"
+            commandfor="popover-1"
+            command="toggle-popover"
+            style="anchor-name: --action-1"
+          >
+            Share
+          </button>
+          <button
+            class="button action"
+            commandfor="popover-2"
+            command="toggle-popover"
+            style="anchor-name: --action-2"
+          >
+            Invite
+          </button>
+          <button
+            class="button action"
+            commandfor="popover-3"
+            command="toggle-popover"
+            style="anchor-name: --action-3"
+          >
+            Move
+          </button>
+        </div>
+      </section>
+      <div class="popover" id="popover-1" popover style="--current-anchor: --action-1">
+        <h2>Share draft</h2>
+        <p>Popover opens from the clicked button.</p>
+      </div>
+      <div class="popover" id="popover-2" popover style="--current-anchor: --action-2">
+        <h2>Invite reviewer</h2>
+        <p>Anchor point changes without JavaScript.</p>
+      </div>
+      <div class="popover" id="popover-3" popover style="--current-anchor: --action-3">
+        <h2>Move task</h2>
+        <p>Each trigger owns its own spring-driven popover.</p>
+      </div>
+    </main>
+  </body>
+</html>

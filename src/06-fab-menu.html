@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .stage {
+        align-content: end;
+        justify-items: end;
+      }
+
+      .fab {
+        position: relative;
+        width: 180px;
+        height: 180px;
+        border: 0;
+
+        &::details-content {
+          content-visibility: visible;
+        }
+
+        .fab-main,
+        .fab-item {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          border: 1px solid var(--line);
+          border-radius: 50%;
+          background: var(--surface);
+          cursor: pointer;
+        }
+
+        .fab-main {
+          width: 64px;
+          height: 64px;
+          display: grid;
+          place-items: center;
+          list-style: none;
+
+          &::-webkit-details-marker {
+            display: none;
+          }
+        }
+
+        .fab-item {
+          width: 56px;
+          height: 56px;
+          display: grid;
+          place-items: center;
+          text-decoration: none;
+          opacity: 0;
+          scale: 0.2;
+          translate: 0 0;
+          transition:
+            opacity 0.18s,
+            scale 0.8s var(--spring-anchor),
+            translate 0.8s var(--spring-anchor);
+
+          &:nth-of-type(1) {
+            translate: 0 0;
+          }
+
+          &:nth-of-type(2) {
+            translate: 0 0;
+          }
+
+          &:nth-of-type(3) {
+            translate: 0 0;
+          }
+        }
+
+        .fab-main__icon {
+          position: relative;
+          width: 20px;
+          height: 20px;
+          transition: rotate 0.8s var(--spring-anchor);
+
+          &::before,
+          &::after {
+            content: '';
+            position: absolute;
+            top: calc(50% - 1px);
+            left: 0;
+            width: 20px;
+            height: 2px;
+            background: var(--accent);
+          }
+
+          &::after {
+            rotate: 90deg;
+          }
+        }
+
+        &[open] {
+          .fab-main__icon {
+            rotate: 135deg;
+          }
+
+          .fab-item {
+            opacity: 1;
+            scale: 1;
+
+            &:nth-of-type(1) {
+              translate: 0 -76px;
+            }
+
+            &:nth-of-type(2) {
+              translate: -54px -54px;
+            }
+
+            &:nth-of-type(3) {
+              translate: -76px 0;
+            }
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <details class="fab">
+          <a class="fab-item" href="#">A</a>
+          <a class="fab-item" href="#">B</a>
+          <a class="fab-item" href="#">C</a>
+          <summary class="fab-main">
+            <span class="fab-main__icon"></span>
+          </summary>
+        </details>
+      </section>
+    </main>
+  </body>
+</html>

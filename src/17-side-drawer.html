@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .stage {
+        align-content: center;
+        justify-items: center;
+      }
+
+      .drawer {
+        inset: 0;
+        width: auto;
+        height: auto;
+        max-width: none;
+        max-height: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        overflow: visible;
+        opacity: 0;
+        transition:
+          opacity 0.24s,
+          display 0.24s allow-discrete,
+          overlay 0.24s allow-discrete;
+
+        &[open] {
+          display: grid;
+          justify-items: end;
+          opacity: 1;
+
+          @starting-style {
+            display: grid;
+            justify-items: end;
+            opacity: 0;
+          }
+        }
+
+        &::backdrop {
+          background: rgb(0 0 0 / 28%);
+          opacity: 0;
+          transition: opacity 0.24s;
+        }
+
+        &[open]::backdrop {
+          opacity: 1;
+
+          @starting-style {
+            opacity: 0;
+          }
+        }
+        .drawer__panel {
+          width: min(380px, calc(100vw - 24px));
+          min-height: 100dvh;
+          padding: 16px;
+          border-inline-start: 1px solid var(--line);
+          background: var(--surface);
+          display: grid;
+          align-content: start;
+          gap: 12px;
+          translate: 100% 0;
+          transition: translate 0.95s var(--spring-anchor);
+        }
+
+        .drawer__item {
+          justify-content: flex-start;
+        }
+
+        &[open] {
+          .drawer__panel {
+            translate: 0 0;
+
+            @starting-style {
+              translate: 100% 0;
+            }
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <button class="button" commandfor="side-drawer" command="show-modal">Open Drawer</button>
+      </section>
+      <dialog class="drawer" id="side-drawer">
+        <div class="drawer__panel">
+          <button class="button drawer__item">Overview</button>
+          <button class="button drawer__item">Members</button>
+          <button class="button drawer__item">Publishing</button>
+          <button class="button drawer__item">Integrations</button>
+          <button class="button drawer__item" commandfor="side-drawer" command="close">
+            Close
+          </button>
+        </div>
+      </dialog>
+    </main>
+  </body>
+</html>
