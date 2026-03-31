@@ -43,6 +43,21 @@
           .summary__icon {
             rotate: 45deg;
           }
+
+          &::details-content {
+            block-size: auto;
+            opacity: 1;
+          }
+        }
+
+        &::details-content {
+          block-size: 0;
+          opacity: 0;
+          overflow: clip;
+          transition:
+            content-visibility 0.82s allow-discrete,
+            block-size 0.82s var(--spring-anchor),
+            opacity 0.26s linear;
         }
       }
 
@@ -72,12 +87,6 @@
       .panel {
         padding: 0 16px 16px;
         color: var(--muted);
-      }
-
-      .item__content {
-        height: 0;
-        overflow: clip;
-        opacity: 0;
       }
     </style>
   </head>
@@ -125,98 +134,5 @@
         </div>
       </section>
     </main>
-    <script type="module">
-      const spring = getComputedStyle(document.documentElement).getPropertyValue("--spring-anchor").trim();
-      const animations = new WeakMap();
-
-      const stopAnimation = (content) => {
-        const current = animations.get(content);
-        if (current) current.cancel();
-      };
-
-      const openItem = (item, content) => {
-        stopAnimation(content);
-        item.open = true;
-
-        const startHeight = content.getBoundingClientRect().height;
-        content.style.height = "auto";
-        const endHeight = content.getBoundingClientRect().height;
-        content.style.height = `${startHeight}px`;
-        content.style.opacity = "1";
-
-        const animation = content.animate(
-          [
-            { height: `${startHeight}px`, opacity: startHeight ? 1 : 0 },
-            { height: `${endHeight + 10}px`, opacity: 1, offset: 0.62 },
-            { height: `${endHeight}px`, opacity: 1 },
-          ],
-          {
-            duration: 760,
-            easing: spring,
-            fill: "forwards",
-          },
-        );
-
-        animations.set(content, animation);
-        animation.addEventListener(
-          "finish",
-          () => {
-            content.style.height = "auto";
-            content.style.opacity = "1";
-            animations.delete(content);
-          },
-          { once: true },
-        );
-      };
-
-      const closeItem = (item, content) => {
-        stopAnimation(content);
-
-        const startHeight = content.getBoundingClientRect().height;
-        const settleHeight = Math.max(startHeight - 14, 0);
-
-        const animation = content.animate(
-          [
-            { height: `${startHeight}px`, opacity: 1 },
-            { height: `${settleHeight}px`, opacity: 1, offset: 0.44 },
-            { height: "0px", opacity: 0 },
-          ],
-          {
-            duration: 620,
-            easing: spring,
-            fill: "forwards",
-          },
-        );
-
-        animations.set(content, animation);
-        animation.addEventListener(
-          "finish",
-          () => {
-            item.open = false;
-            content.style.height = "0px";
-            content.style.opacity = "0";
-            animations.delete(content);
-          },
-          { once: true },
-        );
-      };
-
-      document.querySelectorAll(".item").forEach((item) => {
-        const summary = item.querySelector("summary");
-        const content = item.querySelector(".item__content");
-        content.style.height = item.open ? "auto" : "0px";
-        content.style.opacity = item.open ? "1" : "0";
-
-        summary.addEventListener("click", (event) => {
-          event.preventDefault();
-
-          if (item.open) {
-            closeItem(item, content);
-          } else {
-            openItem(item, content);
-          }
-        });
-      });
-    </script>
   </body>
 </html>

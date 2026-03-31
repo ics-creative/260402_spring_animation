@@ -7,7 +7,7 @@
     <style>
       html,
       body {
-        overflow-x: clip;
+        overflow-x: hidden;
       }
 
       .stage {
@@ -26,7 +26,7 @@
         padding: 0;
         border: 0;
         background: none;
-        overflow: clip;
+        overflow: hidden;
         opacity: 0;
         transition:
           opacity 0.24s,
@@ -58,25 +58,37 @@
         }
 
         .drawer__viewport {
-          position: relative;
+          position: fixed;
+          inset: 0;
+          display: flex;
+          justify-content: flex-end;
           width: 100%;
           height: 100%;
-          overflow: clip;
-          contain: paint;
+          overflow: hidden;
+        }
+
+        .drawer__shell {
+          position: relative;
+          flex: none;
+          width: min(380px, calc(100% - 24px));
+          min-height: 100%;
+          border-inline-start: 1px solid var(--line);
+          background: var(--surface);
+          overflow: hidden;
+          opacity: 0;
+          clip-path: inset(0 0 0 100%);
+          transition:
+            opacity 0.18s linear,
+            clip-path 0.82s var(--spring-anchor);
         }
 
         .drawer__panel {
-          position: absolute;
-          inset: 0 0 0 auto;
-          width: min(380px, calc(100% - 24px));
-          min-height: 100dvh;
+          min-height: 100%;
           padding: 16px;
-          border-inline-start: 1px solid var(--line);
-          background: var(--surface);
           display: grid;
           align-content: start;
           gap: 12px;
-          translate: calc(100% + 24px) 0;
+          translate: 32px 0;
           transition: translate 0.82s var(--spring-anchor);
         }
 
@@ -85,11 +97,21 @@
         }
 
         &[open] {
+          .drawer__shell {
+            opacity: 1;
+            clip-path: inset(0 0 0 0);
+
+            @starting-style {
+              opacity: 0;
+              clip-path: inset(0 0 0 100%);
+            }
+          }
+
           .drawer__panel {
             translate: 0 0;
 
             @starting-style {
-              translate: calc(100% + 24px) 0;
+              translate: 32px 0;
             }
           }
         }
@@ -103,12 +125,14 @@
       </section>
       <dialog class="drawer" id="side-drawer">
         <div class="drawer__viewport">
-          <div class="drawer__panel">
-            <button class="button drawer__item">Overview</button>
-            <button class="button drawer__item">Members</button>
-            <button class="button drawer__item">Publishing</button>
-            <button class="button drawer__item">Integrations</button>
-            <button class="button drawer__item" commandfor="side-drawer" command="close">Close</button>
+          <div class="drawer__shell">
+            <div class="drawer__panel">
+              <button class="button drawer__item">Overview</button>
+              <button class="button drawer__item">Members</button>
+              <button class="button drawer__item">Publishing</button>
+              <button class="button drawer__item">Integrations</button>
+              <button class="button drawer__item" commandfor="side-drawer" command="close">Close</button>
+            </div>
           </div>
         </div>
       </dialog>

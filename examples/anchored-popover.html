@@ -13,16 +13,16 @@
         position: fixed;
         inset: auto;
         margin: 0;
-        width: min(264px, calc(100vw - 32px));
-        padding: 14px;
+        width: min(220px, calc(100vw - 32px));
+        padding: 8px;
         border: 1px solid var(--line);
-        border-radius: 14px;
+        border-radius: 12px;
         background: var(--surface);
         display: grid;
-        gap: 10px;
+        gap: 2px;
         position-anchor: var(--current-anchor);
         position-area: bottom center;
-        margin-block-start: 14px;
+        margin-block-start: 10px;
         position-try-fallbacks:
           flip-block,
           flip-inline,
@@ -30,13 +30,13 @@
         transform-origin: center top;
         opacity: 0;
         translate: 0 -10px;
-        scale: 0.92;
+        scale: 0.94;
         transition:
-          opacity 0.14s,
-          inset 0.5s ease,
-          margin 0.5s ease,
-          translate 0.2s ease,
-          scale 0.2s ease,
+          opacity 0.48s var(--spring-soft),
+          inset 0.48s ease,
+          margin 0.48s ease,
+          translate 0.48s var(--spring-soft),
+          scale 0.48s var(--spring-soft),
           display 0.24s allow-discrete,
           overlay 0.24s allow-discrete;
 
@@ -44,124 +44,64 @@
           opacity: 1;
           translate: 0 0;
           scale: 1;
-          animation: popover-enter 0.62s var(--spring-anchor);
 
           @starting-style {
             opacity: 0;
             translate: 0 -10px;
-            scale: 0.92;
+            scale: 0.94;
           }
         }
 
-        h2,
-        p,
-        .popover__actions {
-          margin: 0;
-          opacity: 0;
-          translate: 0 -6px;
-        }
-
-        h2 {
-          font-size: 0.98rem;
-          font-weight: 600;
-          letter-spacing: -0.02em;
-        }
-
-        .popover__eyebrow {
-          font-size: 0.7rem;
-          font-weight: 600;
-          color: var(--muted);
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-
-        .popover__text {
-          font-size: 0.84rem;
-          line-height: 1.4;
-          color: var(--muted);
-        }
-
-        .popover__actions {
-          display: flex;
-          gap: 8px;
-          padding-top: 2px;
-        }
-
-        .popover__action {
-          min-height: 34px;
-          padding-inline: 12px;
-          border: 1px solid var(--line);
-          border-radius: 10px;
-          background: var(--surface);
-          color: var(--text);
-          transition:
-            background-color 0.16s,
-            border-color 0.16s,
-            opacity 0.18s;
-        }
-
-        .popover__action:hover {
-          transform: none;
-          border-color: color-mix(in srgb, var(--line) 70%, var(--text));
-          background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
-        }
-
-        .popover__action:active {
-          scale: 1;
-        }
-
-        &:popover-open .popover__eyebrow {
-          animation: popover-content 0.34s var(--spring-soft) 0.06s both;
-        }
-
-        &:popover-open h2 {
-          animation: popover-content 0.36s var(--spring-soft) 0.1s both;
-        }
-
-        &:popover-open .popover__text {
-          animation: popover-content 0.38s var(--spring-soft) 0.14s both;
-        }
-
-        &:popover-open .popover__actions {
-          animation: popover-content 0.4s var(--spring-soft) 0.18s both;
-        }
+      .popover__menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 2px;
       }
 
-      @keyframes popover-enter {
-        0% {
-          opacity: 0;
-          translate: 0 -18px;
-          scale: 0.84;
-        }
-
-        64% {
-          opacity: 1;
-          translate: 0 5px;
-          scale: 1.02;
-        }
-
-        100% {
-          opacity: 1;
-          translate: 0 0;
-          scale: 1;
-        }
+      .popover__item {
+        min-width: 0;
       }
 
-      @keyframes popover-content {
-        0% {
-          opacity: 0;
-          translate: 0 -8px;
-        }
+      .popover__action {
+        width: 100%;
+        min-height: 40px;
+        padding: 0 12px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--text);
+        transition:
+          background-color 0.16s,
+          color 0.16s;
+      }
 
-        72% {
-          opacity: 1;
-          translate: 0 1px;
-        }
+      .popover__action:hover {
+        background: color-mix(in srgb, var(--surface) 94%, var(--text) 6%);
+      }
 
-        100% {
-          opacity: 1;
-          translate: 0 0;
-        }
+      .popover__action:active {
+        scale: 1;
+      }
+
+      .popover__label,
+      .popover__meta {
+        display: block;
+        margin: 0;
+      }
+
+      .popover__label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+      }
+
+      .popover__meta {
+        font-size: 0.75rem;
+        color: var(--muted);
       }
     </style>
   </head>
@@ -181,31 +121,70 @@
         </div>
       </section>
       <div class="popover" id="popover-1" popover style="--current-anchor: --action-1">
-        <p class="popover__eyebrow">Share</p>
-        <h2>Share draft</h2>
-        <p class="popover__text">Send a private review link to the current draft.</p>
-        <div class="popover__actions">
-          <button class="button popover__action" type="button">Copy link</button>
-          <button class="button popover__action" type="button">Options</button>
-        </div>
+        <ul class="popover__menu">
+          <li class="popover__item">
+            <button class="popover__action" type="button">
+              <span class="popover__label">Copy link</span>
+              <span class="popover__meta">Share</span>
+            </button>
+          </li>
+          <li class="popover__item">
+            <button class="popover__action" type="button">
+              <span class="popover__label">Email draft</span>
+              <span class="popover__meta">Share</span>
+            </button>
+          </li>
+          <li class="popover__item">
+            <button class="popover__action" type="button">
+              <span class="popover__label">Manage access</span>
+              <span class="popover__meta">Share</span>
+            </button>
+          </li>
+        </ul>
       </div>
       <div class="popover" id="popover-2" popover style="--current-anchor: --action-2">
-        <p class="popover__eyebrow">Invite</p>
-        <h2>Invite reviewer</h2>
-        <p class="popover__text">Add one more reviewer before you request approval.</p>
-        <div class="popover__actions">
-          <button class="button popover__action" type="button">Add email</button>
-          <button class="button popover__action" type="button">Manage</button>
-        </div>
+        <ul class="popover__menu">
+          <li class="popover__item">
+            <button class="popover__action" type="button">
+              <span class="popover__label">Add reviewer</span>
+              <span class="popover__meta">Invite</span>
+            </button>
+          </li>
+          <li class="popover__item">
+            <button class="popover__action" type="button">
+              <span class="popover__label">Copy invite</span>
+              <span class="popover__meta">Invite</span>
+            </button>
+          </li>
+          <li class="popover__item">
+            <button class="popover__action" type="button">
+              <span class="popover__label">View guests</span>
+              <span class="popover__meta">Invite</span>
+            </button>
+          </li>
+        </ul>
       </div>
       <div class="popover" id="popover-3" popover style="--current-anchor: --action-3">
-        <p class="popover__eyebrow">Move</p>
-        <h2>Move task</h2>
-        <p class="popover__text">Choose a destination list for this task.</p>
-        <div class="popover__actions">
-          <button class="button popover__action" type="button">Next step</button>
-          <button class="button popover__action" type="button">Backlog</button>
-        </div>
+        <ul class="popover__menu">
+          <li class="popover__item">
+            <button class="popover__action" type="button">
+              <span class="popover__label">Move to next</span>
+              <span class="popover__meta">Move</span>
+            </button>
+          </li>
+          <li class="popover__item">
+            <button class="popover__action" type="button">
+              <span class="popover__label">Send to backlog</span>
+              <span class="popover__meta">Move</span>
+            </button>
+          </li>
+          <li class="popover__item">
+            <button class="popover__action" type="button">
+              <span class="popover__label">Archive task</span>
+              <span class="popover__meta">Move</span>
+            </button>
+          </li>
+        </ul>
       </div>
     </main>
   </body>

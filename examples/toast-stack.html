@@ -26,7 +26,7 @@
         position: relative;
         width: 100%;
         display: grid;
-        grid-template-columns: 28px minmax(0, 1fr) auto;
+        grid-template-columns: 28px minmax(0, 1fr);
         align-items: center;
         column-gap: 10px;
         padding: 11px 12px;
@@ -38,6 +38,18 @@
         scale: 1;
         transform-origin: top center;
         overflow: clip;
+        transition:
+          opacity 700ms var(--spring-anchor),
+          translate 700ms var(--spring-anchor),
+          scale 700ms var(--spring-anchor),
+          display 700ms allow-discrete;
+      }
+
+      .toast[hidden] {
+        display: none;
+        opacity: 0;
+        translate: 0 18px;
+        scale: 0.86;
       }
 
       .toast__mark {
@@ -55,23 +67,6 @@
 
       .toast__copy {
         min-width: 0;
-        display: grid;
-        gap: 2px;
-      }
-
-      .toast__source {
-        font-size: 0.72rem;
-        font-weight: 600;
-        color: var(--muted);
-        letter-spacing: 0.02em;
-        line-height: 1.2;
-      }
-
-      .toast__time {
-        font-size: 0.74rem;
-        color: var(--muted);
-        align-self: start;
-        padding-top: 1px;
       }
 
       .toast__title {
@@ -83,14 +78,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-      }
-
-      .toast-ghost {
-        position: fixed;
-        margin: 0;
-        pointer-events: none;
-        z-index: 20;
-        transform-origin: top center;
       }
     </style>
   </head>
@@ -106,119 +93,35 @@
     <script type="module">
       let count = 0;
       const stack = document.querySelector("[data-stack]");
+      let activeToast = null;
+      let activeTimer = 0;
       const messages = [
         {
           mark: "W",
-          source: "Workspace",
           title: "Draft saved",
-          time: "now",
         },
         {
           mark: "P",
-          source: "Publishing",
           title: "Preview ready",
-          time: "1m",
         },
         {
           mark: "R",
-          source: "Review",
           title: "Reply sent",
-          time: "2m",
         },
       ];
       const easing =
         "linear(0, 0.1116, 0.216, 0.313, 0.4026, 0.485, 0.5602, 0.6286, 0.6904, 0.746, 0.7955, 0.8396, 0.8783, 0.9123, 0.9418, 0.9672, 0.9888, 1.0071, 1.0222, 1.0346, 1.0446, 1.0524, 1.0582, 1.0624, 1.0651, 1.0666, 1.067, 1.0665, 1.0653, 1.0635, 1.0611, 1.0584, 1.0555, 1.0523, 1.049, 1.0456, 1.0422, 1.0389, 1.0356, 1.0324, 1.0293, 1.0264, 1.0236, 1.021, 1.0186, 1.0163, 1.0142, 1.0122, 1.0105, 1.0089, 1.0074, 1.0061, 1.0049, 1.0039, 1.003, 1.0022, 1.0015, 1.0009, 1.0003, 0.9999, 0.9995, 0.9992, 0.999, 0.9988, 0.9987, 0.9986, 0.9985, 0.9984, 0.9985, 0.9985, 0.9985, 0.9986, 0.9986, 0.9987, 0.9988, 0.9989, 0.9989, 0.999, 0.9991, 0.9992, 0.9992, 0.9993, 0.9994, 0.9994, 0.9995, 0.9996, 0.9996, 0.9997, 0.9997, 0.9998, 0.9998, 0.9998, 0.9999, 0.9999, 0.9999, 0.9999, 0.9999, 1, 1, 1)";
-      const softEasing = "linear(0, 0.18, 0.5, 0.82, 1.03 78%, 0.995 90%, 1)";
 
-      const animateContentIn = (toast) => {
-        const items = toast.querySelectorAll(".toast__mark, .toast__copy, .toast__time");
-        items.forEach((item, index) => {
-          item.animate(
-            [
-              { opacity: 0, translate: "0 14px", scale: "0.92" },
-              { opacity: 1, translate: "0 -3px", scale: "1.025", offset: 0.66 },
-              { opacity: 1, translate: "0 0", scale: "1" },
-            ],
-            {
-              duration: 520,
-              delay: 110 + index * 52,
-              easing,
-              fill: "both",
-            },
-          );
-        });
-      };
+      const animateExit = (toast, onFinish) => {
+        const handleTransitionEnd = (event) => {
+          if (event.propertyName !== "opacity") return;
+          toast.removeEventListener("transitionend", handleTransitionEnd);
+          toast.remove();
+          onFinish?.();
+        };
 
-      const animateStackShift = (before) => {
-        for (const toast of stack.children) {
-          const previous = before.get(toast);
-          if (!previous) continue;
-          const next = toast.getBoundingClientRect();
-          const deltaY = previous.top - next.top;
-          if (deltaY === 0) continue;
-          const overshoot = `${-Math.sign(deltaY) * 18}px`;
-          toast.animate(
-            [
-              { translate: `0 ${deltaY}px`, scale: "0.92" },
-              { translate: `0 ${overshoot}`, scale: "1.035", offset: 0.58 },
-              { translate: "0 0", scale: "1" },
-            ],
-            {
-              duration: 920,
-              easing,
-            },
-          );
-        }
-      };
-
-      const animateExit = (toast) => {
-        const rect = toast.getBoundingClientRect();
-        const ghost = toast.cloneNode(true);
-        ghost.classList.add("toast-ghost");
-        ghost.style.top = `${rect.top}px`;
-        ghost.style.left = `${rect.left}px`;
-        ghost.style.width = `${rect.width}px`;
-        ghost.style.height = `${rect.height}px`;
-        document.body.append(ghost);
-        ghost
-          .animate(
-            [
-              {
-                opacity: 1,
-                translate: "0 0",
-                scale: "1",
-              },
-              {
-                opacity: 1,
-                translate: "0 -4px",
-                scale: "1.01",
-                offset: 0.28,
-              },
-              {
-                opacity: 1,
-                translate: "0 7px",
-                scale: "0.97",
-                offset: 0.62,
-              },
-              {
-                opacity: 0,
-                translate: "0 18px",
-                scale: "0.86",
-              },
-            ],
-            {
-              duration: 520,
-              easing,
-              fill: "forwards",
-            },
-          )
-          .addEventListener(
-            "finish",
-            () => {
-              ghost.remove();
-            },
-            { once: true },
-          );
+        toast.addEventListener("transitionend", handleTransitionEnd);
+        toast.hidden = true;
       };
 
       const buildToast = (item) => {
@@ -227,10 +130,8 @@
         toast.innerHTML = `
           <span class="toast__mark" aria-hidden="true">${item.mark}</span>
           <div class="toast__copy">
-            <span class="toast__source">${item.source}</span>
             <p class="toast__title">${item.title}</p>
           </div>
-          <span class="toast__time">${item.time}</span>
         `;
         return toast;
       };
@@ -256,33 +157,36 @@
             },
           ],
           {
-            duration: 900,
+            duration: 1120,
             easing,
           },
         );
-        animateContentIn(toast);
-      };
-
-      const scheduleRemoval = (toast) => {
-        window.setTimeout(() => {
-          const beforeRemoval = new Map(
-            [...stack.children].filter((item) => item !== toast).map((item) => [item, item.getBoundingClientRect()]),
-          );
-          animateExit(toast);
-          toast.remove();
-          animateStackShift(beforeRemoval);
-        }, 2800);
       };
 
       document.querySelector("[data-add]").addEventListener("click", () => {
-        const before = new Map([...stack.children].map((toast) => [toast, toast.getBoundingClientRect()]));
         count += 1;
         const item = messages[(count - 1) % messages.length];
         const toast = buildToast(item);
-        stack.prepend(toast);
-        animateEntry(toast);
-        animateStackShift(before);
-        scheduleRemoval(toast);
+        const showNext = () => {
+          stack.replaceChildren(toast);
+          activeToast = toast;
+          animateEntry(toast);
+          activeTimer = window.setTimeout(() => {
+            if (toast !== activeToast) return;
+            activeToast = null;
+            animateExit(toast);
+          }, 3400);
+        };
+
+        if (activeToast) {
+          window.clearTimeout(activeTimer);
+          const previous = activeToast;
+          activeToast = null;
+          animateExit(previous, showNext);
+          return;
+        }
+
+        showNext();
       });
     </script>
   </body>

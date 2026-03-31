@@ -30,14 +30,12 @@
       .search__icon {
         width: 40px;
         height: 40px;
-        border: 1px solid var(--line);
-        border-radius: 20px;
         display: grid;
         place-items: center;
         translate: 0 0;
         transition:
-          scale 0.82s var(--spring-anchor),
-          translate 0.82s var(--spring-anchor);
+          translate 0.82s var(--spring-anchor),
+          color 0.2s;
       }
 
       .search__input {
@@ -62,52 +60,25 @@
         }
       }
 
-      .search[data-state="open"],
-      .search[data-state="closing"] {
+      .search:has(.search__input:focus) {
         justify-content: flex-start;
       }
 
-      .search[data-state="open"] {
+      .search:has(.search__input:focus) {
         width: min(420px, calc(100vw - 32px));
         border-color: var(--accent);
       }
 
-      .search[data-state="open"] .search__icon {
-        scale: 1.06;
+      .search:has(.search__input:focus) .search__icon {
         translate: 1px 0;
       }
 
-      .search[data-state="open"] .search__input {
+      .search:has(.search__input:focus) .search__input {
         max-width: 320px;
         opacity: 1;
         padding-inline: 12px;
         pointer-events: auto;
         transition-delay: 0.1s;
-      }
-
-      .search[data-state="closing"] {
-        transition:
-          width 0.26s ease,
-          border-color 0.18s linear 0.16s;
-      }
-
-      .search[data-state="closing"] .search__icon {
-        scale: 1;
-        translate: 0 0;
-        transition:
-          scale 0.22s ease,
-          translate 0.22s ease;
-      }
-
-      .search[data-state="closing"] .search__input {
-        max-width: 0;
-        opacity: 0;
-        padding-inline: 0;
-        pointer-events: none;
-        transition:
-          max-width 0.18s ease,
-          padding-inline 0.18s ease,
-          opacity 0.1s linear;
       }
     </style>
   </head>
@@ -120,24 +91,5 @@
         </label>
       </section>
     </main>
-    <script type="module">
-      const search = document.querySelector(".search");
-      const input = search.querySelector(".search__input");
-      let closeTimer = 0;
-
-      search.addEventListener("focusin", () => {
-        clearTimeout(closeTimer);
-        search.dataset.state = "open";
-      });
-
-      search.addEventListener("focusout", (event) => {
-        if (search.contains(event.relatedTarget)) return;
-        search.dataset.state = "closing";
-        closeTimer = window.setTimeout(() => {
-          if (search.matches(":focus-within")) return;
-          delete search.dataset.state;
-        }, 360);
-      });
-    </script>
   </body>
 </html>
