@@ -25,60 +25,57 @@
         transition:
           width 0.82s var(--spring-anchor),
           border-color 0.2s;
-      }
 
-      .search__icon {
-        width: 40px;
-        height: 40px;
-        display: grid;
-        place-items: center;
-        translate: 0 0;
-        transition:
-          translate 0.82s var(--spring-anchor),
-          color 0.2s;
-      }
-
-      .search__input {
-        flex: 1;
-        max-width: 0;
-        min-width: 0;
-        padding: 0;
-        border: 0;
-        outline: 0;
-        background: transparent;
-        opacity: 0;
-        pointer-events: none;
-        transition:
-          max-width 0.7s var(--spring-anchor),
-          padding-inline 0.7s var(--spring-anchor),
-          opacity 0.16s linear 0.08s;
-
-        &::-webkit-search-cancel-button,
-        &::-webkit-search-decoration {
-          appearance: none;
-          display: none;
+        .search__icon {
+          width: 40px;
+          height: 40px;
+          display: grid;
+          place-items: center;
+          translate: 0 0;
+          transition:
+            translate 0.82s var(--spring-anchor),
+            color 0.2s;
         }
-      }
 
-      .search:has(.search__input:focus) {
-        justify-content: flex-start;
-      }
+        .search__input {
+          flex: 1;
+          max-width: 0;
+          min-width: 0;
+          padding: 0;
+          border: 0;
+          outline: 0;
+          background: transparent;
+          opacity: 0;
+          pointer-events: none;
+          transition:
+            max-width 0.7s var(--spring-anchor),
+            padding-inline 0.7s var(--spring-anchor),
+            opacity 0.16s linear 0.08s;
 
-      .search:has(.search__input:focus) {
-        width: min(420px, calc(100vw - 32px));
-        border-color: var(--accent);
-      }
+          &::-webkit-search-cancel-button,
+          &::-webkit-search-decoration {
+            appearance: none;
+            display: none;
+          }
+        }
 
-      .search:has(.search__input:focus) .search__icon {
-        translate: 1px 0;
-      }
+        &:has(.search__input:focus) {
+          justify-content: flex-start;
+          width: min(420px, calc(100vw - 32px));
+          border-color: var(--accent);
 
-      .search:has(.search__input:focus) .search__input {
-        max-width: 320px;
-        opacity: 1;
-        padding-inline: 12px;
-        pointer-events: auto;
-        transition-delay: 0.1s;
+          .search__icon {
+            translate: 1px 0;
+          }
+
+          .search__input {
+            max-width: 320px;
+            opacity: 1;
+            padding-inline: 12px;
+            pointer-events: auto;
+            transition-delay: 0.1s;
+          }
+        }
       }
     </style>
   </head>

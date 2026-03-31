@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./common.css" />
     <style>
+      @property --active {
+        syntax: "<number>";
+        inherits: true;
+        initial-value: 0;
+      }
+
       .stage {
         min-height: auto;
         padding: 0;
@@ -30,6 +36,7 @@
       }
 
       .headline {
+        --active: 0;
         margin: 0;
         display: grid;
         justify-items: center;
@@ -38,9 +45,14 @@
         line-height: 0.88;
         letter-spacing: -0.08em;
         text-wrap: balance;
+        timeline-trigger: --reveal view() contain 15% contain 85% / entry 100% exit 0%;
+        trigger-scope: --reveal;
+        animation: reveal-flag 1ms steps(1, end) both;
+        animation-trigger: --reveal play-forwards play-backwards;
       }
 
       .line {
+        --offset: 0;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -48,10 +60,46 @@
       }
 
       .letter {
+        --index: calc(var(--offset) + sibling-index() - 1);
         display: inline-block;
         overflow: clip;
         padding-inline-end: 0.08em;
         margin-inline-end: -0.08em;
+        opacity: var(--active);
+        clip-path: inset(calc((1 - var(--active)) * 100%) -0.08em 0 0);
+        transition:
+          opacity 560ms ease-out,
+          clip-path 560ms ease-out;
+        transition-delay: calc(var(--index) * 44ms);
+      }
+
+      .glyph {
+        display: inline-block;
+        translate: 0 calc((1 - var(--active)) * 1.02em);
+        scale: calc(0.84 + (0.16 * var(--active)));
+        transition:
+          translate 920ms var(--spring-anchor),
+          scale 920ms var(--spring-anchor);
+        transition-delay: calc(var(--index) * 44ms);
+      }
+
+      .line--4 {
+        --offset: 4;
+      }
+
+      .line--5 {
+        --offset: 5;
+      }
+
+      .line--6 {
+        --offset: 6;
+      }
+
+      /* Scroll triggers can currently start animations, so this 1ms bridge only flips the reveal flag. */
+      @keyframes reveal-flag {
+        to {
+          --active: 1;
+        }
       }
     </style>
   </head>
@@ -59,61 +107,61 @@
     <main class="page">
       <section class="stage">
         <div class="story-list">
-          <section class="story" data-story>
+          <section class="story">
             <div class="story__frame">
               <p class="headline">
                 <span class="line">
-                  <span class="letter">S</span>
-                  <span class="letter">P</span>
-                  <span class="letter">R</span>
-                  <span class="letter">I</span>
-                  <span class="letter">N</span>
-                  <span class="letter">G</span>
+                  <span class="letter"><span class="glyph">S</span></span>
+                  <span class="letter"><span class="glyph">P</span></span>
+                  <span class="letter"><span class="glyph">R</span></span>
+                  <span class="letter"><span class="glyph">I</span></span>
+                  <span class="letter"><span class="glyph">N</span></span>
+                  <span class="letter"><span class="glyph">G</span></span>
                 </span>
-                <span class="line">
-                  <span class="letter">T</span>
-                  <span class="letter">Y</span>
-                  <span class="letter">P</span>
-                  <span class="letter">E</span>
+                <span class="line line--6">
+                  <span class="letter"><span class="glyph">T</span></span>
+                  <span class="letter"><span class="glyph">Y</span></span>
+                  <span class="letter"><span class="glyph">P</span></span>
+                  <span class="letter"><span class="glyph">E</span></span>
                 </span>
               </p>
             </div>
           </section>
 
-          <section class="story" data-story>
+          <section class="story">
             <div class="story__frame">
               <p class="headline">
                 <span class="line">
-                  <span class="letter">S</span>
-                  <span class="letter">N</span>
-                  <span class="letter">A</span>
-                  <span class="letter">P</span>
+                  <span class="letter"><span class="glyph">S</span></span>
+                  <span class="letter"><span class="glyph">N</span></span>
+                  <span class="letter"><span class="glyph">A</span></span>
+                  <span class="letter"><span class="glyph">P</span></span>
                 </span>
-                <span class="line">
-                  <span class="letter">O</span>
-                  <span class="letter">P</span>
-                  <span class="letter">E</span>
-                  <span class="letter">N</span>
+                <span class="line line--4">
+                  <span class="letter"><span class="glyph">O</span></span>
+                  <span class="letter"><span class="glyph">P</span></span>
+                  <span class="letter"><span class="glyph">E</span></span>
+                  <span class="letter"><span class="glyph">N</span></span>
                 </span>
               </p>
             </div>
           </section>
 
-          <section class="story" data-story>
+          <section class="story">
             <div class="story__frame">
               <p class="headline">
                 <span class="line">
-                  <span class="letter">C</span>
-                  <span class="letter">L</span>
-                  <span class="letter">E</span>
-                  <span class="letter">A</span>
-                  <span class="letter">N</span>
+                  <span class="letter"><span class="glyph">C</span></span>
+                  <span class="letter"><span class="glyph">L</span></span>
+                  <span class="letter"><span class="glyph">E</span></span>
+                  <span class="letter"><span class="glyph">A</span></span>
+                  <span class="letter"><span class="glyph">N</span></span>
                 </span>
-                <span class="line">
-                  <span class="letter">E</span>
-                  <span class="letter">X</span>
-                  <span class="letter">I</span>
-                  <span class="letter">T</span>
+                <span class="line line--5">
+                  <span class="letter"><span class="glyph">E</span></span>
+                  <span class="letter"><span class="glyph">X</span></span>
+                  <span class="letter"><span class="glyph">I</span></span>
+                  <span class="letter"><span class="glyph">T</span></span>
                 </span>
               </p>
             </div>
@@ -121,108 +169,5 @@
         </div>
       </section>
     </main>
-    <script type="module">
-      const revealDuration = 560;
-      const motionDuration = 920;
-      const spring = getComputedStyle(document.documentElement).getPropertyValue("--spring-anchor").trim();
-      const stories = [...document.querySelectorAll("[data-story]")].map((story) => ({
-        element: story,
-        letters: [...story.querySelectorAll(".letter")],
-        activeAnimations: [],
-        played: false,
-      }));
-
-      const resetStory = (story) => {
-        story.activeAnimations.forEach((animation) => animation.cancel());
-        story.activeAnimations = [];
-        story.played = false;
-
-        story.letters.forEach((letter) => {
-          letter.style.opacity = "0";
-          letter.style.translate = "0 1.02em";
-          letter.style.scale = "0.84";
-          letter.style.rotate = "0deg";
-          letter.style.clipPath = "inset(100% -0.08em 0 0)";
-        });
-      };
-
-      const playStory = (story) => {
-        if (story.played) return;
-        story.played = true;
-        story.activeAnimations = story.letters.flatMap((letter, index) => {
-          const delay = index * 44;
-
-          const reveal = letter.animate(
-            [
-              {
-                opacity: 0,
-                clipPath: "inset(100% -0.08em 0 0)",
-              },
-              {
-                opacity: 1,
-                clipPath: "inset(0 -0.08em 0 0)",
-              },
-            ],
-            {
-              duration: revealDuration,
-              delay,
-              easing: "ease-out",
-              fill: "both",
-            },
-          );
-
-          const motion = letter.animate(
-            [
-              {
-                translate: "0 1.02em",
-                scale: "0.84",
-                rotate: "0deg",
-              },
-              {
-                translate: "0 -0.12em",
-                scale: "1.075",
-                rotate: "0deg",
-                offset: 0.68,
-              },
-              {
-                translate: "0 0",
-                scale: "1",
-                rotate: "0deg",
-              },
-            ],
-            {
-              duration: motionDuration,
-              delay,
-              easing: spring,
-              fill: "both",
-            },
-          );
-
-          return [reveal, motion];
-        });
-      };
-
-      stories.forEach(resetStory);
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const story = stories.find((item) => item.element === entry.target);
-            if (!story) return;
-
-            if (entry.isIntersecting) {
-              playStory(story);
-            } else if (entry.boundingClientRect.top > window.innerHeight || entry.boundingClientRect.bottom < 0) {
-              resetStory(story);
-            }
-          });
-        },
-        {
-          threshold: 0.45,
-        },
-      );
-
-      stories.forEach((story) => observer.observe(story.element));
-    </script>
   </body>
 </html>

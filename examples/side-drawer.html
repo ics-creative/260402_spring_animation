@@ -27,19 +27,15 @@
         border: 0;
         background: none;
         overflow: hidden;
-        opacity: 0;
         transition:
-          opacity 0.24s,
           display 0.24s allow-discrete,
           overlay 0.24s allow-discrete;
 
         &[open] {
           display: block;
-          opacity: 1;
 
           @starting-style {
             display: block;
-            opacity: 0;
           }
         }
 
@@ -72,24 +68,27 @@
           flex: none;
           width: min(380px, calc(100% - 24px));
           min-height: 100%;
-          border-inline-start: 1px solid var(--line);
-          background: var(--surface);
           overflow: hidden;
-          opacity: 0;
-          clip-path: inset(0 0 0 100%);
-          transition:
-            opacity 0.18s linear,
-            clip-path 0.82s var(--spring-anchor);
+          translate: 100% 0;
+          transition: translate 0.96s var(--spring-anchor);
+
+          /* The shell clips the overshoot so the viewport never grows to the right. */
+          &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-inline-start: 1px solid var(--line);
+            background: var(--surface);
+          }
         }
 
         .drawer__panel {
+          position: relative;
           min-height: 100%;
           padding: 16px;
           display: grid;
           align-content: start;
           gap: 12px;
-          translate: 32px 0;
-          transition: translate 0.82s var(--spring-anchor);
         }
 
         .drawer__item {
@@ -98,21 +97,7 @@
 
         &[open] {
           .drawer__shell {
-            opacity: 1;
-            clip-path: inset(0 0 0 0);
-
-            @starting-style {
-              opacity: 0;
-              clip-path: inset(0 0 0 100%);
-            }
-          }
-
-          .drawer__panel {
             translate: 0 0;
-
-            @starting-style {
-              translate: 32px 0;
-            }
           }
         }
       }

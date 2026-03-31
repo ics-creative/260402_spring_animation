@@ -19,24 +19,24 @@
         border-radius: 12px;
         background: var(--surface);
         display: grid;
-        gap: 2px;
+        gap: 4px;
         position-anchor: var(--current-anchor);
         position-area: bottom center;
-        margin-block-start: 10px;
+        margin-block-start: 12px;
         position-try-fallbacks:
           flip-block,
           flip-inline,
           flip-block flip-inline;
         transform-origin: center top;
         opacity: 0;
-        translate: 0 -10px;
-        scale: 0.94;
+        translate: 0 -24px;
+        scale: 0.82;
         transition:
-          opacity 0.48s var(--spring-soft),
-          inset 0.48s ease,
-          margin 0.48s ease,
-          translate 0.48s var(--spring-soft),
-          scale 0.48s var(--spring-soft),
+          opacity 0.24s linear,
+          inset 0.32s ease,
+          margin 0.32s ease,
+          translate 0.82s var(--spring-anchor),
+          scale 0.82s var(--spring-anchor),
           display 0.24s allow-discrete,
           overlay 0.24s allow-discrete;
 
@@ -47,17 +47,18 @@
 
           @starting-style {
             opacity: 0;
-            translate: 0 -10px;
-            scale: 0.94;
+            translate: 0 -24px;
+            scale: 0.82;
           }
         }
+      }
 
       .popover__menu {
         margin: 0;
         padding: 0;
         list-style: none;
         display: grid;
-        gap: 2px;
+        gap: 1px;
       }
 
       .popover__item {
@@ -71,20 +72,20 @@
         border-radius: 10px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start;
         gap: 12px;
         color: var(--text);
         transition:
           background-color 0.16s,
           color 0.16s;
-      }
 
-      .popover__action:hover {
-        background: color-mix(in srgb, var(--surface) 94%, var(--text) 6%);
-      }
+        &:hover {
+          background: color-mix(in srgb, var(--surface) 94%, var(--text) 6%);
+        }
 
-      .popover__action:active {
-        scale: 1;
+        &:active {
+          scale: 1;
+        }
       }
 
       .popover__label,
@@ -125,19 +126,19 @@
           <li class="popover__item">
             <button class="popover__action" type="button">
               <span class="popover__label">Copy link</span>
-              <span class="popover__meta">Share</span>
+              <span class="popover__meta">Cmd+C</span>
             </button>
           </li>
           <li class="popover__item">
             <button class="popover__action" type="button">
-              <span class="popover__label">Email draft</span>
-              <span class="popover__meta">Share</span>
+              <span class="popover__label">Send by email</span>
+              <span class="popover__meta">Open</span>
             </button>
           </li>
           <li class="popover__item">
             <button class="popover__action" type="button">
               <span class="popover__label">Manage access</span>
-              <span class="popover__meta">Share</span>
+              <span class="popover__meta">More</span>
             </button>
           </li>
         </ul>
@@ -147,19 +148,19 @@
           <li class="popover__item">
             <button class="popover__action" type="button">
               <span class="popover__label">Add reviewer</span>
-              <span class="popover__meta">Invite</span>
+              <span class="popover__meta">Add</span>
             </button>
           </li>
           <li class="popover__item">
             <button class="popover__action" type="button">
               <span class="popover__label">Copy invite</span>
-              <span class="popover__meta">Invite</span>
+              <span class="popover__meta">Cmd+C</span>
             </button>
           </li>
           <li class="popover__item">
             <button class="popover__action" type="button">
               <span class="popover__label">View guests</span>
-              <span class="popover__meta">Invite</span>
+              <span class="popover__meta">Open</span>
             </button>
           </li>
         </ul>
@@ -169,19 +170,19 @@
           <li class="popover__item">
             <button class="popover__action" type="button">
               <span class="popover__label">Move to next</span>
-              <span class="popover__meta">Move</span>
+              <span class="popover__meta">Next</span>
             </button>
           </li>
           <li class="popover__item">
             <button class="popover__action" type="button">
               <span class="popover__label">Send to backlog</span>
-              <span class="popover__meta">Move</span>
+              <span class="popover__meta">Backlog</span>
             </button>
           </li>
           <li class="popover__item">
             <button class="popover__action" type="button">
               <span class="popover__label">Archive task</span>
-              <span class="popover__meta">Move</span>
+              <span class="popover__meta">Archive</span>
             </button>
           </li>
         </ul>

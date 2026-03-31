@@ -9,43 +9,45 @@
         position: absolute;
         opacity: 0;
         pointer-events: none;
+
+        &:checked + .switch {
+          .track {
+            background: var(--accent);
+          }
+
+          .knob {
+            translate: 34px 0;
+            scale: 1.06;
+          }
+        }
       }
 
       .switch {
         display: inline-block;
         cursor: pointer;
-      }
 
-      .track {
-        display: block;
-        width: 78px;
-        height: 44px;
-        padding: 4px;
-        border-radius: 22px;
-        background: var(--line);
-        transition: background-color 0.8s var(--spring-anchor);
-      }
+        .track {
+          display: block;
+          width: 78px;
+          height: 44px;
+          padding: 4px;
+          border-radius: 22px;
+          background: var(--line);
+          transition: background-color 0.8s var(--spring-anchor);
+        }
 
-      .knob {
-        display: block;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: var(--surface);
-        border: 1px solid var(--line);
-        translate: 0 0;
-        transition:
-          translate 0.8s var(--spring-anchor),
-          scale 0.8s var(--spring-anchor);
-      }
-
-      .switch-input:checked + .switch .track {
-        background: var(--accent);
-      }
-
-      .switch-input:checked + .switch .knob {
-        translate: 34px 0;
-        scale: 1.06;
+        .knob {
+          display: block;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: var(--surface);
+          border: 1px solid var(--line);
+          translate: 0 0;
+          transition:
+            translate 0.8s var(--spring-anchor),
+            scale 0.8s var(--spring-anchor);
+        }
       }
     </style>
   </head>

@@ -40,7 +40,8 @@
           transition:
             opacity 0.18s,
             scale 0.46s var(--spring-anchor),
-            translate 0.46s var(--spring-soft);
+            translate 0.46s var(--spring-soft),
+            rotate 0.46s var(--spring-anchor);
         }
 
         .submit__icon,
@@ -52,7 +53,7 @@
         .submit__icon svg {
           width: 22px;
           height: 22px;
-          scale: 0.88;
+          scale: 0.82;
           stroke: currentColor;
           stroke-width: 2.75;
           stroke-linecap: round;
@@ -60,11 +61,13 @@
           fill: none;
           transform-box: fill-box;
           transform-origin: center;
+          transition: scale 0.34s var(--spring-soft);
         }
 
         .submit__icon path {
           stroke-dasharray: 24;
           stroke-dashoffset: 24;
+          transition: stroke-dashoffset 0.36s ease-out 0.04s;
         }
 
         .submit__spinner::before {
@@ -74,124 +77,83 @@
           border: 2px solid currentColor;
           border-right-color: transparent;
           border-radius: 50%;
-          animation: spin 0.6s linear infinite;
+          rotate: -90deg;
+          scale: 0.92;
+        }
+
+        &[data-state="loading"],
+        &[data-state="done"] {
+          width: 56px;
+          border-radius: 28px;
+          cursor: default;
+        }
+
+        &[data-state="loading"] {
+          scale: 1;
+          translate: 0 0;
+
+          .submit__label {
+            opacity: 0;
+            scale: 0.45;
+            translate: 0 -10px;
+          }
+
+          .submit__spinner {
+            opacity: 1;
+            scale: 1;
+          }
+
+          .submit__spinner::before {
+            rotate: 0deg;
+            scale: 1.06;
+            animation: submit-spinner-rotate 0.72s linear infinite;
+          }
+        }
+
+        &[data-state="done"] {
+          background: var(--accent);
+          border-color: var(--accent);
+          color: var(--accent-contrast);
+          scale: 1;
+          translate: 0 0;
+
+          .submit__label,
+          .submit__spinner {
+            opacity: 0;
+            scale: 0.42;
+            translate: 0 10px;
+          }
+
+          .submit__icon {
+            opacity: 1;
+            scale: 1;
+            translate: 0 0;
+          }
+
+          .submit__icon svg {
+            scale: 1;
+          }
+
+          .submit__icon path {
+            stroke-dashoffset: 0;
+          }
+        }
+
+        &:disabled {
+          pointer-events: none;
+        }
+
+        &[data-state="loading"]:hover,
+        &[data-state="done"]:hover {
+          transform: none;
+          color: inherit;
+          border-color: inherit;
         }
       }
 
-      .submit[data-state="loading"],
-      .submit[data-state="done"] {
-        width: 56px;
-        border-radius: 28px;
-      }
-
-      .submit[data-state="loading"] {
-        scale: 1;
-        translate: 0 0;
-      }
-
-      .submit[data-state="done"] {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: var(--accent-contrast);
-        scale: 1;
-        translate: 0 0;
-      }
-
-      .submit[data-state="loading"] .submit__label {
-        opacity: 0;
-        scale: 0.45;
-        translate: 0 -10px;
-      }
-
-      .submit[data-state="loading"] .submit__spinner {
-        opacity: 1;
-        scale: 1;
-      }
-
-      .submit[data-state="done"] .submit__label,
-      .submit[data-state="done"] .submit__spinner {
-        opacity: 0;
-        scale: 0.42;
-        translate: 0 10px;
-      }
-
-      .submit[data-state="done"] .submit__icon {
-        opacity: 1;
-        scale: 1;
-        translate: 0 0;
-      }
-
-      .submit[data-state="loading"] .submit__spinner::before {
-        animation:
-          spin 0.6s linear infinite,
-          pulse 0.62s var(--spring-soft) infinite alternate;
-      }
-
-      .submit[data-state="done"] .submit__icon svg {
-        animation: icon-settle 0.34s var(--spring-soft) both;
-      }
-
-      .submit[data-state="done"] .submit__icon path {
-        animation: check-draw 0.36s ease-out 0.04s both;
-      }
-
-      .submit[data-state="loading"],
-      .submit[data-state="done"] {
-        cursor: default;
-      }
-
-      .submit:disabled {
-        pointer-events: none;
-      }
-
-      .submit[data-state="loading"]:hover,
-      .submit[data-state="done"]:hover {
-        transform: none;
-        color: inherit;
-        border-color: inherit;
-      }
-
-      @keyframes spin {
+      @keyframes submit-spinner-rotate {
         to {
           rotate: 360deg;
-        }
-      }
-
-      @keyframes pulse {
-        from {
-          scale: 0.9;
-        }
-
-        to {
-          scale: 1.08;
-        }
-      }
-
-      @keyframes icon-settle {
-        0% {
-          scale: 0.82;
-        }
-
-        68% {
-          scale: 1.06;
-        }
-
-        100% {
-          scale: 1;
-        }
-      }
-
-      @keyframes check-draw {
-        0% {
-          stroke-dashoffset: 24;
-        }
-
-        72% {
-          stroke-dashoffset: -2;
-        }
-
-        100% {
-          stroke-dashoffset: 0;
         }
       }
     </style>

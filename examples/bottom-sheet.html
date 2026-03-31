@@ -116,6 +116,15 @@
           transition:
             background-color 0.18s,
             color 0.18s;
+
+          &:hover {
+            transform: none;
+            background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
+          }
+
+          &:active {
+            scale: 1;
+          }
         }
 
         .sheet__action-title,
@@ -136,20 +145,6 @@
           text-align: left;
         }
 
-        .sheet__action:hover {
-          transform: none;
-          background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
-        }
-
-        .sheet__action:active,
-        .sheet__cancel:active {
-          scale: 1;
-        }
-
-        .sheet__action--destructive:hover {
-          background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
-        }
-
         .sheet__footer {
           display: flex;
           justify-content: flex-end;
@@ -159,6 +154,10 @@
 
         .sheet__action--destructive {
           color: var(--text);
+
+          &:hover {
+            background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
+          }
         }
 
         .sheet__cancel {
@@ -170,12 +169,16 @@
           background: var(--surface);
           color: var(--text);
           font-weight: 600;
-        }
 
-        .sheet__cancel:hover {
-          transform: none;
-          border-color: var(--line);
-          background: color-mix(in srgb, var(--surface) 94%, var(--text) 6%);
+          &:hover {
+            transform: none;
+            border-color: var(--line);
+            background: color-mix(in srgb, var(--surface) 94%, var(--text) 6%);
+          }
+
+          &:active {
+            scale: 1;
+          }
         }
       }
     </style>

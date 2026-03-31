@@ -19,6 +19,10 @@
         gap: 12px;
       }
 
+      .accordion {
+        --spring-close: linear(0, 0.18, 0.42, 0.74, 0.94, 1, 0.965 84%, 1);
+      }
+
       .item {
         border: 1px solid var(--line);
         border-radius: 14px;
@@ -31,6 +35,7 @@
           align-items: center;
           justify-content: space-between;
           cursor: pointer;
+          transition: padding-block-end 0.82s var(--spring-anchor);
 
           &::-webkit-details-marker {
             display: none;
@@ -40,25 +45,36 @@
         &[open] {
           border-color: var(--accent);
 
+          summary {
+            padding-block-end: 4px;
+          }
+
           .summary__icon {
             rotate: 45deg;
           }
 
-          &::details-content {
-            block-size: auto;
+          .panel {
             opacity: 1;
+            translate: 0 0;
+            scale: 1;
           }
         }
+      }
 
-        &::details-content {
-          block-size: 0;
-          opacity: 0;
-          overflow: clip;
-          transition:
-            content-visibility 0.82s allow-discrete,
-            block-size 0.82s var(--spring-anchor),
-            opacity 0.26s linear;
-        }
+      .item__content {
+        --content-size: 0px;
+        block-size: 0;
+        opacity: 0;
+        overflow: clip;
+        transition-property: block-size, opacity;
+        transition-duration: 0.82s, 0.26s;
+        transition-timing-function: var(--spring-close), linear;
+      }
+
+      .item[open] .item__content {
+        block-size: var(--content-size);
+        opacity: 1;
+        transition-timing-function: var(--spring-anchor), linear;
       }
 
       .summary__icon {
@@ -87,6 +103,14 @@
       .panel {
         padding: 0 16px 16px;
         color: var(--muted);
+        opacity: 0;
+        translate: 0 -12px;
+        scale: 0.96;
+        transform-origin: top center;
+        transition:
+          opacity 0.24s linear,
+          translate 0.82s var(--spring-anchor),
+          scale 0.82s var(--spring-anchor);
       }
     </style>
   </head>
@@ -134,5 +158,19 @@
         </div>
       </section>
     </main>
+    <script type="module">
+      const items = [...document.querySelectorAll(".item")];
+
+      const syncHeights = () => {
+        items.forEach((item) => {
+          const panel = item.querySelector(".panel");
+          item.style.setProperty("--content-size", `${panel.offsetHeight}px`);
+        });
+      };
+
+      const resizeObserver = new ResizeObserver(syncHeights);
+      items.forEach((item) => resizeObserver.observe(item.querySelector(".panel")));
+      syncHeights();
+    </script>
   </body>
 </html>
