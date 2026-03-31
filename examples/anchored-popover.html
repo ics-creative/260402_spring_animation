@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .stage {
+        align-content: center;
+      }
+
+      .popover {
+        position: fixed;
+        inset: auto;
+        margin: 0;
+        width: min(264px, calc(100vw - 32px));
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--surface);
+        display: grid;
+        gap: 10px;
+        position-anchor: var(--current-anchor);
+        position-area: bottom center;
+        margin-block-start: 14px;
+        position-try-fallbacks:
+          flip-block,
+          flip-inline,
+          flip-block flip-inline;
+        transform-origin: center top;
+        opacity: 0;
+        translate: 0 -10px;
+        scale: 0.92;
+        transition:
+          opacity 0.14s,
+          inset 0.5s ease,
+          margin 0.5s ease,
+          translate 0.2s ease,
+          scale 0.2s ease,
+          display 0.24s allow-discrete,
+          overlay 0.24s allow-discrete;
+
+        &:popover-open {
+          opacity: 1;
+          translate: 0 0;
+          scale: 1;
+          animation: popover-enter 0.62s var(--spring-anchor);
+
+          @starting-style {
+            opacity: 0;
+            translate: 0 -10px;
+            scale: 0.92;
+          }
+        }
+
+        h2,
+        p,
+        .popover__actions {
+          margin: 0;
+          opacity: 0;
+          translate: 0 -6px;
+        }
+
+        h2 {
+          font-size: 0.98rem;
+          font-weight: 600;
+          letter-spacing: -0.02em;
+        }
+
+        .popover__eyebrow {
+          font-size: 0.7rem;
+          font-weight: 600;
+          color: var(--muted);
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .popover__text {
+          font-size: 0.84rem;
+          line-height: 1.4;
+          color: var(--muted);
+        }
+
+        .popover__actions {
+          display: flex;
+          gap: 8px;
+          padding-top: 2px;
+        }
+
+        .popover__action {
+          min-height: 34px;
+          padding-inline: 12px;
+          border: 1px solid var(--line);
+          border-radius: 10px;
+          background: var(--surface);
+          color: var(--text);
+          transition:
+            background-color 0.16s,
+            border-color 0.16s,
+            opacity 0.18s;
+        }
+
+        .popover__action:hover {
+          transform: none;
+          border-color: color-mix(in srgb, var(--line) 70%, var(--text));
+          background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
+        }
+
+        .popover__action:active {
+          scale: 1;
+        }
+
+        &:popover-open .popover__eyebrow {
+          animation: popover-content 0.34s var(--spring-soft) 0.06s both;
+        }
+
+        &:popover-open h2 {
+          animation: popover-content 0.36s var(--spring-soft) 0.1s both;
+        }
+
+        &:popover-open .popover__text {
+          animation: popover-content 0.38s var(--spring-soft) 0.14s both;
+        }
+
+        &:popover-open .popover__actions {
+          animation: popover-content 0.4s var(--spring-soft) 0.18s both;
+        }
+      }
+
+      @keyframes popover-enter {
+        0% {
+          opacity: 0;
+          translate: 0 -18px;
+          scale: 0.84;
+        }
+
+        64% {
+          opacity: 1;
+          translate: 0 5px;
+          scale: 1.02;
+        }
+
+        100% {
+          opacity: 1;
+          translate: 0 0;
+          scale: 1;
+        }
+      }
+
+      @keyframes popover-content {
+        0% {
+          opacity: 0;
+          translate: 0 -8px;
+        }
+
+        72% {
+          opacity: 1;
+          translate: 0 1px;
+        }
+
+        100% {
+          opacity: 1;
+          translate: 0 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="row">
+          <button class="button action" commandfor="popover-1" command="toggle-popover" style="anchor-name: --action-1">
+            Share
+          </button>
+          <button class="button action" commandfor="popover-2" command="toggle-popover" style="anchor-name: --action-2">
+            Invite
+          </button>
+          <button class="button action" commandfor="popover-3" command="toggle-popover" style="anchor-name: --action-3">
+            Move
+          </button>
+        </div>
+      </section>
+      <div class="popover" id="popover-1" popover style="--current-anchor: --action-1">
+        <p class="popover__eyebrow">Share</p>
+        <h2>Share draft</h2>
+        <p class="popover__text">Send a private review link to the current draft.</p>
+        <div class="popover__actions">
+          <button class="button popover__action" type="button">Copy link</button>
+          <button class="button popover__action" type="button">Options</button>
+        </div>
+      </div>
+      <div class="popover" id="popover-2" popover style="--current-anchor: --action-2">
+        <p class="popover__eyebrow">Invite</p>
+        <h2>Invite reviewer</h2>
+        <p class="popover__text">Add one more reviewer before you request approval.</p>
+        <div class="popover__actions">
+          <button class="button popover__action" type="button">Add email</button>
+          <button class="button popover__action" type="button">Manage</button>
+        </div>
+      </div>
+      <div class="popover" id="popover-3" popover style="--current-anchor: --action-3">
+        <p class="popover__eyebrow">Move</p>
+        <h2>Move task</h2>
+        <p class="popover__text">Choose a destination list for this task.</p>
+        <div class="popover__actions">
+          <button class="button popover__action" type="button">Next step</button>
+          <button class="button popover__action" type="button">Backlog</button>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

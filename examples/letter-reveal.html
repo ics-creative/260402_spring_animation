@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .stage {
+        min-height: auto;
+        padding: 0;
+        background: var(--surface);
+        gap: 0;
+      }
+
+      .story-list {
+        width: 100%;
+      }
+
+      .story {
+        min-height: 140vh;
+      }
+
+      .story__frame {
+        position: sticky;
+        top: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .headline {
+        margin: 0;
+        display: grid;
+        justify-items: center;
+        gap: 0.05em;
+        font-size: clamp(3rem, 11vw, 8rem);
+        line-height: 0.88;
+        letter-spacing: -0.08em;
+        text-wrap: balance;
+      }
+
+      .line {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.04em;
+      }
+
+      .letter {
+        display: inline-block;
+        overflow: clip;
+        padding-inline-end: 0.08em;
+        margin-inline-end: -0.08em;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="story-list">
+          <section class="story" data-story>
+            <div class="story__frame">
+              <p class="headline">
+                <span class="line">
+                  <span class="letter">S</span>
+                  <span class="letter">P</span>
+                  <span class="letter">R</span>
+                  <span class="letter">I</span>
+                  <span class="letter">N</span>
+                  <span class="letter">G</span>
+                </span>
+                <span class="line">
+                  <span class="letter">T</span>
+                  <span class="letter">Y</span>
+                  <span class="letter">P</span>
+                  <span class="letter">E</span>
+                </span>
+              </p>
+            </div>
+          </section>
+
+          <section class="story" data-story>
+            <div class="story__frame">
+              <p class="headline">
+                <span class="line">
+                  <span class="letter">S</span>
+                  <span class="letter">N</span>
+                  <span class="letter">A</span>
+                  <span class="letter">P</span>
+                </span>
+                <span class="line">
+                  <span class="letter">O</span>
+                  <span class="letter">P</span>
+                  <span class="letter">E</span>
+                  <span class="letter">N</span>
+                </span>
+              </p>
+            </div>
+          </section>
+
+          <section class="story" data-story>
+            <div class="story__frame">
+              <p class="headline">
+                <span class="line">
+                  <span class="letter">C</span>
+                  <span class="letter">L</span>
+                  <span class="letter">E</span>
+                  <span class="letter">A</span>
+                  <span class="letter">N</span>
+                </span>
+                <span class="line">
+                  <span class="letter">E</span>
+                  <span class="letter">X</span>
+                  <span class="letter">I</span>
+                  <span class="letter">T</span>
+                </span>
+              </p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+    <script type="module">
+      const duration = 760;
+      const stories = [...document.querySelectorAll("[data-story]")].map((story) => ({
+        element: story,
+        letters: [...story.querySelectorAll(".letter")],
+        activeAnimations: [],
+        played: false,
+      }));
+
+      const resetStory = (story) => {
+        story.activeAnimations.forEach((animation) => animation.cancel());
+        story.activeAnimations = [];
+        story.played = false;
+
+        story.letters.forEach((letter) => {
+          letter.style.opacity = "0";
+          letter.style.translate = "0 1.25em";
+          letter.style.scale = "0.72";
+          letter.style.rotate = "-6deg";
+          letter.style.clipPath = "inset(100% -0.08em 0 0)";
+        });
+      };
+
+      const playStory = (story) => {
+        if (story.played) return;
+        story.played = true;
+        story.activeAnimations = story.letters.map((letter, index) =>
+          letter.animate(
+            [
+              {
+                opacity: 0,
+                translate: "0 1.25em",
+                scale: "0.72",
+                rotate: "-6deg",
+                clipPath: "inset(100% -0.08em 0 0)",
+              },
+              {
+                opacity: 1,
+                translate: "0 -0.09em",
+                scale: "1.08",
+                rotate: "0.6deg",
+                clipPath: "inset(0 -0.08em 0 0)",
+                offset: 0.68,
+              },
+              {
+                opacity: 1,
+                translate: "0 0",
+                scale: "1",
+                rotate: "0deg",
+                clipPath: "inset(0 -0.08em 0 0)",
+              },
+            ],
+            {
+              duration,
+              delay: index * 56,
+              easing:
+                "linear(0, 0.1116, 0.216, 0.313, 0.4026, 0.485, 0.5602, 0.6286, 0.6904, 0.746, 0.7955, 0.8396, 0.8783, 0.9123, 0.9418, 0.9672, 0.9888, 1.0071, 1.0222, 1.0346, 1.0446, 1.0524, 1.0582, 1.0624, 1.0651, 1.0666, 1.067, 1.0665, 1.0653, 1.0635, 1.0611, 1.0584, 1.0555, 1.0523, 1.049, 1.0456, 1.0422, 1.0389, 1.0356, 1.0324, 1.0293, 1.0264, 1.0236, 1.021, 1.0186, 1.0163, 1.0142, 1.0122, 1.0105, 1.0089, 1.0074, 1.0061, 1.0049, 1.0039, 1.003, 1.0022, 1.0015, 1.0009, 1.0003, 0.9999, 0.9995, 0.9992, 0.999, 0.9988, 0.9987, 0.9986, 0.9985, 0.9984, 0.9985, 0.9985, 0.9985, 0.9986, 0.9986, 0.9987, 0.9988, 0.9989, 0.9989, 0.999, 0.9991, 0.9992, 0.9992, 0.9993, 0.9994, 0.9994, 0.9995, 0.9996, 0.9996, 0.9997, 0.9997, 0.9998, 0.9998, 0.9998, 0.9999, 0.9999, 0.9999, 0.9999, 0.9999, 1, 1, 1)",
+              fill: "both",
+            },
+          ),
+        );
+      };
+
+      stories.forEach(resetStory);
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const story = stories.find((item) => item.element === entry.target);
+            if (!story) return;
+
+            if (entry.isIntersecting) {
+              playStory(story);
+            } else if (entry.boundingClientRect.top > window.innerHeight || entry.boundingClientRect.bottom < 0) {
+              resetStory(story);
+            }
+          });
+        },
+        {
+          threshold: 0.45,
+        },
+      );
+
+      stories.forEach((story) => observer.observe(story.element));
+    </script>
+  </body>
+</html>

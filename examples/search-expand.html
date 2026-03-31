@@ -11,6 +11,7 @@
       }
 
       .search {
+        position: relative;
         width: 56px;
         min-height: 56px;
         padding: 8px;
@@ -23,8 +24,7 @@
         overflow: clip;
         transition:
           width 0.82s var(--spring-anchor),
-          border-color 0.2s,
-          box-shadow 0.82s var(--spring-soft);
+          border-color 0.2s;
       }
 
       .search__icon {
@@ -53,45 +53,61 @@
         transition:
           max-width 0.7s var(--spring-anchor),
           padding-inline 0.7s var(--spring-anchor),
-          opacity 0.14s;
+          opacity 0.16s linear 0.08s;
+
+        &::-webkit-search-cancel-button,
+        &::-webkit-search-decoration {
+          appearance: none;
+          display: none;
+        }
       }
 
-      .search[data-state='open'] {
-        width: min(420px, calc(100vw - 32px));
+      .search[data-state="open"],
+      .search[data-state="closing"] {
         justify-content: flex-start;
-        border-color: var(--accent);
-        box-shadow: 0 16px 32px rgb(50 35 179 / 10%);
       }
 
-      .search[data-state='open'] .search__icon {
+      .search[data-state="open"] {
+        width: min(420px, calc(100vw - 32px));
+        border-color: var(--accent);
+      }
+
+      .search[data-state="open"] .search__icon {
         scale: 1.06;
         translate: 1px 0;
       }
 
-      .search[data-state='open'] .search__input {
+      .search[data-state="open"] .search__input {
         max-width: 320px;
         opacity: 1;
-        padding-inline: var(--space-12) var(--space-16);
+        padding-inline: 12px;
         pointer-events: auto;
         transition-delay: 0.1s;
       }
 
-      .search[data-state='closing'] {
+      .search[data-state="closing"] {
         transition:
-          width 0.28s cubic-bezier(0.28, 0, 0.2, 1) 0.08s,
-          border-color 0.18s,
-          box-shadow 0.18s;
+          width 0.26s ease,
+          border-color 0.18s linear 0.16s;
       }
 
-      .search[data-state='closing'] .search__input {
+      .search[data-state="closing"] .search__icon {
+        scale: 1;
+        translate: 0 0;
+        transition:
+          scale 0.22s ease,
+          translate 0.22s ease;
+      }
+
+      .search[data-state="closing"] .search__input {
         max-width: 0;
         opacity: 0;
         padding-inline: 0;
         pointer-events: none;
         transition:
-          max-width 0.16s ease,
-          padding-inline 0.16s ease,
-          opacity 0.1s;
+          max-width 0.18s ease,
+          padding-inline 0.18s ease,
+          opacity 0.1s linear;
       }
     </style>
   </head>
@@ -105,23 +121,23 @@
       </section>
     </main>
     <script type="module">
-      const search = document.querySelector('.search')
-      const input = search.querySelector('.search__input')
-      let closeTimer = 0
+      const search = document.querySelector(".search");
+      const input = search.querySelector(".search__input");
+      let closeTimer = 0;
 
-      search.addEventListener('focusin', () => {
-        clearTimeout(closeTimer)
-        search.dataset.state = 'open'
-      })
+      search.addEventListener("focusin", () => {
+        clearTimeout(closeTimer);
+        search.dataset.state = "open";
+      });
 
-      search.addEventListener('focusout', (event) => {
-        if (search.contains(event.relatedTarget)) return
-        search.dataset.state = 'closing'
+      search.addEventListener("focusout", (event) => {
+        if (search.contains(event.relatedTarget)) return;
+        search.dataset.state = "closing";
         closeTimer = window.setTimeout(() => {
-          if (search.matches(':focus-within')) return
-          delete search.dataset.state
-        }, 360)
-      })
+          if (search.matches(":focus-within")) return;
+          delete search.dataset.state;
+        }, 360);
+      });
     </script>
   </body>
 </html>

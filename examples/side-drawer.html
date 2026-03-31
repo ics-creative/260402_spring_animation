@@ -5,22 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./common.css" />
     <style>
+      html,
+      body {
+        overflow-x: clip;
+      }
+
       .stage {
         align-content: center;
         justify-items: center;
       }
 
       .drawer {
+        position: fixed;
         inset: 0;
-        width: auto;
-        height: auto;
+        width: 100vw;
+        height: 100dvh;
         max-width: none;
         max-height: none;
         margin: 0;
         padding: 0;
         border: 0;
         background: none;
-        overflow: visible;
+        overflow: clip;
         opacity: 0;
         transition:
           opacity 0.24s,
@@ -28,13 +34,11 @@
           overlay 0.24s allow-discrete;
 
         &[open] {
-          display: grid;
-          justify-items: end;
+          display: block;
           opacity: 1;
 
           @starting-style {
-            display: grid;
-            justify-items: end;
+            display: block;
             opacity: 0;
           }
         }
@@ -52,8 +56,19 @@
             opacity: 0;
           }
         }
+
+        .drawer__viewport {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          overflow: clip;
+          contain: paint;
+        }
+
         .drawer__panel {
-          width: min(380px, calc(100vw - 24px));
+          position: absolute;
+          inset: 0 0 0 auto;
+          width: min(380px, calc(100% - 24px));
           min-height: 100dvh;
           padding: 16px;
           border-inline-start: 1px solid var(--line);
@@ -61,8 +76,8 @@
           display: grid;
           align-content: start;
           gap: 12px;
-          translate: 100% 0;
-          transition: translate 0.95s var(--spring-anchor);
+          translate: calc(100% + 24px) 0;
+          transition: translate 0.82s var(--spring-anchor);
         }
 
         .drawer__item {
@@ -74,7 +89,7 @@
             translate: 0 0;
 
             @starting-style {
-              translate: 100% 0;
+              translate: calc(100% + 24px) 0;
             }
           }
         }
@@ -87,14 +102,14 @@
         <button class="button" commandfor="side-drawer" command="show-modal">Open Drawer</button>
       </section>
       <dialog class="drawer" id="side-drawer">
-        <div class="drawer__panel">
-          <button class="button drawer__item">Overview</button>
-          <button class="button drawer__item">Members</button>
-          <button class="button drawer__item">Publishing</button>
-          <button class="button drawer__item">Integrations</button>
-          <button class="button drawer__item" commandfor="side-drawer" command="close">
-            Close
-          </button>
+        <div class="drawer__viewport">
+          <div class="drawer__panel">
+            <button class="button drawer__item">Overview</button>
+            <button class="button drawer__item">Members</button>
+            <button class="button drawer__item">Publishing</button>
+            <button class="button drawer__item">Integrations</button>
+            <button class="button drawer__item" commandfor="side-drawer" command="close">Close</button>
+          </div>
         </div>
       </dialog>
     </main>

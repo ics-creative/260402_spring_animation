@@ -59,7 +59,7 @@
         width: min(420px, calc(100vw - 24px));
         padding: 20px;
         border: 1px solid var(--line);
-        border-radius: 20px;
+        border-radius: 16px;
         background: var(--surface);
         display: grid;
         gap: 12px;
@@ -75,28 +75,13 @@
     <main class="page">
       <section class="stage">
         <div class="row">
-          <button
-            class="button launcher"
-            commandfor="dialog-1"
-            command="show-modal"
-            style="anchor-name: --dialog-1"
-          >
+          <button class="button launcher" commandfor="dialog-1" command="show-modal" style="anchor-name: --dialog-1">
             Profile
           </button>
-          <button
-            class="button launcher"
-            commandfor="dialog-2"
-            command="show-modal"
-            style="anchor-name: --dialog-2"
-          >
+          <button class="button launcher" commandfor="dialog-2" command="show-modal" style="anchor-name: --dialog-2">
             Billing
           </button>
-          <button
-            class="button launcher"
-            commandfor="dialog-3"
-            command="show-modal"
-            style="anchor-name: --dialog-3"
-          >
+          <button class="button launcher" commandfor="dialog-3" command="show-modal" style="anchor-name: --dialog-3">
             Review
           </button>
         </div>

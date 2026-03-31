@@ -1,0 +1,217 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .stage {
+        align-content: center;
+        justify-items: center;
+      }
+
+      .sheet {
+        inset: auto 0 0;
+        width: min(380px, calc(100vw - 20px));
+        margin: 0 auto 12px;
+        padding: 0;
+        border: 0;
+        background: none;
+        opacity: 0;
+        translate: 0 100%;
+        transition:
+          opacity 0.24s,
+          translate 0.9s var(--spring-anchor),
+          display 0.24s allow-discrete,
+          overlay 0.24s allow-discrete;
+
+        &[open] {
+          opacity: 1;
+          translate: 0 0;
+
+          @starting-style {
+            opacity: 0;
+            translate: 0 100%;
+          }
+        }
+
+        &::backdrop {
+          background: rgb(0 0 0 / 32%);
+          opacity: 0;
+          transition: opacity 0.24s;
+        }
+
+        &[open]::backdrop {
+          opacity: 1;
+
+          @starting-style {
+            opacity: 0;
+          }
+        }
+      }
+
+      .sheet {
+        .sheet__panel {
+          display: grid;
+          overflow: clip;
+          border: 1px solid var(--line);
+          border-radius: 16px;
+          background: var(--surface);
+        }
+
+        .sheet__header {
+          display: grid;
+          gap: 4px;
+          padding: 18px 18px 10px;
+          text-align: left;
+        }
+
+        .sheet__eyebrow,
+        .sheet__title,
+        .sheet__message {
+          margin: 0;
+        }
+
+        .sheet__eyebrow {
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: var(--muted);
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .sheet__title {
+          font-size: 1.05rem;
+          font-weight: 600;
+          letter-spacing: -0.02em;
+        }
+
+        .sheet__message {
+          font-size: 0.875rem;
+          color: var(--muted);
+          line-height: 1.45;
+        }
+
+        .sheet__actions {
+          display: grid;
+          padding: 4px 0 0;
+        }
+
+        .sheet__action {
+          width: 100%;
+          min-height: 56px;
+          padding: 14px 18px;
+          border: 0;
+          border-top: 1px solid var(--line);
+          border-radius: 0;
+          justify-content: flex-start;
+          align-items: flex-start;
+          background: var(--surface);
+          color: var(--text);
+          font-weight: 500;
+          display: grid;
+          gap: 1px;
+          transition:
+            background-color 0.18s,
+            color 0.18s;
+        }
+
+        .sheet__action-title,
+        .sheet__action-note {
+          margin: 0;
+        }
+
+        .sheet__action-title {
+          font-size: 0.96rem;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+        }
+
+        .sheet__action-note {
+          font-size: 0.8rem;
+          color: var(--muted);
+          line-height: 1.35;
+        }
+
+        .sheet__action:hover {
+          transform: none;
+          background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
+        }
+
+        .sheet__action:active,
+        .sheet__cancel:active {
+          scale: 1;
+        }
+
+        .sheet__action--destructive:hover {
+          background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
+        }
+
+        .sheet__footer {
+          display: flex;
+          justify-content: flex-end;
+          padding: 12px 18px 18px;
+          border-top: 1px solid var(--line);
+        }
+
+        .sheet__action--destructive {
+          color: var(--text);
+        }
+
+        .sheet__cancel {
+          min-height: 40px;
+          padding-inline: 14px;
+          border-radius: 10px;
+          justify-content: center;
+          border: 1px solid var(--line);
+          background: var(--surface);
+          color: var(--text);
+          font-weight: 600;
+        }
+
+        .sheet__cancel:hover {
+          transform: none;
+          border-color: var(--line);
+          background: color-mix(in srgb, var(--surface) 94%, var(--text) 6%);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <button class="button" commandfor="bottom-sheet" command="show-modal">Open Action Sheet</button>
+      </section>
+      <dialog class="sheet" id="bottom-sheet">
+        <div class="sheet__panel">
+          <div class="sheet__header">
+            <p class="sheet__eyebrow">Photo</p>
+            <p class="sheet__title">Photo Actions</p>
+            <p class="sheet__message">Choose what you want to do with this photo.</p>
+          </div>
+          <div class="sheet__actions">
+            <button class="button sheet__action">
+              <span class="sheet__action-title">Save to Files</span>
+              <span class="sheet__action-note">Download a copy to your device.</span>
+            </button>
+            <button class="button sheet__action">
+              <span class="sheet__action-title">Copy Link</span>
+              <span class="sheet__action-note">Share the current photo URL.</span>
+            </button>
+            <button class="button sheet__action">
+              <span class="sheet__action-title">Add to Album</span>
+              <span class="sheet__action-note">Move it into another collection.</span>
+            </button>
+            <button class="button sheet__action sheet__action--destructive">
+              <span class="sheet__action-title">Delete Photo</span>
+              <span class="sheet__action-note">Remove it permanently from this workspace.</span>
+            </button>
+          </div>
+          <div class="sheet__footer">
+            <button class="button sheet__cancel" commandfor="bottom-sheet" command="close">Close</button>
+          </div>
+        </div>
+      </dialog>
+    </main>
+  </body>
+</html>

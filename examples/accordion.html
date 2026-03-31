@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      :root {
+        interpolate-size: allow-keywords;
+      }
+
+      .stage {
+        align-content: start;
+      }
+
+      .accordion {
+        width: min(680px, 100%);
+        display: grid;
+        gap: 12px;
+      }
+
+      .item {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+
+        summary {
+          list-style: none;
+          min-height: 52px;
+          padding: 0 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          cursor: pointer;
+
+          &::-webkit-details-marker {
+            display: none;
+          }
+        }
+
+        &[open] {
+          border-color: var(--accent);
+
+          .summary__icon {
+            rotate: 45deg;
+          }
+        }
+      }
+
+      .summary__icon {
+        position: relative;
+        flex: none;
+        width: 18px;
+        height: 18px;
+        transition: rotate 0.8s var(--spring-anchor);
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          top: calc(50% - 1px);
+          left: 0;
+          width: 18px;
+          height: 2px;
+          background: currentColor;
+        }
+
+        &::after {
+          rotate: 90deg;
+        }
+      }
+
+      .panel {
+        padding: 0 16px 16px;
+        color: var(--muted);
+      }
+
+      .item__content {
+        height: 0;
+        overflow: clip;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="accordion">
+          <details class="item" open>
+            <summary>
+              <span>Motion tokens</span>
+              <span class="summary__icon"></span>
+            </summary>
+            <div class="item__content">
+              <div class="panel">
+                Reusing one spring curve across tabs, popovers, and dialogs makes the whole interface feel connected.
+                The motion reads as one system instead of a set of unrelated component demos.
+              </div>
+            </div>
+          </details>
+          <details class="item">
+            <summary>
+              <span>Entry timing</span>
+              <span class="summary__icon"></span>
+            </summary>
+            <div class="item__content">
+              <div class="panel">
+                The first thing that should settle is the large shape or container. After that, labels, counters, and
+                supporting copy can catch up a fraction later without making the transition feel noisy or overproduced.
+              </div>
+            </div>
+          </details>
+          <details class="item">
+            <summary>
+              <span>Interaction states</span>
+              <span class="summary__icon"></span>
+            </summary>
+            <div class="item__content">
+              <div class="panel">
+                Small controls still benefit from spring motion, but the travel distance has to stay tight. A short
+                overshoot on open and a clean, readable collapse on close usually feels better than large theatrical
+                movement.
+              </div>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+    <script type="module">
+      const spring = getComputedStyle(document.documentElement).getPropertyValue("--spring-anchor").trim();
+      const animations = new WeakMap();
+
+      const stopAnimation = (content) => {
+        const current = animations.get(content);
+        if (current) current.cancel();
+      };
+
+      const openItem = (item, content) => {
+        stopAnimation(content);
+        item.open = true;
+
+        const startHeight = content.getBoundingClientRect().height;
+        content.style.height = "auto";
+        const endHeight = content.getBoundingClientRect().height;
+        content.style.height = `${startHeight}px`;
+        content.style.opacity = "1";
+
+        const animation = content.animate(
+          [
+            { height: `${startHeight}px`, opacity: startHeight ? 1 : 0 },
+            { height: `${endHeight + 10}px`, opacity: 1, offset: 0.62 },
+            { height: `${endHeight}px`, opacity: 1 },
+          ],
+          {
+            duration: 760,
+            easing: spring,
+            fill: "forwards",
+          },
+        );
+
+        animations.set(content, animation);
+        animation.addEventListener(
+          "finish",
+          () => {
+            content.style.height = "auto";
+            content.style.opacity = "1";
+            animations.delete(content);
+          },
+          { once: true },
+        );
+      };
+
+      const closeItem = (item, content) => {
+        stopAnimation(content);
+
+        const startHeight = content.getBoundingClientRect().height;
+        const settleHeight = Math.max(startHeight - 14, 0);
+
+        const animation = content.animate(
+          [
+            { height: `${startHeight}px`, opacity: 1 },
+            { height: `${settleHeight}px`, opacity: 1, offset: 0.44 },
+            { height: "0px", opacity: 0 },
+          ],
+          {
+            duration: 620,
+            easing: spring,
+            fill: "forwards",
+          },
+        );
+
+        animations.set(content, animation);
+        animation.addEventListener(
+          "finish",
+          () => {
+            item.open = false;
+            content.style.height = "0px";
+            content.style.opacity = "0";
+            animations.delete(content);
+          },
+          { once: true },
+        );
+      };
+
+      document.querySelectorAll(".item").forEach((item) => {
+        const summary = item.querySelector("summary");
+        const content = item.querySelector(".item__content");
+        content.style.height = item.open ? "auto" : "0px";
+        content.style.opacity = item.open ? "1" : "0";
+
+        summary.addEventListener("click", (event) => {
+          event.preventDefault();
+
+          if (item.open) {
+            closeItem(item, content);
+          } else {
+            openItem(item, content);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
