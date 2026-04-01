@@ -16,6 +16,10 @@
       }
 
       .chip {
+        --shift-x: 0px;
+        --shift-y: 0px;
+        --shift-scale: 1;
+
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -24,6 +28,14 @@
         border: 1px solid var(--line);
         border-radius: 999px;
         background: var(--surface);
+        translate: var(--shift-x) var(--shift-y);
+        scale: var(--shift-scale);
+
+        &.is-shifting {
+          transition:
+            translate 1s var(--spring-bouncy),
+            scale 1s var(--spring-bouncy);
+        }
 
         button {
           position: relative;
@@ -69,6 +81,16 @@
         pointer-events: none;
         z-index: 10;
         transform-origin: center;
+        opacity: 1;
+        scale: 1;
+        transition:
+          opacity 0.4s ease,
+          scale 0.8s var(--spring-bouncy);
+
+        &.is-exiting {
+          opacity: 0;
+          scale: 0.4;
+        }
       }
     </style>
   </head>
@@ -87,12 +109,9 @@
     <script type="module">
       const row = document.querySelector("[data-row]");
 
-      const spring = getComputedStyle(document.documentElement)
-        .getPropertyValue("--spring-bouncy")
-        .replace(/\s+/g, " ")
-        .trim();
-
       const animateShift = (before) => {
+        const shifted = [];
+
         // Replaying the layout delta keeps the row readable even though the chip is removed immediately.
         for (const chip of row.children) {
           const previous = before.get(chip);
@@ -101,11 +120,23 @@
           const deltaX = previous.left - next.left;
           const deltaY = previous.top - next.top;
           if (deltaX === 0 && deltaY === 0) continue;
-          chip.animate([{ translate: `${deltaX}px ${deltaY}px` }, { translate: "0 0" }], {
-            duration: 800,
-            easing: spring,
-          });
+          chip.classList.remove("is-shifting");
+          chip.style.setProperty("--shift-x", `${deltaX}px`);
+          chip.style.setProperty("--shift-y", `${deltaY}px`);
+          chip.style.setProperty("--shift-scale", "0.9");
+          shifted.push(chip);
         }
+
+        void row.offsetWidth;
+
+        requestAnimationFrame(() => {
+          for (const chip of shifted) {
+            chip.classList.add("is-shifting");
+            chip.style.setProperty("--shift-x", "0px");
+            chip.style.setProperty("--shift-y", "0px");
+            chip.style.setProperty("--shift-scale", "1");
+          }
+        });
       };
 
       const animateGhost = (chip) => {
@@ -119,36 +150,15 @@
         ghost.style.height = `${rect.height}px`;
         ghost.style.transformOrigin = "center";
         document.body.append(ghost);
-        ghost
-          .animate(
-            [
-              {
-                opacity: 1,
-                scale: "1",
-              },
-              {
-                opacity: 1,
-                scale: "0.9",
-                offset: 0.4,
-              },
-              {
-                opacity: 0,
-                scale: "0.58",
-              },
-            ],
-            {
-              duration: 320,
-              easing: spring,
-              fill: "forwards",
-            },
-          )
-          .addEventListener(
-            "finish",
-            () => {
-              ghost.remove();
-            },
-            { once: true },
-          );
+        const removeGhost = (event) => {
+          if (event.propertyName !== "opacity") return;
+          ghost.removeEventListener("transitionend", removeGhost);
+          ghost.remove();
+        };
+        ghost.addEventListener("transitionend", removeGhost);
+        requestAnimationFrame(() => {
+          ghost.classList.add("is-exiting");
+        });
       };
 
       row.addEventListener("click", (event) => {

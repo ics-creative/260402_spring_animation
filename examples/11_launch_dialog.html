@@ -17,6 +17,10 @@
         anchor-name: --dialog-3;
       }
 
+      .launcher-row {
+        gap: 32px;
+      }
+
       .dialog {
         margin: 0;
         padding: 0;
@@ -100,7 +104,7 @@
   <body>
     <main class="page">
       <section class="stage">
-        <div class="row">
+        <div class="row launcher-row">
           <button class="button launcher launcher-anchor-1" commandfor="dialog-1" command="show-modal">Profile</button>
           <button class="button launcher launcher-anchor-2" commandfor="dialog-2" command="show-modal">Billing</button>
           <button class="button launcher launcher-anchor-3" commandfor="dialog-3" command="show-modal">Review</button>

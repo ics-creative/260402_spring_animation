@@ -23,17 +23,7 @@
         border: 1px solid var(--line);
         border-radius: 14px;
         overflow: clip;
-
-        /* Opening is the hero motion. Closing stays short so the collapse does not feel theatrical. */
-        transition:
-          block-size 0.3s ease,
-          border-color 0.2s;
-
-        &[data-motion="opening"] {
-          transition:
-            block-size 1s var(--spring-strong),
-            border-color 0.2s;
-        }
+        transition: border-color 0.2s;
 
         summary {
           list-style: none;
@@ -49,10 +39,14 @@
             display: none;
           }
         }
-      }
 
-      .item-content {
-        overflow: clip;
+        &::details-content {
+          block-size: 0;
+          overflow: clip;
+          transition:
+            block-size 0.3s ease,
+            content-visibility 0.3s allow-discrete;
+        }
       }
 
       .summary-icon {
@@ -60,22 +54,22 @@
         flex: none;
         width: 18px;
         height: 18px;
-        transition: rotate 0.2s ease;
+        display: grid;
+        place-items: center;
 
         &::before,
         &::after {
           content: "";
-          position: absolute;
-          top: 50%;
-          left: 50%;
+          grid-area: 1 / 1;
           width: 18px;
           height: 2px;
           background: currentcolor;
-          translate: -50% -50%;
+          transform-origin: center;
+          transition: transform 0.2s ease;
         }
 
         &::after {
-          rotate: 90deg;
+          transform: rotate(90deg);
         }
       }
 
@@ -86,15 +80,26 @@
         transition: opacity 0.2s linear;
       }
 
-      .item.is-open {
+      .item[open] {
         border-color: var(--accent);
+
+        &::details-content {
+          block-size: auto;
+          transition:
+            block-size 1s var(--spring-strong),
+            content-visibility 1s allow-discrete;
+        }
 
         summary {
           padding-block-end: 4px;
         }
 
-        .summary-icon {
-          rotate: 45deg;
+        .summary-icon::before {
+          transform: rotate(45deg);
+        }
+
+        .summary-icon::after {
+          transform: rotate(-45deg);
         }
 
         .panel {
@@ -147,65 +152,5 @@
         </div>
       </section>
     </main>
-    <script type="module">
-      const items = [...document.querySelectorAll(".item")];
-      const openingDuration = 1020;
-      const closingDuration = 320;
-      const finishTimers = new WeakMap();
-      const getSummarySize = (item) => item.querySelector("summary").offsetHeight;
-      const getOpenSize = (item) => getSummarySize(item) + item.querySelector(".panel").offsetHeight;
-
-      const finish = (item) => {
-        const isOpen = item.classList.contains("is-open");
-        item.classList.remove("is-animating");
-        delete item.dataset.motion;
-        item.style.blockSize = "";
-
-        if (!isOpen) {
-          item.open = false;
-        }
-      };
-
-      const scheduleFinish = (item, duration) => {
-        // block-size transitionend is unreliable here, so the timer performs the final open/close cleanup.
-        window.clearTimeout(finishTimers.get(item));
-        const timer = window.setTimeout(() => {
-          finish(item);
-        }, duration + 40);
-        finishTimers.set(item, timer);
-      };
-
-      const animateItem = (item, nextOpen) => {
-        if (item.classList.contains("is-animating")) return;
-        const duration = nextOpen ? openingDuration : closingDuration;
-        const startSize = item.offsetHeight || getSummarySize(item);
-        item.classList.add("is-animating");
-        item.dataset.motion = nextOpen ? "opening" : "closing";
-        item.style.blockSize = `${startSize}px`;
-        void item.offsetHeight;
-
-        if (nextOpen) {
-          item.open = true;
-        }
-
-        const endSize = nextOpen ? getOpenSize(item) : getSummarySize(item);
-        requestAnimationFrame(() => {
-          item.classList.toggle("is-open", nextOpen);
-          item.style.blockSize = `${endSize}px`;
-        });
-        scheduleFinish(item, duration);
-      };
-
-      items.forEach((item) => {
-        if (item.open) {
-          item.classList.add("is-open");
-        }
-
-        item.querySelector("summary").addEventListener("click", (event) => {
-          event.preventDefault();
-          animateItem(item, !item.classList.contains("is-open"));
-        });
-      });
-    </script>
   </body>
 </html>

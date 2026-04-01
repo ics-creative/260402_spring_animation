@@ -21,7 +21,7 @@
         padding: 0 10px 12px;
         border: 0;
         background: none;
-        display: grid;
+        display: none;
         align-content: end;
         justify-items: center;
         overflow: hidden;
@@ -40,7 +40,7 @@
         &::backdrop {
           background: rgb(0 0 0 / 32%);
           opacity: 0;
-          transition: opacity 0.2s;
+          transition: opacity 0.5s;
         }
 
         &[open]::backdrop {
@@ -63,19 +63,22 @@
         border-radius: 16px;
         background: var(--surface);
         opacity: 0;
-        translate: 0 100%;
+        translate: 0 calc(100% + 96px);
         transition:
-          opacity 0.2s,
-          translate 0.9s var(--spring-default);
+          opacity 0.3s linear,
+          translate 0.4s ease;
       }
 
       .sheet[open] .sheet-panel {
         opacity: 1;
         translate: 0 0;
+        transition:
+          opacity 0.3s linear,
+          translate 1.2s var(--spring-default);
 
         @starting-style {
           opacity: 0;
-          translate: 0 100%;
+          translate: 0 calc(100% + 160px);
         }
       }
 
@@ -203,9 +206,9 @@
   <body>
     <main class="page">
       <section class="stage">
-        <button class="button sheet-open" type="button">Open Action Sheet</button>
+        <button class="button sheet-open" commandfor="bottom-sheet" command="show-modal">Open Action Sheet</button>
       </section>
-      <dialog class="sheet" id="bottom-sheet">
+      <dialog class="sheet" id="bottom-sheet" closedby="any">
         <div class="sheet-panel">
           <div class="sheet-header">
             <p class="sheet-eyebrow">Photo</p>
@@ -213,54 +216,28 @@
             <p class="sheet-message">Choose what you want to do with this photo.</p>
           </div>
           <div class="sheet-actions">
-            <button class="button sheet-action" type="button" value="save">
+            <button class="button sheet-action" commandfor="bottom-sheet" command="close">
               <span class="sheet-action-title">Save to Files</span>
               <span class="sheet-action-note">Download a copy to your device.</span>
             </button>
-            <button class="button sheet-action" type="button" value="copy">
+            <button class="button sheet-action" commandfor="bottom-sheet" command="close">
               <span class="sheet-action-title">Copy Link</span>
               <span class="sheet-action-note">Share the current photo URL.</span>
             </button>
-            <button class="button sheet-action" type="button" value="album">
+            <button class="button sheet-action" commandfor="bottom-sheet" command="close">
               <span class="sheet-action-title">Add to Album</span>
               <span class="sheet-action-note">Move it into another collection.</span>
             </button>
-            <button class="button sheet-action sheet-action-destructive" type="button" value="delete">
+            <button class="button sheet-action sheet-action-destructive" commandfor="bottom-sheet" command="close">
               <span class="sheet-action-title">Delete Photo</span>
               <span class="sheet-action-note">Remove it permanently from this workspace.</span>
             </button>
           </div>
           <div class="sheet-footer">
-            <button class="button sheet-cancel" type="button" value="close">Close</button>
+            <button class="button sheet-cancel" commandfor="bottom-sheet" command="close">Close</button>
           </div>
         </div>
       </dialog>
     </main>
-    <script type="module">
-      const sheet = document.querySelector("#bottom-sheet");
-      const openButton = document.querySelector(".sheet-open");
-      const actionButtons = document.querySelectorAll(".sheet-action");
-      const closeButton = document.querySelector(".sheet-cancel");
-
-      openButton.addEventListener("click", () => {
-        sheet.showModal();
-      });
-
-      actionButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          sheet.close(button.value);
-        });
-      });
-
-      closeButton.addEventListener("click", () => {
-        sheet.close(closeButton.value);
-      });
-
-      sheet.addEventListener("click", (event) => {
-        if (event.target === sheet) {
-          sheet.close("dismiss");
-        }
-      });
-    </script>
   </body>
 </html>

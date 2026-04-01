@@ -22,13 +22,15 @@
         height: 100dvh;
         max-width: none;
         max-height: none;
+
+        /* オーバーシュート時に見切れないように右側の座布団を表示させる  */
+        overflow: visible;
         margin: 0;
-        padding: 16px 72px 16px 16px;
+        padding: 16px;
         border: 0;
         border-inline-start: 1px solid var(--line);
         background: var(--surface);
-        overflow: hidden;
-        translate: calc(100% + 64px) 0;
+        translate: calc(100%) 0;
         transition:
           translate 1s var(--spring-default),
           display 1s allow-discrete,
@@ -40,13 +42,14 @@
           transition: opacity 0.4s;
         }
 
+        /* オーバーシュート時に見切れないように右側に座布団を設ける  */
         &::after {
           content: "";
           position: absolute;
           top: 0;
-          right: 0;
+          right: -128px;
           bottom: 0;
-          width: 64px;
+          width: 128px;
           background: var(--surface);
         }
 
@@ -71,10 +74,10 @@
           display: grid;
           grid-template-rows: 1fr auto;
           gap: 12px;
-          translate: 128px 0;
+          translate: 0 0;
 
           @starting-style {
-              translate: calc(100%) 0;
+            translate: calc(100%) 0;
           }
 
           &::backdrop {
@@ -84,7 +87,6 @@
               opacity: 0;
             }
           }
-
         }
       }
     </style>

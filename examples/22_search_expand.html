@@ -35,6 +35,16 @@
           transition:
             translate 0.8s var(--spring-default),
             color 0.2s;
+
+          svg {
+            width: 22px;
+            height: 22px;
+            stroke: currentcolor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+          }
         }
 
         .search-input {
@@ -45,6 +55,8 @@
           border: 0;
           outline: 0;
           background: transparent;
+          font-size: 1.05rem;
+          line-height: 1.2;
           opacity: 0;
           pointer-events: none;
           transition:
@@ -84,7 +96,12 @@
     <main class="page">
       <section class="stage">
         <label class="search">
-          <span class="search-icon">Q</span>
+          <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="M16 16 L20 20" />
+            </svg>
+          </span>
           <input class="search-input" type="search" placeholder="Search projects" />
         </label>
       </section>

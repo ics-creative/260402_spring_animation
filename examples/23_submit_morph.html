@@ -50,35 +50,39 @@
           scale: 0.55;
         }
 
-        .submit-icon svg {
-          width: 22px;
-          height: 22px;
-          scale: 0.82;
-          stroke: currentcolor;
-          stroke-width: 2.75;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          fill: none;
-          transform-box: fill-box;
-          transform-origin: center;
-          transition: scale 0.3s var(--spring-default);
+        .submit-icon {
+          svg {
+            width: 22px;
+            height: 22px;
+            scale: 0.82;
+            stroke: currentcolor;
+            stroke-width: 2.75;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            transform-box: fill-box;
+            transform-origin: center;
+            transition: scale 0.3s var(--spring-default);
+          }
+
+          path {
+            stroke-dasharray: 24;
+            stroke-dashoffset: 24;
+            transition: stroke-dashoffset 0.4s ease-out 0.1s;
+          }
         }
 
-        .submit-icon path {
-          stroke-dasharray: 24;
-          stroke-dashoffset: 24;
-          transition: stroke-dashoffset 0.4s ease-out 0.1s;
-        }
-
-        .submit-spinner::before {
-          content: "";
-          width: 22px;
-          height: 22px;
-          border: 2px solid currentcolor;
-          border-right-color: transparent;
-          border-radius: 50%;
-          rotate: -90deg;
-          scale: 0.92;
+        .submit-spinner {
+          &::before {
+            content: "";
+            width: 22px;
+            height: 22px;
+            border: 2px solid currentcolor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            rotate: -90deg;
+            scale: 0.92;
+          }
         }
 
         /* Loading and done share the same circle so the morph reads as one shape, not a jump cut. */
@@ -87,6 +91,12 @@
           width: 56px;
           border-radius: 28px;
           cursor: default;
+
+          &:hover {
+            transform: none;
+            color: inherit;
+            border-color: inherit;
+          }
         }
 
         &[data-state="loading"] {
@@ -142,13 +152,6 @@
 
         &:disabled {
           pointer-events: none;
-        }
-
-        &[data-state="loading"]:hover,
-        &[data-state="done"]:hover {
-          transform: none;
-          color: inherit;
-          border-color: inherit;
         }
       }
 
