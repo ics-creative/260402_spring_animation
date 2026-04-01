@@ -12,18 +12,31 @@
 
       .submit {
         position: relative;
-        width: 160px;
-        height: 56px;
+        width: 256px;
+        height: 64px;
         min-height: 56px;
         padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         overflow: clip;
         transition:
-          width 0.7s var(--spring-default),
-          border-radius 0.7s var(--spring-default),
-          scale 0.7s var(--spring-default),
-          translate 0.7s var(--spring-default),
+          width 1s var(--spring-default),
+          border-radius 1s var(--spring-bouncy),
+          scale 1s var(--spring-bouncy),
           background-color 0.2s,
-          color 0.2s;
+          color 0.2s,
+          border-color 0.2s;
+
+        &[data-state="idle"]:hover {
+          color: var(--accent);
+          border-color: var(--accent);
+        }
 
         .submit-label,
         .submit-icon,
@@ -32,6 +45,11 @@
           inset: 0;
           display: grid;
           place-items: center;
+          transition:
+            opacity 0.2s,
+            scale 0.5s var(--spring-strong),
+            translate 0.5s var(--spring-strong),
+            rotate 0.5s var(--spring-strong);
         }
 
         .submit-label,
@@ -39,9 +57,9 @@
         .submit-spinner::before {
           transition:
             opacity 0.2s,
-            scale 0.5s var(--spring-default),
-            translate 0.5s var(--spring-default),
-            rotate 0.5s var(--spring-default);
+            scale 0.5s var(--spring-strong),
+            translate 0.5s var(--spring-strong),
+            rotate 0.5s var(--spring-strong);
         }
 
         .submit-icon,
@@ -81,15 +99,15 @@
             border-right-color: transparent;
             border-radius: 50%;
             rotate: -90deg;
-            scale: 0.92;
           }
         }
 
         /* Loading and done share the same circle so the morph reads as one shape, not a jump cut. */
         &[data-state="loading"],
         &[data-state="done"] {
-          width: 56px;
-          border-radius: 28px;
+          width: 64px;
+          height: 64px;
+          border-radius: 32px;
           cursor: default;
 
           &:hover {
@@ -139,14 +157,14 @@
             opacity: 1;
             scale: 1;
             translate: 0 0;
-          }
 
-          .submit-icon svg {
-            scale: 1;
-          }
+            svg {
+              scale: 1;
+            }
 
-          .submit-icon path {
-            stroke-dashoffset: 0;
+            path {
+              stroke-dashoffset: 0;
+            }
           }
         }
 
@@ -165,7 +183,7 @@
   <body>
     <main class="page">
       <section class="stage">
-        <button class="button submit" data-submit data-state="idle">
+        <button class="submit" data-submit data-state="idle">
           <span class="submit-label">Submit</span>
           <span class="submit-spinner"></span>
           <span class="submit-icon" aria-hidden="true">

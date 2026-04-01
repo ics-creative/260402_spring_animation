@@ -81,12 +81,10 @@
       }
 
       .item[open] {
-        border-color: var(--accent);
-
         &::details-content {
           block-size: auto;
           transition:
-            block-size 1s var(--spring-strong),
+            block-size 0.6s var(--spring-default),
             content-visibility 1s allow-discrete;
         }
 
@@ -94,12 +92,14 @@
           padding-block-end: 4px;
         }
 
-        .summary-icon::before {
-          transform: rotate(45deg);
-        }
+        .summary-icon {
+          &::before {
+            transform: rotate(45deg);
+          }
 
-        .summary-icon::after {
-          transform: rotate(-45deg);
+          &::after {
+            transform: rotate(-45deg);
+          }
         }
 
         .panel {

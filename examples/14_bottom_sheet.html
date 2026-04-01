@@ -12,28 +12,39 @@
 
       .sheet {
         position: fixed;
-        inset: 0;
-        width: 100vw;
-        height: 100dvh;
+        inset: auto auto 12px 50%;
+        width: min(380px, calc(100vw - 20px));
+        max-height: calc(100dvh - 24px);
         max-width: none;
-        max-height: none;
         margin: 0;
-        padding: 0 10px 12px;
-        border: 0;
-        background: none;
+        padding: 0;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--surface);
         display: none;
-        align-content: end;
-        justify-items: center;
-        overflow: hidden;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        overflow: clip;
+        opacity: 0;
+        translate: -50% calc(100% + 96px);
         transition:
+          opacity 0.3s linear,
+          translate 0.4s ease,
           display 0.2s allow-discrete,
           overlay 0.2s allow-discrete;
 
         &[open] {
           display: grid;
+          opacity: 1;
+          translate: -50% 0;
+          transition:
+            opacity 0.3s linear,
+            translate 1.2s var(--spring-default),
+            display 0.2s allow-discrete,
+            overlay 0.2s allow-discrete;
 
           @starting-style {
-            display: grid;
+            opacity: 0;
+            translate: -50% calc(100% + 160px);
           }
         }
 
@@ -49,36 +60,6 @@
           @starting-style {
             opacity: 0;
           }
-        }
-      }
-
-      .sheet-panel {
-        width: min(380px, 100%);
-        display: grid;
-        grid-template-rows: auto minmax(0, 1fr) auto;
-        max-height: calc(100dvh - 24px);
-        align-self: end;
-        overflow: clip;
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        background: var(--surface);
-        opacity: 0;
-        translate: 0 calc(100% + 96px);
-        transition:
-          opacity 0.3s linear,
-          translate 0.4s ease;
-      }
-
-      .sheet[open] .sheet-panel {
-        opacity: 1;
-        translate: 0 0;
-        transition:
-          opacity 0.3s linear,
-          translate 1.2s var(--spring-default);
-
-        @starting-style {
-          opacity: 0;
-          translate: 0 calc(100% + 160px);
         }
       }
 
@@ -140,6 +121,8 @@
 
         &:hover {
           transform: none;
+          color: var(--text);
+          border-color: transparent;
           background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
         }
 
@@ -177,6 +160,8 @@
         color: var(--text);
 
         &:hover {
+          color: var(--text);
+          border-color: transparent;
           background: color-mix(in srgb, var(--surface) 96%, var(--text) 4%);
         }
       }
@@ -209,33 +194,31 @@
         <button class="button sheet-open" commandfor="bottom-sheet" command="show-modal">Open Action Sheet</button>
       </section>
       <dialog class="sheet" id="bottom-sheet" closedby="any">
-        <div class="sheet-panel">
-          <div class="sheet-header">
-            <p class="sheet-eyebrow">Photo</p>
-            <p class="sheet-title">Photo Actions</p>
-            <p class="sheet-message">Choose what you want to do with this photo.</p>
-          </div>
-          <div class="sheet-actions">
-            <button class="button sheet-action" commandfor="bottom-sheet" command="close">
-              <span class="sheet-action-title">Save to Files</span>
-              <span class="sheet-action-note">Download a copy to your device.</span>
-            </button>
-            <button class="button sheet-action" commandfor="bottom-sheet" command="close">
-              <span class="sheet-action-title">Copy Link</span>
-              <span class="sheet-action-note">Share the current photo URL.</span>
-            </button>
-            <button class="button sheet-action" commandfor="bottom-sheet" command="close">
-              <span class="sheet-action-title">Add to Album</span>
-              <span class="sheet-action-note">Move it into another collection.</span>
-            </button>
-            <button class="button sheet-action sheet-action-destructive" commandfor="bottom-sheet" command="close">
-              <span class="sheet-action-title">Delete Photo</span>
-              <span class="sheet-action-note">Remove it permanently from this workspace.</span>
-            </button>
-          </div>
-          <div class="sheet-footer">
-            <button class="button sheet-cancel" commandfor="bottom-sheet" command="close">Close</button>
-          </div>
+        <div class="sheet-header">
+          <p class="sheet-eyebrow">Photo</p>
+          <p class="sheet-title">Photo Actions</p>
+          <p class="sheet-message">Choose what you want to do with this photo.</p>
+        </div>
+        <div class="sheet-actions">
+          <button class="button sheet-action" commandfor="bottom-sheet" command="close">
+            <span class="sheet-action-title">Save to Files</span>
+            <span class="sheet-action-note">Download a copy to your device.</span>
+          </button>
+          <button class="button sheet-action" commandfor="bottom-sheet" command="close">
+            <span class="sheet-action-title">Copy Link</span>
+            <span class="sheet-action-note">Share the current photo URL.</span>
+          </button>
+          <button class="button sheet-action" commandfor="bottom-sheet" command="close">
+            <span class="sheet-action-title">Add to Album</span>
+            <span class="sheet-action-note">Move it into another collection.</span>
+          </button>
+          <button class="button sheet-action sheet-action-destructive" commandfor="bottom-sheet" command="close">
+            <span class="sheet-action-title">Delete Photo</span>
+            <span class="sheet-action-note">Remove it permanently from this workspace.</span>
+          </button>
+        </div>
+        <div class="sheet-footer">
+          <button class="button sheet-cancel" commandfor="bottom-sheet" command="close">Close</button>
         </div>
       </dialog>
     </main>
