@@ -22,7 +22,7 @@
       }
 
       .popover {
-        position: fixed;
+        position: absolute;
         inset: auto;
         margin: 0;
         width: min(220px, calc(100vw - 32px));
@@ -30,47 +30,28 @@
         border: 1px solid var(--line);
         border-radius: 12px;
         background: var(--surface);
-        display: grid;
-        gap: 4px;
-        position-anchor: var(--current-anchor);
-        position-area: bottom center;
+        display: block;
+        block-size: max-content;
+        position-area: block-end center;
         margin-block-start: 12px;
-        position-try-fallbacks:
-          flip-block,
-          flip-inline,
-          flip-block flip-inline;
+        position-try: block-start center;
+        place-self: start center;
         transform-origin: center top;
         opacity: 0;
-        translate: 0 -8px;
-        scale: 0.96;
+        translate: 0 -24px;
+        scale: 0;
         transition:
           opacity 0.2s linear,
-          inset 0.3s ease,
-          margin 0.3s ease,
-          translate 0.2s ease,
-          scale 0.2s ease,
-          display 0.2s allow-discrete,
-          overlay 0.2s allow-discrete;
+          translate 1s var(--spring-default),
+          scale 1s var(--spring-default),
+          display 1s allow-discrete,
+          overlay 1s allow-discrete;
 
         /* Opening gets the spring. Closing stays short and plain so the menu does not bounce away. */
         &:popover-open {
           opacity: 1;
           translate: 0 0;
           scale: 1;
-          transition:
-            opacity 0.2s linear,
-            inset 0.3s ease,
-            margin 0.3s ease,
-            translate 0.8s var(--spring-strong),
-            scale 0.8s var(--spring-strong),
-            display 0.2s allow-discrete,
-            overlay 0.2s allow-discrete;
-
-          @starting-style {
-            opacity: 0;
-            translate: 0 -24px;
-            scale: 0.82;
-          }
         }
       }
 
@@ -78,7 +59,8 @@
         margin: 0;
         padding: 0;
         list-style: none;
-        display: grid;
+        display: flex;
+        flex-direction: column;
         gap: 1px;
       }
 
@@ -125,15 +107,15 @@
       }
 
       .popover-anchor-1 {
-        --current-anchor: --action-1;
+        position-anchor: --action-1;
       }
 
       .popover-anchor-2 {
-        --current-anchor: --action-2;
+        position-anchor: --action-2;
       }
 
       .popover-anchor-3 {
-        --current-anchor: --action-3;
+        position-anchor: --action-3;
       }
     </style>
   </head>

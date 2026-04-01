@@ -6,42 +6,16 @@
     <link rel="stylesheet" href="./common.css" />
     <style>
       .segmented {
-        --active-anchor: --segment-1;
-
         position: relative;
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
         gap: 8px;
         width: fit-content;
+        max-width: 100%;
         padding: 6px;
         border: 1px solid var(--line);
         border-radius: 999px;
-
-        /* Move one shared background so the state change reads through shape motion, not text motion. */
-        &::before {
-          content: "";
-          position: absolute;
-          position-anchor: var(--active-anchor);
-          top: anchor(top);
-          left: anchor(left);
-          width: anchor-size(width);
-          height: anchor-size(height);
-          border-radius: 999px;
-          background: var(--accent);
-          transition: 1s var(--spring-default);
-        }
-
-        &:has(#segment-2:checked) {
-          --active-anchor: --segment-2;
-        }
-
-        &:has(#segment-3:checked) {
-          --active-anchor: --segment-3;
-        }
-
-        &:has(#segment-4:checked) {
-          --active-anchor: --segment-4;
-        }
 
         &:has(#segment-1:checked) label[for="segment-1"],
         &:has(#segment-2:checked) label[for="segment-2"],
@@ -49,6 +23,35 @@
         &:has(#segment-4:checked) label[for="segment-4"] {
           color: var(--accent-contrast);
         }
+      }
+
+      .segment-indicator {
+        position: absolute;
+        position-anchor: --segment-1;
+        top: anchor(top);
+        left: anchor(left);
+        width: anchor-size(width);
+        height: anchor-size(height);
+        border-radius: 999px;
+        background: var(--accent);
+        pointer-events: none;
+        transition:
+          top 1s var(--spring-default),
+          left 1s var(--spring-default),
+          width 1s var(--spring-default),
+          height 1s var(--spring-default);
+      }
+
+      .segmented:has(#segment-2:checked) .segment-indicator {
+        position-anchor: --segment-2;
+      }
+
+      .segmented:has(#segment-3:checked) .segment-indicator {
+        position-anchor: --segment-3;
+      }
+
+      .segmented:has(#segment-4:checked) .segment-indicator {
+        position-anchor: --segment-4;
       }
 
       .segment-input {
@@ -84,12 +87,27 @@
       .segmented:has(#segment-4:checked) .segment[for="segment-4"]:hover {
         background: transparent;
       }
+
+      @media (width < 578px) {
+        .segmented {
+          width: 100%;
+          flex-direction: column;
+          border-radius: 24px;
+        }
+
+        .segment {
+          width: 100%;
+          justify-content: center;
+          padding-inline: 14px;
+        }
+      }
     </style>
   </head>
   <body>
     <main class="page">
       <section class="stage">
         <div class="segmented">
+          <span class="segment-indicator" aria-hidden="true"></span>
           <input class="segment-input" id="segment-1" name="segment" type="radio" checked />
           <label class="segment" for="segment-1" style="anchor-name: --segment-1">All</label>
           <input class="segment-input" id="segment-2" name="segment" type="radio" />

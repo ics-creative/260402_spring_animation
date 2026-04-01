@@ -12,7 +12,7 @@
 
       .submit {
         position: relative;
-        width: 256px;
+        width: min(256px, calc(100vw - 32px));
         height: 64px;
         min-height: 56px;
         padding: 0;
@@ -48,22 +48,12 @@
           transition:
             opacity 0.2s,
             scale 0.5s var(--spring-strong),
-            translate 0.5s var(--spring-strong),
-            rotate 0.5s var(--spring-strong);
-        }
-
-        .submit-label,
-        .submit-icon,
-        .submit-spinner::before {
-          transition:
-            opacity 0.2s,
-            scale 0.5s var(--spring-strong),
-            translate 0.5s var(--spring-strong),
-            rotate 0.5s var(--spring-strong);
+            translate 0.5s var(--spring-strong);
         }
 
         .submit-icon,
         .submit-spinner {
+          color: inherit;
           opacity: 0;
           scale: 0.55;
         }
@@ -90,16 +80,13 @@
           }
         }
 
-        .submit-spinner {
-          &::before {
-            content: "";
-            width: 22px;
-            height: 22px;
-            border: 2px solid currentcolor;
-            border-right-color: transparent;
-            border-radius: 50%;
-            rotate: -90deg;
-          }
+        .submit-spinner-ring {
+          width: 22px;
+          height: 22px;
+          border: 2px solid currentcolor;
+          border-right-color: transparent;
+          border-radius: 50%;
+          transform: rotate(-90deg);
         }
 
         /* Loading and done share the same circle so the morph reads as one shape, not a jump cut. */
@@ -132,9 +119,7 @@
             scale: 1;
           }
 
-          .submit-spinner::before {
-            rotate: 0deg;
-            scale: 1.06;
+          .submit-spinner-ring {
             animation: submit-spinner-rotate 0.7s linear infinite;
           }
         }
@@ -175,7 +160,7 @@
 
       @keyframes submit-spinner-rotate {
         to {
-          rotate: 360deg;
+          transform: rotate(270deg);
         }
       }
     </style>
@@ -185,7 +170,7 @@
       <section class="stage">
         <button class="submit" data-submit data-state="idle">
           <span class="submit-label">Submit</span>
-          <span class="submit-spinner"></span>
+          <span class="submit-spinner" aria-hidden="true"><span class="submit-spinner-ring"></span></span>
           <span class="submit-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24">
               <path d="M5 12.5l4.2 4.2L19 7.4"></path>

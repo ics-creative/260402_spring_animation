@@ -22,7 +22,7 @@
         border-radius: 16px;
         background: var(--surface);
         display: none;
-        grid-template-rows: auto minmax(0, 1fr) auto;
+        flex-direction: column;
         overflow: clip;
         opacity: 0;
         translate: -50% calc(100% + 96px);
@@ -33,7 +33,7 @@
           overlay 0.2s allow-discrete;
 
         &[open] {
-          display: grid;
+          display: flex;
           opacity: 1;
           translate: -50% 0;
           transition:
@@ -97,7 +97,10 @@
       }
 
       .sheet-actions {
-        display: grid;
+        display: flex;
+        flex: 0 1 auto;
+        flex-direction: column;
+        min-height: 0;
         padding: 4px 0 0;
         overflow: auto;
       }
