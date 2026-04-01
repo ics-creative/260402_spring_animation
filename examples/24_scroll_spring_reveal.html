@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      @property --active {
+        syntax: "<number>";
+        inherits: true;
+        initial-value: 0;
+      }
+
+      .stage {
+        min-height: auto;
+        padding: 0;
+        background: var(--surface);
+        gap: 0;
+        font-family: "Helvetica Neue", "Segoe UI", sans-serif;
+        font-weight: 900;
+      }
+
+      .story-list {
+        width: 100%;
+      }
+
+      .story {
+        min-height: 100vh;
+        display: grid;
+        align-items: center;
+      }
+
+      .story-frame {
+        min-height: auto;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .headline {
+        --active: 0;
+
+        margin: 0;
+        display: grid;
+        justify-items: center;
+        gap: 0.05em;
+        font-size: clamp(3rem, 11vw, 8rem);
+        line-height: 0.88;
+        text-wrap: balance;
+        timeline-trigger: --reveal view() contain 15% contain 85% / entry 100% exit 0%;
+        trigger-scope: --reveal;
+        animation: reveal-flag 1ms steps(1, end) both;
+        animation-trigger: --reveal play-forwards play-backwards;
+      }
+
+      .line {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.04em;
+      }
+
+      .letter {
+        --offset: 0;
+        --index: calc(var(--offset) + sibling-index() - 1);
+
+        display: inline-block;
+        transition:
+          translate 0.8s var(--spring-default),
+          scale 0.8s var(--spring-default);
+        translate: 0 calc((1 - var(--active)) * 0.6em);
+        scale: var(--active);
+        transition-delay: calc(var(--index) * 0.05s);
+      }
+
+      .glyph {
+        display: inline-block;
+      }
+
+      .line-offset-4 {
+        --offset: 4;
+      }
+
+      .line-offset-5 {
+        --offset: 5;
+      }
+
+      .line-offset-6 {
+        --offset: 6;
+      }
+
+      /* Scroll triggers can currently start animations, so this 1ms bridge only flips the reveal flag. */
+      @keyframes reveal-flag {
+        to {
+          --active: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="story-list">
+          <section class="story">
+            <div class="story-frame">
+              <p class="headline">
+                <span class="line">
+                  <span class="letter"><span class="glyph">S</span></span>
+                  <span class="letter"><span class="glyph">P</span></span>
+                  <span class="letter"><span class="glyph">R</span></span>
+                  <span class="letter"><span class="glyph">I</span></span>
+                  <span class="letter"><span class="glyph">N</span></span>
+                  <span class="letter"><span class="glyph">G</span></span>
+                </span>
+                <span class="line line-offset-6">
+                  <span class="letter"><span class="glyph">T</span></span>
+                  <span class="letter"><span class="glyph">Y</span></span>
+                  <span class="letter"><span class="glyph">P</span></span>
+                  <span class="letter"><span class="glyph">E</span></span>
+                </span>
+              </p>
+            </div>
+          </section>
+
+          <section class="story">
+            <div class="story-frame">
+              <p class="headline">
+                <span class="line">
+                  <span class="letter"><span class="glyph">S</span></span>
+                  <span class="letter"><span class="glyph">N</span></span>
+                  <span class="letter"><span class="glyph">A</span></span>
+                  <span class="letter"><span class="glyph">P</span></span>
+                </span>
+                <span class="line line-offset-4">
+                  <span class="letter"><span class="glyph">O</span></span>
+                  <span class="letter"><span class="glyph">P</span></span>
+                  <span class="letter"><span class="glyph">E</span></span>
+                  <span class="letter"><span class="glyph">N</span></span>
+                </span>
+              </p>
+            </div>
+          </section>
+
+          <section class="story">
+            <div class="story-frame">
+              <p class="headline">
+                <span class="line">
+                  <span class="letter"><span class="glyph">C</span></span>
+                  <span class="letter"><span class="glyph">L</span></span>
+                  <span class="letter"><span class="glyph">E</span></span>
+                  <span class="letter"><span class="glyph">A</span></span>
+                  <span class="letter"><span class="glyph">N</span></span>
+                </span>
+                <span class="line line-offset-5">
+                  <span class="letter"><span class="glyph">E</span></span>
+                  <span class="letter"><span class="glyph">X</span></span>
+                  <span class="letter"><span class="glyph">I</span></span>
+                  <span class="letter"><span class="glyph">T</span></span>
+                </span>
+              </p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

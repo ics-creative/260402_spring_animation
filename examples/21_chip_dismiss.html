@@ -28,6 +28,8 @@
         border: 1px solid var(--line);
         border-radius: 999px;
         background: var(--surface);
+        -webkit-user-select: none;
+        user-select: none;
         translate: var(--shift-x) var(--shift-y);
         scale: var(--shift-scale);
 
@@ -112,7 +114,11 @@
       const animateShift = (before) => {
         const shifted = [];
 
-        // Replaying the layout delta keeps the row readable even though the chip is removed immediately.
+        // This demo uses FLIP for the remaining chips:
+        // First = remember each chip before layout changes.
+        // Last = remove one chip, then measure where the others ended up.
+        // Invert = move each survivor back by the delta so it visually stays in place for a frame.
+        // Play = animate that delta back to zero with the spring easing.
         for (const chip of row.children) {
           const previous = before.get(chip);
           if (!previous) continue;
@@ -127,8 +133,6 @@
           shifted.push(chip);
         }
 
-        void row.offsetWidth;
-
         requestAnimationFrame(() => {
           for (const chip of shifted) {
             chip.classList.add("is-shifting");
@@ -141,7 +145,8 @@
 
       const animateGhost = (chip) => {
         const rect = chip.getBoundingClientRect();
-        // A fixed ghost preserves the exit motion while the live row can reflow immediately.
+        // The removed chip itself is not part of the FLIP pass.
+        // We keep its exit visible with a fixed ghost so the row can reflow immediately.
         const ghost = chip.cloneNode(true);
         ghost.classList.add("chip-ghost");
         ghost.style.top = `${rect.top}px`;
@@ -165,6 +170,16 @@
         const button = event.target.closest("button");
         if (!button) return;
         const chip = button.closest(".chip");
+        if (row.children.length === 1) {
+          animateGhost(chip);
+          chip.remove();
+          setTimeout(() => {
+            location.reload();
+          }, 450);
+          return;
+        }
+
+        // First: capture the chips before removal so animateShift() can run the FLIP delta.
         const before = new Map([...row.children].map((item) => [item, item.getBoundingClientRect()]));
         animateGhost(chip);
         chip.remove();

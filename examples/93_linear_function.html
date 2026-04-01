@@ -1,0 +1,517 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      :root {
+        --hero-bg-1: #4f1d8f;
+        --hero-bg-2: #7a2be2;
+        --hero-bg-3: #170826;
+        --hero-glow-1: #9a63ff;
+        --hero-glow-2: #4b7cff;
+      }
+
+      html,
+      body {
+        background:
+          radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--hero-glow-1) 42%, transparent), transparent 30%),
+          radial-gradient(circle at 82% 8%, color-mix(in srgb, var(--hero-glow-2) 28%, transparent), transparent 34%),
+          radial-gradient(circle at 50% 100%, rgb(255 255 255 / 5%), transparent 42%),
+          linear-gradient(135deg, var(--hero-bg-3) 0%, #241043 24%, var(--hero-bg-1) 58%, var(--hero-bg-2) 100%);
+      }
+
+      .stage {
+        align-content: center;
+        background: transparent;
+      }
+
+      .demo {
+        width: min(1280px, 100%);
+        min-width: 0;
+        display: grid;
+        gap: 0;
+      }
+
+      .visual {
+        min-width: 0;
+        width: 100%;
+        display: grid;
+        justify-items: center;
+      }
+
+      .graph-panel {
+        min-width: 0;
+        width: 100%;
+        display: grid;
+        justify-items: center;
+      }
+
+      .graph {
+        inline-size: min(100%, 1120px);
+        aspect-ratio: 2.2;
+        display: block;
+        justify-self: center;
+        background: transparent;
+      }
+
+      .graph-minor-grid,
+      .graph-major-grid,
+      .graph-baseline,
+      .graph-zero-baseline,
+      .graph-axis,
+      .graph-ticks,
+      .graph-reference,
+      .graph-line {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .graph-minor-grid {
+        stroke: rgb(255 255 255 / 8%);
+        stroke-width: 0.55;
+      }
+
+      .graph-major-grid {
+        stroke: rgb(255 255 255 / 16%);
+        stroke-width: 0.95;
+      }
+
+      .graph-axis {
+        stroke: rgb(255 255 255 / 42%);
+        stroke-width: 1.3;
+      }
+
+      .graph-ticks {
+        stroke: rgb(255 255 255 / 54%);
+        stroke-width: 1.1;
+      }
+
+      .graph-baseline {
+        stroke: rgb(255 255 255 / 64%);
+        stroke-width: 1.6;
+      }
+
+      .graph-zero-baseline {
+        stroke: rgb(255 255 255 / 50%);
+        stroke-width: 1.4;
+      }
+
+      .graph-reference {
+        stroke: rgb(255 255 255 / 34%);
+        stroke-width: 1.15;
+        stroke-dasharray: 8 12;
+      }
+
+      .graph-ghost {
+        fill: rgb(255 255 255 / 10%);
+        stroke: rgb(255 255 255 / 18%);
+        stroke-width: 1.2;
+      }
+
+      .graph-line {
+        stroke: rgb(255 255 255 / 98%);
+        stroke-width: 1.75;
+      }
+
+      .graph-stop {
+        fill: rgb(255 255 255 / 18%);
+        stroke: #fff;
+        stroke-width: 1.35;
+      }
+
+      .graph-cursor {
+        fill: #fff;
+        stroke: rgb(27 16 71 / 88%);
+        stroke-width: 2.6;
+      }
+
+      .graph-label {
+        fill: rgb(255 255 255 / 88%);
+        font-family: sans-serif;
+        font-size: 12px;
+      }
+
+      .graph-label-x {
+        text-anchor: middle;
+        dominant-baseline: hanging;
+      }
+
+      .graph-label-y {
+        text-anchor: end;
+        dominant-baseline: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="demo">
+          <section class="visual">
+            <div class="graph-panel">
+              <svg class="graph" viewBox="0 0 1200 545" aria-hidden="true">
+                <path class="graph-minor-grid" data-minor-grid></path>
+                <path class="graph-major-grid" data-major-grid></path>
+                <path class="graph-baseline" data-baseline></path>
+                <path class="graph-zero-baseline" data-zero-baseline></path>
+                <path class="graph-axis" data-axis></path>
+                <path class="graph-ticks" data-x-ticks></path>
+                <path class="graph-ticks" data-y-ticks></path>
+                <path class="graph-reference" data-reference></path>
+                <g data-ghosts></g>
+                <path class="graph-line" data-curve></path>
+                <g data-stops></g>
+                <circle class="graph-cursor" data-cursor cx="88" cy="457" r="13"></circle>
+                <text class="graph-label graph-label-x" data-zero-label x="88" y="489">0</text>
+                <text class="graph-label graph-label-x" data-one-x-label x="1112" y="489">1</text>
+                <text class="graph-label graph-label-y" data-one-y-label x="64" y="84">1</text>
+              </svg>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const EASE =
+        "linear(0, 0.04, 0.11, 0.23, 0.38, 0.54, 0.7, 0.85, 0.99, 1.11, 1.21, 1.27, 1.32, 1.33, 1.31, 1.27, 1.22, 1.17, 1.12, 1.06, 1.02, 0.97, 0.94, 0.91, 0.9, 0.92, 0.95, 0.98, 1, 1.01, 1.02, 1.01, 1)";
+
+      const DURATION = 2200;
+      const GRAPH_LEFT = 88;
+      const GRAPH_TOP = 56;
+      const GRAPH_WIDTH = 1024;
+      const GRAPH_ZERO_HEIGHT = 401;
+      const X_MAJOR_DIVISIONS = 10;
+      const X_MINOR_DIVISIONS = 40;
+      const Y_MAJOR_DIVISIONS = 5;
+      const Y_MINOR_DIVISIONS = 20;
+      const NEGATIVE_MAJOR_STEPS = 1;
+
+      const minorGrid = document.querySelector("[data-minor-grid]");
+      const majorGrid = document.querySelector("[data-major-grid]");
+      const baseline = document.querySelector("[data-baseline]");
+      const zeroBaseline = document.querySelector("[data-zero-baseline]");
+      const axis = document.querySelector("[data-axis]");
+      const xTicks = document.querySelector("[data-x-ticks]");
+      const yTicks = document.querySelector("[data-y-ticks]");
+      const reference = document.querySelector("[data-reference]");
+      const ghostsRoot = document.querySelector("[data-ghosts]");
+      const curve = document.querySelector("[data-curve]");
+      const stopsRoot = document.querySelector("[data-stops]");
+      const cursor = document.querySelector("[data-cursor]");
+      const zeroLabel = document.querySelector("[data-zero-label]");
+      const oneXLabel = document.querySelector("[data-one-x-label]");
+      const oneYLabel = document.querySelector("[data-one-y-label]");
+
+      let frameId = 0;
+
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+      const parseLinear = (input) => {
+        const match = input.trim().match(/^linear\((.*)\)$/);
+
+        if (!match) {
+          throw new Error("Expected a CSS linear() timing function.");
+        }
+
+        const expandedStops = match[1]
+          .split(",")
+          .map((part) => part.trim())
+          .filter(Boolean)
+          .flatMap((part) => {
+            const tokens = part.split(/\s+/).filter(Boolean);
+            const value = Number(tokens[0]);
+            const positions = tokens.slice(1).map((token) => Number(token.replace("%", "")) / 100);
+
+            if (positions.length === 0) {
+              return [{ value, position: null }];
+            }
+
+            if (positions.length === 1) {
+              return [{ value, position: positions[0] }];
+            }
+
+            return positions.slice(0, 2).map((position) => ({ value, position }));
+          });
+
+        if (expandedStops.length === 0) {
+          throw new Error("linear() needs at least one stop.");
+        }
+
+        if (expandedStops[0].position == null) {
+          expandedStops[0].position = 0;
+        }
+
+        if (expandedStops.at(-1).position == null) {
+          expandedStops.at(-1).position = 1;
+        }
+
+        let start = 0;
+
+        while (start < expandedStops.length) {
+          if (expandedStops[start].position != null) {
+            start += 1;
+            continue;
+          }
+
+          const leftIndex = start - 1;
+          let rightIndex = start;
+
+          while (rightIndex < expandedStops.length && expandedStops[rightIndex].position == null) {
+            rightIndex += 1;
+          }
+
+          const leftPosition = expandedStops[leftIndex].position;
+          const rightPosition = expandedStops[rightIndex].position;
+          const span = rightIndex - leftIndex;
+
+          for (let offset = 1; offset < span; offset += 1) {
+            expandedStops[leftIndex + offset].position =
+              leftPosition + ((rightPosition - leftPosition) * offset) / span;
+          }
+
+          start = rightIndex + 1;
+        }
+
+        return expandedStops.map((stop) => ({
+          value: stop.value,
+          position: stop.position,
+        }));
+      };
+
+      const sampleLinear = (points, time) => {
+        const t = clamp(time, 0, 1);
+
+        if (t <= points[0].position) {
+          return points[0].value;
+        }
+
+        for (let index = 1; index < points.length; index += 1) {
+          const previous = points[index - 1];
+          const current = points[index];
+
+          if (t <= current.position) {
+            if (current.position === previous.position) {
+              return current.value;
+            }
+
+            const localT = (t - previous.position) / (current.position - previous.position);
+            return previous.value + (current.value - previous.value) * localT;
+          }
+        }
+
+        return points.at(-1).value;
+      };
+
+      const getBounds = (points) => {
+        const minValue = Math.min(...points.map((point) => point.value));
+        const maxValue = Math.max(...points.map((point) => point.value));
+        const topPadding = Math.max((maxValue - 1) * 0.18, 0.05);
+
+        return {
+          min: minValue < 0 ? minValue : 0,
+          max: Math.max(2, maxValue + topPadding),
+        };
+      };
+
+      const getGraphZeroY = (bounds) => {
+        return GRAPH_TOP + GRAPH_ZERO_HEIGHT;
+      };
+
+      const getGraphOneY = (bounds) => {
+        return getGraphZeroY(bounds) - (GRAPH_ZERO_HEIGHT * (1 - bounds.min)) / (bounds.max - bounds.min);
+      };
+
+      const getGraphBottomY = (bounds) => {
+        const zeroY = getGraphZeroY(bounds);
+        const oneY = getGraphOneY(bounds);
+        const majorStep = (zeroY - oneY) / Y_MAJOR_DIVISIONS;
+        return zeroY + majorStep * NEGATIVE_MAJOR_STEPS;
+      };
+
+      const toGraphPoint = (time, value, bounds) => {
+        const x = GRAPH_LEFT + GRAPH_WIDTH * time;
+        const zeroY = getGraphZeroY(bounds);
+        const y = zeroY - (GRAPH_ZERO_HEIGHT * (value - bounds.min)) / (bounds.max - bounds.min);
+        return { x, y };
+      };
+
+      const drawGridLayer = (target, xDivisions, yDivisions, bounds) => {
+        const oneY = getGraphOneY(bounds);
+        const zeroY = getGraphZeroY(bounds);
+        const bottomY = getGraphBottomY(bounds);
+        const xStep = GRAPH_WIDTH / xDivisions;
+        const yStep = (zeroY - oneY) / yDivisions;
+        const rightX = GRAPH_LEFT + GRAPH_WIDTH;
+        const lines = [`M${rightX} ${GRAPH_TOP.toFixed(2)}V${bottomY.toFixed(2)}`];
+
+        for (let index = 1; index < xDivisions; index += 1) {
+          const x = GRAPH_LEFT + xStep * index;
+          lines.push(`M${x.toFixed(2)} ${GRAPH_TOP.toFixed(2)}V${bottomY.toFixed(2)}`);
+        }
+
+        for (let y = zeroY - yStep; y > GRAPH_TOP; y -= yStep) {
+          lines.push(`M${GRAPH_LEFT} ${y.toFixed(2)}H${rightX}`);
+        }
+
+        for (let y = zeroY + yStep; y <= bottomY + 0.1; y += yStep) {
+          lines.push(`M${GRAPH_LEFT} ${y.toFixed(2)}H${rightX}`);
+        }
+
+        target.setAttribute("d", lines.join(" "));
+      };
+
+      const drawAxis = (bounds) => {
+        const zeroY = getGraphZeroY(bounds);
+        const bottomY = getGraphBottomY(bounds);
+        axis.setAttribute("d", `M${GRAPH_LEFT} ${GRAPH_TOP}V${bottomY.toFixed(2)}`);
+        zeroLabel.setAttribute("x", GRAPH_LEFT);
+        zeroLabel.setAttribute("y", zeroY + 16);
+        oneXLabel.setAttribute("x", GRAPH_LEFT + GRAPH_WIDTH);
+        oneXLabel.setAttribute("y", zeroY + 16);
+        oneYLabel.setAttribute("x", GRAPH_LEFT - 18);
+        oneYLabel.setAttribute("y", getGraphOneY(bounds));
+      };
+
+      const drawTicks = (bounds) => {
+        const zeroY = getGraphZeroY(bounds);
+        const bottomY = getGraphBottomY(bounds);
+        const oneY = getGraphOneY(bounds);
+        const xStep = GRAPH_WIDTH / X_MINOR_DIVISIONS;
+        const yStep = (zeroY - oneY) / Y_MINOR_DIVISIONS;
+        const xTickSize = 8;
+        const yTickSize = 8;
+        const xLines = [];
+        const yLines = [];
+
+        for (let index = 1; index < X_MINOR_DIVISIONS; index += 1) {
+          const x = GRAPH_LEFT + xStep * index;
+          xLines.push(`M${x.toFixed(2)} ${zeroY.toFixed(2)}V${(zeroY + xTickSize).toFixed(2)}`);
+        }
+
+        for (let y = zeroY - yStep; y > GRAPH_TOP; y -= yStep) {
+          yLines.push(`M${(GRAPH_LEFT - yTickSize).toFixed(2)} ${y.toFixed(2)}H${GRAPH_LEFT.toFixed(2)}`);
+        }
+
+        for (let y = zeroY + yStep; y <= bottomY + 0.1; y += yStep) {
+          yLines.push(`M${(GRAPH_LEFT - yTickSize).toFixed(2)} ${y.toFixed(2)}H${GRAPH_LEFT.toFixed(2)}`);
+        }
+
+        xTicks.setAttribute("d", xLines.join(" "));
+        yTicks.setAttribute("d", yLines.join(" "));
+      };
+
+      const drawBaseline = (bounds) => {
+        const y = getGraphOneY(bounds);
+        baseline.setAttribute("d", `M${GRAPH_LEFT} ${y.toFixed(2)}H${GRAPH_LEFT + GRAPH_WIDTH}`);
+      };
+
+      const drawZeroBaseline = (bounds) => {
+        const y = getGraphZeroY(bounds);
+        zeroBaseline.setAttribute("d", `M${GRAPH_LEFT} ${y.toFixed(2)}H${GRAPH_LEFT + GRAPH_WIDTH}`);
+      };
+
+      const drawReference = (bounds) => {
+        const start = toGraphPoint(0, 0, bounds);
+        const end = toGraphPoint(1, 1, bounds);
+        reference.setAttribute("d", `M${start.x} ${start.y}L${end.x} ${end.y}`);
+      };
+
+      const drawGhosts = (points, bounds) => {
+        const samples = [
+          0.01, 0.03, 0.05, 0.08, 0.11, 0.15, 0.2, 0.27, 0.35, 0.48, 0.67, 0.82, 0.88, 0.92, 0.95, 0.97, 0.99, 1,
+        ];
+        const radii = [28, 44, 62, 38, 52, 76, 96, 58, 84, 42, 74, 68, 36, 34, 40, 54, 70, 58];
+        const fills = [6, 9, 14, 7, 10, 15, 22, 8, 16, 6, 12, 11, 7, 6, 8, 12, 18, 14];
+        const strokes = [12, 16, 22, 14, 18, 24, 34, 16, 28, 12, 20, 18, 13, 12, 14, 20, 30, 24];
+        const widths = [0.8, 1, 1.4, 0.9, 1.1, 1.5, 2, 1.1, 1.7, 0.8, 1.3, 1.2, 0.9, 0.8, 1, 1.4, 1.8, 1.5];
+        const circles = samples.map((time, index) => {
+          const value = sampleLinear(points, time);
+          const { x, y } = toGraphPoint(time, value, bounds);
+          const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          circle.setAttribute("class", "graph-ghost");
+          circle.setAttribute("cx", x.toFixed(2));
+          circle.setAttribute("cy", y.toFixed(2));
+          circle.setAttribute("r", String(radii[index]));
+          circle.setAttribute("fill", `rgb(255 255 255 / ${fills[index]}%)`);
+          circle.setAttribute("stroke", `rgb(255 255 255 / ${strokes[index]}%)`);
+          circle.setAttribute("stroke-width", String(widths[index]));
+          return circle;
+        });
+
+        ghostsRoot.replaceChildren(...circles);
+      };
+
+      const drawCurve = (points, bounds) => {
+        const samples = Array.from({ length: 321 }, (_, index) => {
+          const time = index / 320;
+          const value = sampleLinear(points, time);
+          const point = toGraphPoint(time, value, bounds);
+          return `${index === 0 ? "M" : "L"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
+        });
+
+        curve.setAttribute("d", samples.join(" "));
+      };
+
+      const drawStops = (points, bounds) => {
+        stopsRoot.replaceChildren(
+          ...points.map((point) => {
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            const position = toGraphPoint(point.position, point.value, bounds);
+            circle.setAttribute("class", "graph-stop");
+            circle.setAttribute("cx", position.x.toFixed(2));
+            circle.setAttribute("cy", position.y.toFixed(2));
+            circle.setAttribute("r", "5.1");
+            return circle;
+          }),
+        );
+      };
+
+      const setCursor = (points, bounds, time) => {
+        const value = sampleLinear(points, time);
+        const position = toGraphPoint(time, value, bounds);
+        cursor.setAttribute("cx", position.x.toFixed(2));
+        cursor.setAttribute("cy", position.y.toFixed(2));
+      };
+
+      const animateCursor = (points, bounds) => {
+        cancelAnimationFrame(frameId);
+        const startTime = performance.now();
+
+        const tick = (now) => {
+          const elapsed = now - startTime;
+          const progress = clamp(elapsed / DURATION, 0, 1);
+          setCursor(points, bounds, progress);
+
+          if (progress < 1) {
+            frameId = requestAnimationFrame(tick);
+          }
+        };
+
+        frameId = requestAnimationFrame(tick);
+      };
+
+      const points = parseLinear(EASE);
+      const bounds = getBounds(points);
+
+      const replay = () => {
+        setCursor(points, bounds, 0);
+        animateCursor(points, bounds);
+      };
+
+      drawGridLayer(minorGrid, X_MINOR_DIVISIONS, Y_MINOR_DIVISIONS, bounds);
+      drawGridLayer(majorGrid, X_MAJOR_DIVISIONS, Y_MAJOR_DIVISIONS, bounds);
+      drawBaseline(bounds);
+      drawZeroBaseline(bounds);
+      drawAxis(bounds);
+      drawTicks(bounds);
+      drawReference(bounds);
+      drawGhosts(points, bounds);
+      drawCurve(points, bounds);
+      drawStops(points, bounds);
+      replay();
+    </script>
+  </body>
+</html>
