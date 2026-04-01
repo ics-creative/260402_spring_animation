@@ -11,6 +11,8 @@
       }
 
       .fab {
+        --item-radius: 96px;
+
         position: relative;
         width: 180px;
         height: 180px;
@@ -37,35 +39,57 @@
           display: grid;
           place-items: center;
           list-style: none;
+          transition: border-color 0.2s;
 
           &::-webkit-details-marker {
             display: none;
           }
+
+          &:is(:hover, :focus-visible) {
+            border-color: var(--accent);
+            outline: none;
+          }
         }
 
         .fab-item {
-          --item-index: calc(sibling-index() - 1);
-          --item-angle: calc(var(--item-index) * 45deg);
+          --item-angle: 0deg;
 
           width: 56px;
           height: 56px;
           display: grid;
           place-items: center;
           text-decoration: none;
+          color: var(--text);
           opacity: 0;
           scale: 0.2;
           translate: 0 0;
           transition:
+            color 0.2s,
+            border-color 0.2s,
             opacity 0.2s,
             scale 0.8s var(--spring-bouncy),
             translate 0.8s var(--spring-bouncy);
+
+          &:is(:hover, :focus-visible) {
+            border-color: var(--accent);
+            color: var(--accent);
+            outline: none;
+          }
+        }
+
+        .fab-item:nth-of-type(2) {
+          --item-angle: 45deg;
+        }
+
+        .fab-item:nth-of-type(3) {
+          --item-angle: 90deg;
         }
 
         .fab-main-icon {
           position: relative;
           width: 20px;
           height: 20px;
-          transition: rotate 0.8s var(--spring-bouncy);
+          transition: rotate 1s var(--spring-bouncy);
 
           &::before,
           &::after {
@@ -91,7 +115,9 @@
           .fab-item {
             opacity: 1;
             scale: 1;
-            translate: calc(sin(var(--item-angle)) * -76px) calc(cos(var(--item-angle)) * -76px);
+            translate:
+              calc(sin(var(--item-angle)) * var(--item-radius) * -1)
+              calc(cos(var(--item-angle)) * var(--item-radius) * -1);
           }
         }
       }
@@ -101,12 +127,12 @@
     <main class="page">
       <section class="stage">
         <details class="fab">
-          <a class="fab-item" href="#">A</a>
-          <a class="fab-item" href="#">B</a>
-          <a class="fab-item" href="#">C</a>
           <summary class="fab-main">
             <span class="fab-main-icon"></span>
           </summary>
+          <a class="fab-item" href="#">A</a>
+          <a class="fab-item" href="#">B</a>
+          <a class="fab-item" href="#">C</a>
         </details>
       </section>
     </main>

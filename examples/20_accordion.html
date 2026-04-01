@@ -23,7 +23,7 @@
         border: 1px solid var(--line);
         border-radius: 14px;
         overflow: clip;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s ease;
 
         summary {
           list-style: none;
@@ -33,7 +33,6 @@
           align-items: center;
           justify-content: space-between;
           cursor: pointer;
-          transition: padding-block-end 0.2s ease;
 
           &::-webkit-details-marker {
             display: none;
@@ -49,6 +48,14 @@
         }
       }
 
+      .item:hover {
+        border-color: var(--accent);
+      }
+
+      .item-content {
+        padding-block-start: 4px;
+      }
+
       .summary-icon {
         position: relative;
         flex: none;
@@ -56,6 +63,11 @@
         height: 18px;
         display: grid;
         place-items: center;
+        color: inherit;
+        rotate: 0deg;
+        transition:
+          rotate 0.45s var(--spring-snappy),
+          color 0.2s ease;
 
         &::before,
         &::after {
@@ -64,13 +76,15 @@
           width: 18px;
           height: 2px;
           background: currentcolor;
-          transform-origin: center;
-          transition: transform 0.2s ease;
         }
 
         &::after {
           transform: rotate(90deg);
         }
+      }
+
+      .item > summary:hover .summary-icon {
+        color: var(--accent);
       }
 
       .panel {
@@ -88,18 +102,8 @@
             content-visibility 1s allow-discrete;
         }
 
-        summary {
-          padding-block-end: 4px;
-        }
-
         .summary-icon {
-          &::before {
-            transform: rotate(45deg);
-          }
-
-          &::after {
-            transform: rotate(-45deg);
-          }
+          rotate: 45deg;
         }
 
         .panel {

@@ -30,6 +30,9 @@
         border: 0;
         border-inline-start: 1px solid var(--line);
         background: var(--surface);
+        grid-template-rows: auto 1fr;
+        align-content: start;
+        gap: 16px;
         translate: calc(100%) 0;
         transition:
           translate 1s var(--spring-default),
@@ -59,21 +62,17 @@
           gap: 12px;
         }
 
-        .drawer-item {
-          justify-content: flex-start;
-        }
-
-        .drawer-footer {
-          margin-top: auto;
-          padding-top: 4px;
+        .drawer-header {
           display: flex;
           justify-content: flex-end;
         }
 
+        .drawer-item {
+          justify-content: flex-start;
+        }
+
         &[open] {
           display: grid;
-          grid-template-rows: 1fr auto;
-          gap: 12px;
           translate: 0 0;
 
           @starting-style {
@@ -97,14 +96,16 @@
         <button class="button" commandfor="side-drawer" command="show-modal">Open Drawer</button>
       </section>
       <dialog class="drawer" id="side-drawer" closedby="any">
+        <div class="drawer-header">
+          <button class="button close-button" aria-label="Close drawer" commandfor="side-drawer" command="close">
+            <span class="close-icon" aria-hidden="true"></span>
+          </button>
+        </div>
         <div class="drawer-nav">
           <button class="button drawer-item">Overview</button>
           <button class="button drawer-item">Members</button>
           <button class="button drawer-item">Publishing</button>
           <button class="button drawer-item">Integrations</button>
-        </div>
-        <div class="drawer-footer">
-          <button class="button" commandfor="side-drawer" command="close">Close</button>
         </div>
       </dialog>
     </main>

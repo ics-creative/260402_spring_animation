@@ -55,9 +55,13 @@ dialog,
 }
 
 button {
+  appearance: none;
   border: 0;
   background: none;
   color: inherit;
+  white-space: normal;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-appearance: none;
   /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-user-select: none;
   user-select: none;
@@ -113,6 +117,50 @@ a {
   &:active {
     scale: 0.98;
   }
+}
+
+.close-button {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  min-height: 40px;
+  padding: 0;
+  border-radius: 999px;
+  flex: none;
+}
+
+.close-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  rotate: 0deg;
+  transition: rotate 0.8s var(--spring-bouncy);
+  pointer-events: none;
+}
+
+.close-button:hover .close-icon {
+  rotate: 90deg;
+}
+
+.close-icon::before,
+.close-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 14px;
+  height: 2px;
+  background: currentcolor;
+}
+
+.close-icon::before {
+  rotate: 45deg;
+}
+
+.close-icon::after {
+  rotate: -45deg;
 }
 
 .row {

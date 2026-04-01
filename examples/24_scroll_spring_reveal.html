@@ -11,6 +11,25 @@
         initial-value: 0;
       }
 
+      html {
+        overflow-y: scroll;
+        scrollbar-gutter: stable;
+
+        &::-webkit-scrollbar {
+          width: 14px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: #f5f5f5;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: #b8b8b8;
+          border: 3px solid #f5f5f5;
+          border-radius: 999px;
+        }
+      }
+
       .stage {
         min-height: auto;
         padding: 0;

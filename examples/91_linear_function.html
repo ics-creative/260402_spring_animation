@@ -9,22 +9,22 @@
         align-content: center;
       }
 
-      .demo {
+      .compare {
         width: min(860px, 100%);
         min-width: 0;
         display: grid;
         gap: 16px;
-      }
+        
+        > .button {
+          justify-self: end;
+          gap: 8px;
 
-      .demo-header {
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        gap: 16px;
-
-        @media (width <= 640px) {
-          align-items: start;
-          flex-direction: column;
+          svg {
+            display: block;
+            width: 18px;
+            height: 18px;
+            flex: none;
+          }
         }
       }
 
@@ -141,10 +141,15 @@
     <main class="page">
       <section class="stage">
         <div class="demo">
-          <div class="demo-header">
-            <h1 class="demo-title">`linear()`</h1>
-            <button class="button" type="button" data-replay>再生</button>
-          </div>
+        <div class="compare">
+          <button class="button" type="button" data-replay>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-5.65 4H4.26A8 8 0 1 0 12 5" fill="currentColor" />
+            </svg>
+            <span>Replay</span>
+          </button>
+
+          <h1 class="demo-title">`linear()`</h1>
 
           <section class="panel">
             <p class="token-label">サンプル</p>

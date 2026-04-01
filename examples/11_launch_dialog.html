@@ -18,7 +18,8 @@
       }
 
       .launcher-row {
-        gap: 32px;
+        column-gap: 64px;
+        row-gap: 32px;
       }
 
       .dialog {
@@ -36,7 +37,7 @@
         top: anchor(center);
         translate: -50% -50%;
         opacity: 0;
-        scale: 0.12;
+        scale: 0.2;
 
         /* Anchor positioning gives the dialog a believable launch point before it settles at center. */
         transition:
@@ -57,7 +58,7 @@
             left: anchor(center);
             top: anchor(center);
             opacity: 0;
-            scale: 0.12;
+            scale: 0.2;
           }
         }
 
@@ -78,17 +79,26 @@
 
       .dialog-inner {
         width: min(420px, calc(100vw - 24px));
+        min-height: 220px;
         padding: 20px;
         border: 1px solid var(--line);
         border-radius: 16px;
         background: var(--surface);
         display: grid;
+        align-content: start;
         gap: 12px;
 
         h2,
         p {
           margin: 0;
         }
+      }
+
+      .dialog-header {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 12px;
       }
 
       .dialog-anchor-1 {
@@ -115,29 +125,38 @@
       </section>
       <dialog class="dialog dialog-anchor-1" id="dialog-1" closedby="any">
         <div class="dialog-inner">
-          <h2>Profile updated</h2>
-          <p>This panel grows from the pressed button, then settles at center.</p>
-          <div class="row">
-            <button class="button" commandfor="dialog-1" command="close">Close</button>
+          <div class="dialog-header">
+            <h2>Profile updated</h2>
+            <button class="button close-button" aria-label="Close dialog" commandfor="dialog-1" command="close">
+              <span class="close-icon" aria-hidden="true"></span>
+            </button>
           </div>
+          <p>This panel grows from the pressed button, then settles at center with a soft spring motion.</p>
+          <p>Use this pattern when you want the next surface to feel clearly connected to the control that launched it.</p>
         </div>
       </dialog>
       <dialog class="dialog dialog-anchor-2" id="dialog-2" closedby="any">
         <div class="dialog-inner">
-          <h2>Invoice sent</h2>
-          <p>This panel grows from the pressed button, then settles at center.</p>
-          <div class="row">
-            <button class="button" commandfor="dialog-2" command="close">Close</button>
+          <div class="dialog-header">
+            <h2>Invoice sent</h2>
+            <button class="button close-button" aria-label="Close dialog" commandfor="dialog-2" command="close">
+              <span class="close-icon" aria-hidden="true"></span>
+            </button>
           </div>
+          <p>This panel grows from the pressed button, then settles at center with a soft spring motion.</p>
+          <p>It works well for short billing confirmations, small follow-up actions, and lightweight status changes.</p>
         </div>
       </dialog>
       <dialog class="dialog dialog-anchor-3" id="dialog-3" closedby="any">
         <div class="dialog-inner">
-          <h2>Review requested</h2>
-          <p>This panel grows from the pressed button, then settles at center.</p>
-          <div class="row">
-            <button class="button" commandfor="dialog-3" command="close">Close</button>
+          <div class="dialog-header">
+            <h2>Review requested</h2>
+            <button class="button close-button" aria-label="Close dialog" commandfor="dialog-3" command="close">
+              <span class="close-icon" aria-hidden="true"></span>
+            </button>
           </div>
+          <p>This panel grows from the pressed button, then settles at center with a soft spring motion.</p>
+          <p>The extra copy gives the card a little more presence so the launch animation has room to breathe.</p>
         </div>
       </dialog>
     </main>

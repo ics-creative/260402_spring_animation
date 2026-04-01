@@ -10,30 +10,47 @@
       }
 
       .compare {
-        width: min(760px, 100%);
+        width: 100%;
+        max-width: 1200px;
         display: grid;
         gap: 16px;
+
+        > .button {
+          justify-self: end;
+          gap: 8px;
+
+          svg {
+            display: block;
+            width: 18px;
+            height: 18px;
+            flex: none;
+          }
+        }
       }
 
-      .compare-controls {
-        display: flex;
-        justify-content: flex-end;
+      .compare-lanes {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
       }
 
       .lane {
         display: grid;
         gap: 12px;
-        padding: 16px;
+        padding: 12px;
         border: 1px solid var(--line);
         border-radius: 16px;
         background: var(--surface);
+        container-type: inline-size;
+        justify-items: center;
       }
 
       .lane-body {
         display: grid;
-        grid-template-columns: 112px minmax(0, 1fr);
-        gap: 16px;
-        align-items: center;
+        grid-template-columns: 168px 112px 72px;
+        gap: 12px;
+        justify-content: center;
+        place-items: start center;
       }
 
       .lane-label {
@@ -41,11 +58,12 @@
         font-size: 0.84rem;
         font-weight: 600;
         letter-spacing: -0.01em;
+        text-align: center;
       }
 
       .lane-curve {
-        inline-size: 112px;
-        block-size: 112px;
+        inline-size: 168px;
+        block-size: 168px;
         display: block;
         border: 1px solid var(--line);
         border-radius: 12px;
@@ -69,43 +87,108 @@
       }
 
       .lane-track {
+        --track-start-inset: 16px;
+        --track-end-inset: 44px;
+
         position: relative;
-        height: 72px;
+        width: 72px;
+        height: 140px;
         border: 1px solid var(--line);
-        border-radius: 36px;
+        border-radius: 20px;
         background: var(--surface);
         overflow: clip;
 
         &::before {
           content: "";
           position: absolute;
-          top: calc(50% - 1px);
-          left: 28px;
-          right: 28px;
-          height: 2px;
+          inset: var(--track-start-inset) auto var(--track-end-inset) calc(50% - 1px);
+          width: 2px;
+          height: auto;
           background: color-mix(in srgb, var(--line) 72%, transparent);
         }
+      }
 
-        &::after {
+      .lane-panel {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+        justify-items: center;
+      }
+
+      .lane-panel-label {
+        margin: 0;
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: -0.01em;
+        text-align: center;
+      }
+
+      .lane-panel-visual {
+        display: grid;
+        place-items: start;
+      }
+
+      .lane-scale-stage {
+        position: relative;
+        width: 112px;
+        aspect-ratio: 1;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--surface);
+        overflow: clip;
+
+        &::before {
           content: "";
           position: absolute;
-          top: 16px;
-          right: 28px;
-          bottom: 16px;
-          width: 2px;
-          background: color-mix(in srgb, var(--line) 72%, transparent);
+          top: calc(50% - 32px);
+          left: calc(50% - 32px);
+          width: 64px;
+          height: 64px;
+          border: 2px solid color-mix(in srgb, var(--line) 72%, transparent);
+          border-radius: 999px;
         }
       }
 
       .lane-block {
         position: absolute;
-        top: 20px;
-        left: 28px;
+        top: var(--track-start-inset, 20px);
+        left: calc(50% - 16px);
         width: 32px;
         height: 32px;
         border-radius: 999px;
         background: var(--text);
         translate: 0 0;
+      }
+
+      .lane-block[data-motion="scale"] {
+        --block-scale: 0.4;
+
+        top: calc(50% - 32px);
+        left: calc(50% - 32px);
+        width: 64px;
+        height: 64px;
+        border-radius: 999px;
+        transform: scale(var(--block-scale));
+        transform-origin: center;
+      }
+
+      @container (width <= 320px) {
+        .lane-body {
+          grid-template-columns: max-content;
+          justify-content: center;
+        }
+      }
+
+      @container (320px < width <= 420px) {
+        .lane-body {
+          grid-template-columns: repeat(2, max-content);
+          justify-content: center;
+        }
+
+        .lane-panel[data-panel="x"] {
+          grid-column: 1 / -1;
+        }
       }
     </style>
   </head>
@@ -113,35 +196,76 @@
     <main class="page">
       <section class="stage">
         <div class="compare">
-          <div class="compare-controls">
-            <button class="button" data-replay>Replay</button>
+          <button class="button" data-replay>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-5.65 4H4.26A8 8 0 1 0 12 5" fill="currentColor" />
+            </svg>
+            <span>Replay</span>
+          </button>
+
+          <div class="compare-lanes">
+            <section class="lane">
+              <p class="lane-label">Elastic</p>
+              <div class="lane-body">
+                <section class="lane-panel" data-panel="curve">
+                  <p class="lane-panel-label">Curve</p>
+                  <div class="lane-panel-visual">
+                    <svg class="lane-curve" viewBox="0 0 120 120" aria-hidden="true">
+                      <path class="lane-curve-guide" d="M18 18V102H102"></path>
+                      <path class="lane-curve-line" data-curve="elastic"></path>
+                    </svg>
+                  </div>
+                </section>
+                <section class="lane-panel" data-panel="scale">
+                  <p class="lane-panel-label">Scale</p>
+                  <div class="lane-panel-visual">
+                    <div class="lane-scale-stage">
+                      <div class="lane-block" data-block data-kind="elastic" data-motion="scale"></div>
+                    </div>
+                  </div>
+                </section>
+                <section class="lane-panel" data-panel="x">
+                  <p class="lane-panel-label">Y Motion</p>
+                  <div class="lane-panel-visual">
+                    <div class="lane-track" data-track>
+                      <div class="lane-block" data-block data-kind="elastic" data-motion="y"></div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
+
+            <section class="lane">
+              <p class="lane-label">Spring</p>
+              <div class="lane-body">
+                <section class="lane-panel" data-panel="curve">
+                  <p class="lane-panel-label">Curve</p>
+                  <div class="lane-panel-visual">
+                    <svg class="lane-curve" viewBox="0 0 120 120" aria-hidden="true">
+                      <path class="lane-curve-guide" d="M18 18V102H102"></path>
+                      <path class="lane-curve-line" data-curve="spring"></path>
+                    </svg>
+                  </div>
+                </section>
+                <section class="lane-panel" data-panel="scale">
+                  <p class="lane-panel-label">Scale</p>
+                  <div class="lane-panel-visual">
+                    <div class="lane-scale-stage">
+                      <div class="lane-block" data-block data-kind="spring" data-motion="scale"></div>
+                    </div>
+                  </div>
+                </section>
+                <section class="lane-panel" data-panel="x">
+                  <p class="lane-panel-label">Y Motion</p>
+                  <div class="lane-panel-visual">
+                    <div class="lane-track" data-track>
+                      <div class="lane-block" data-block data-kind="spring" data-motion="y"></div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
           </div>
-
-          <section class="lane">
-            <p class="lane-label">Elastic</p>
-            <div class="lane-body">
-              <svg class="lane-curve" viewBox="0 0 120 120" aria-hidden="true">
-                <path class="lane-curve-guide" d="M18 18V102H102"></path>
-                <path class="lane-curve-line" data-curve="elastic"></path>
-              </svg>
-              <div class="lane-track" data-track>
-                <div class="lane-block" data-kind="elastic"></div>
-              </div>
-            </div>
-          </section>
-
-          <section class="lane">
-            <p class="lane-label">Spring</p>
-            <div class="lane-body">
-              <svg class="lane-curve" viewBox="0 0 120 120" aria-hidden="true">
-                <path class="lane-curve-guide" d="M18 18V102H102"></path>
-                <path class="lane-curve-line" data-curve="spring"></path>
-              </svg>
-              <div class="lane-track" data-track>
-                <div class="lane-block" data-kind="spring"></div>
-              </div>
-            </div>
-          </section>
         </div>
       </section>
     </main>
@@ -149,35 +273,51 @@
     <script type="module">
       import { animate, eases, spring } from "https://cdn.jsdelivr.net/npm/animejs/+esm";
 
-      const templates = {
-        elastic: document.querySelector('[data-kind="elastic"]').cloneNode(true),
-        spring: document.querySelector('[data-kind="spring"]').cloneNode(true),
-      };
-      const elasticEase = eases.outElastic();
-      const springEase = spring();
-      const elasticDuration = springEase.duration;
+      const templates = Object.fromEntries(
+        Array.from(document.querySelectorAll("[data-block]"), (block) => [
+          `${block.dataset.kind}:${block.dataset.motion}`,
+          block.cloneNode(true),
+        ]),
+      );
 
       const resetBlock = (block) => {
         block.style.translate = "0 0";
+        if (block.dataset.motion === "scale") {
+          block.style.setProperty("--block-scale", "0.4");
+        }
       };
 
-      const createBlock = (name) => {
-        const block = templates[name].cloneNode(true);
-        block.dataset.kind = name;
+      const createBlock = (kind, motion) => {
+        const block = templates[`${kind}:${motion}`].cloneNode(true);
+        block.dataset.kind = kind;
+        block.dataset.motion = motion;
         resetBlock(block);
         return block;
       };
 
-      const getTravelX = (block) => {
+      const getTravelY = (block) => {
         const track = block.closest("[data-track]");
-        return track.clientWidth - block.offsetWidth - 56;
+        const styles = getComputedStyle(track);
+        const startInset = Number.parseFloat(styles.getPropertyValue("--track-start-inset")) || 28;
+        const endInset = Number.parseFloat(styles.getPropertyValue("--track-end-inset")) || 28;
+        return track.clientHeight - block.offsetHeight - startInset - endInset;
       };
 
       const resolveEase = (ease) => (typeof ease === "function" ? ease : (ease?.ease ?? ((time) => time)));
+      const comparisonDuration = 1200;
+      const animations = {
+        elastic: {
+          duration: comparisonDuration,
+          ease: resolveEase(eases.outElastic()),
+        },
+        spring: {
+          duration: comparisonDuration,
+          ease: resolveEase(spring({ duration: comparisonDuration })),
+        },
+      };
 
-      const drawCurve = (path, ease) => {
+      const drawCurve = (path, curve) => {
         // Use the exact same easing function for the graph and the moving knob so the comparison stays honest.
-        const sample = resolveEase(ease);
         const width = 84;
         const height = 84;
         const insetX = 18;
@@ -186,7 +326,7 @@
         const maxY = 1.2;
         const points = Array.from({ length: 61 }, (_, index) => {
           const t = index / 60;
-          const value = sample(t);
+          const value = t === 0 ? 0 : (t === 1 ? 1 : curve(t));
           const x = insetX + width * t;
           const y = insetY + height - ((value - minY) / (maxY - minY)) * height;
           return `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
@@ -194,31 +334,48 @@
         path.setAttribute("d", points.join(" "));
       };
 
-      const replay = () => {
-        const elastic = createBlock("elastic");
-        const springBlock = createBlock("spring");
+      const drawCurveGuide = (path) => {
+        const width = 84;
+        const height = 84;
+        const insetX = 18;
+        const insetY = 18;
+        const minY = -0.08;
+        const maxY = 1.2;
+        const zeroY = insetY + height - ((0 - minY) / (maxY - minY)) * height;
+        path.setAttribute("d", `M${insetX} ${insetY}V${zeroY.toFixed(2)}H${(insetX + width).toFixed(2)}`);
+      };
 
-        document.querySelector('[data-kind="elastic"]').replaceWith(elastic);
-        document.querySelector('[data-kind="spring"]').replaceWith(springBlock);
+      const replay = () => {
+        const blocks = Array.from(document.querySelectorAll("[data-block]"), (currentBlock) => {
+          const { kind, motion } = currentBlock.dataset;
+          const block = createBlock(kind, motion);
+          currentBlock.replaceWith(block);
+          return block;
+        });
 
         requestAnimationFrame(() => {
-          animate(elastic, {
-            x: getTravelX(elastic),
-            duration: elasticDuration,
-            ease: elasticEase,
-          });
+          blocks.forEach((block) => {
+            const animation = animations[block.dataset.kind];
+            if (block.dataset.motion === "y") {
+              animate(block, {
+                ...animation,
+                y: getTravelY(block),
+              });
+              return;
+            }
 
-          animate(springBlock, {
-            x: getTravelX(springBlock),
-            ease: springEase,
+            animate(block, {
+              ...animation,
+              "--block-scale": "1",
+            });
           });
         });
       };
 
-      drawCurve(document.querySelector('[data-curve="elastic"]'), elasticEase);
-      drawCurve(document.querySelector('[data-curve="spring"]'), springEase);
+      document.querySelectorAll(".lane-curve-guide").forEach(drawCurveGuide);
+      drawCurve(document.querySelector('[data-curve="elastic"]'), animations.elastic.ease);
+      drawCurve(document.querySelector('[data-curve="spring"]'), animations.spring.ease);
       document.querySelector("[data-replay]").addEventListener("click", replay);
-      window.addEventListener("resize", replay);
       replay();
     </script>
   </body>

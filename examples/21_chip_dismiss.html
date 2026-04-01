@@ -40,6 +40,8 @@
 
         button {
           position: relative;
+          display: inline-grid;
+          place-items: center;
           width: 24px;
           height: 24px;
           padding: 0;
@@ -47,32 +49,45 @@
           border-radius: 10px;
           background: transparent;
           cursor: pointer;
-          transition: all 0.2s;
+          color: var(--muted);
+          transition: color 0.2s;
 
           &:hover {
-            transform: none;
             color: var(--accent);
-            background: color-mix(in srgb, var(--accent) 12%, transparent);
           }
 
-          &::before,
-          &::after {
-            content: "";
-            position: absolute;
-            top: calc(50% - 1px);
-            left: 5px;
+          .chip-dismiss-icon {
+            position: relative;
             width: 12px;
-            height: 2px;
-            background: currentcolor;
+            height: 12px;
+            rotate: 0deg;
+            transition: rotate 0.8s var(--spring-bouncy);
+            pointer-events: none;
           }
 
-          &::before {
-            rotate: 45deg;
+          &:hover .chip-dismiss-icon {
+            rotate: 90deg;
           }
+        }
 
-          &::after {
-            rotate: -45deg;
-          }
+        .chip-dismiss-icon::before,
+        .chip-dismiss-icon::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          translate: -50% -50%;
+          width: 12px;
+          height: 2px;
+          background: currentcolor;
+        }
+
+        .chip-dismiss-icon::before {
+          rotate: 45deg;
+        }
+
+        .chip-dismiss-icon::after {
+          rotate: -45deg;
         }
       }
 
@@ -99,11 +114,11 @@
     <main class="page">
       <section class="stage">
         <div class="chip-row" data-row>
-          <div class="chip"><span>Motion</span><button></button></div>
-          <div class="chip"><span>Popover</span><button></button></div>
-          <div class="chip"><span>Dialog</span><button></button></div>
-          <div class="chip"><span>Anchor</span><button></button></div>
-          <div class="chip"><span>Spring</span><button></button></div>
+          <div class="chip"><span>Motion</span><button type="button" aria-label="Dismiss Motion"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
+          <div class="chip"><span>Popover</span><button type="button" aria-label="Dismiss Popover"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
+          <div class="chip"><span>Dialog</span><button type="button" aria-label="Dismiss Dialog"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
+          <div class="chip"><span>Anchor</span><button type="button" aria-label="Dismiss Anchor"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
+          <div class="chip"><span>Spring</span><button type="button" aria-label="Dismiss Spring"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
         </div>
       </section>
     </main>

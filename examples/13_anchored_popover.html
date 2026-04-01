@@ -6,7 +6,51 @@
     <link rel="stylesheet" href="./common.css" />
     <style>
       .stage {
+        --trigger-width: clamp(124px, 32vw, 144px);
         align-content: center;
+        justify-items: center;
+      }
+
+      .action-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: var(--trigger-width);
+      }
+
+      .action-trigger {
+        width: 100%;
+        padding-inline: 14px 12px;
+        justify-content: space-between;
+        gap: 12px;
+        text-align: left;
+      }
+
+      .action-label {
+        font-size: 0.95rem;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+      }
+
+      .action-caret {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        flex: none;
+        translate: 0 0;
+        transition: translate 0.24s var(--spring-snappy);
+      }
+
+      .action-caret-icon {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .action-trigger:hover .action-caret {
+        translate: 2px 0;
       }
 
       .action-anchor-1 {
@@ -25,20 +69,20 @@
         position: absolute;
         inset: auto;
         margin: 0;
-        width: min(220px, calc(100vw - 32px));
+        width: min(220px, calc(100vw - 48px - var(--trigger-width)));
         padding: 8px;
         border: 1px solid var(--line);
         border-radius: 12px;
         background: var(--surface);
         display: block;
         block-size: max-content;
-        position-area: block-end center;
-        margin-block-start: 12px;
-        position-try: block-start center;
-        place-self: start center;
-        transform-origin: center top;
+        position-area: inline-end center;
+        margin-inline-start: 12px;
+        position-try: inline-start center;
+        place-self: start start;
+        transform-origin: left top;
         opacity: 0;
-        translate: 0 -24px;
+        translate: -24px 0;
         scale: 0;
         transition:
           opacity 0.2s linear,
@@ -89,21 +133,12 @@
         }
       }
 
-      .popover-label,
-      .popover-meta {
+      .popover-label {
         display: block;
         margin: 0;
-      }
-
-      .popover-label {
         font-size: 0.9rem;
         font-weight: 500;
         letter-spacing: -0.01em;
-      }
-
-      .popover-meta {
-        font-size: 0.75rem;
-        color: var(--muted);
       }
 
       .popover-anchor-1 {
@@ -122,10 +157,31 @@
   <body>
     <main class="page">
       <section class="stage">
-        <div class="row">
-          <button class="button action action-anchor-1" commandfor="popover-1" command="toggle-popover">Share</button>
-          <button class="button action action-anchor-2" commandfor="popover-2" command="toggle-popover">Invite</button>
-          <button class="button action action-anchor-3" commandfor="popover-3" command="toggle-popover">Move</button>
+        <div class="action-list">
+          <button class="button action-trigger action-anchor-1" commandfor="popover-1" command="toggle-popover">
+            <span class="action-label">Share</span>
+            <span class="action-caret" aria-hidden="true">
+              <svg class="action-caret-icon" viewBox="0 0 16 16" fill="none">
+                <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+          <button class="button action-trigger action-anchor-2" commandfor="popover-2" command="toggle-popover">
+            <span class="action-label">Invite</span>
+            <span class="action-caret" aria-hidden="true">
+              <svg class="action-caret-icon" viewBox="0 0 16 16" fill="none">
+                <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+          <button class="button action-trigger action-anchor-3" commandfor="popover-3" command="toggle-popover">
+            <span class="action-label">Move</span>
+            <span class="action-caret" aria-hidden="true">
+              <svg class="action-caret-icon" viewBox="0 0 16 16" fill="none">
+                <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
         </div>
       </section>
       <div class="popover popover-anchor-1" id="popover-1" popover>
@@ -133,19 +189,16 @@
           <li class="popover-item">
             <button class="popover-action" type="button">
               <span class="popover-label">Copy link</span>
-              <span class="popover-meta">Cmd+C</span>
             </button>
           </li>
           <li class="popover-item">
             <button class="popover-action" type="button">
               <span class="popover-label">Send by email</span>
-              <span class="popover-meta">Open</span>
             </button>
           </li>
           <li class="popover-item">
             <button class="popover-action" type="button">
               <span class="popover-label">Manage access</span>
-              <span class="popover-meta">More</span>
             </button>
           </li>
         </ul>
@@ -155,19 +208,16 @@
           <li class="popover-item">
             <button class="popover-action" type="button">
               <span class="popover-label">Add reviewer</span>
-              <span class="popover-meta">Add</span>
             </button>
           </li>
           <li class="popover-item">
             <button class="popover-action" type="button">
               <span class="popover-label">Copy invite</span>
-              <span class="popover-meta">Cmd+C</span>
             </button>
           </li>
           <li class="popover-item">
             <button class="popover-action" type="button">
               <span class="popover-label">View guests</span>
-              <span class="popover-meta">Open</span>
             </button>
           </li>
         </ul>
@@ -177,19 +227,16 @@
           <li class="popover-item">
             <button class="popover-action" type="button">
               <span class="popover-label">Move to next</span>
-              <span class="popover-meta">Next</span>
             </button>
           </li>
           <li class="popover-item">
             <button class="popover-action" type="button">
               <span class="popover-label">Send to backlog</span>
-              <span class="popover-meta">Backlog</span>
             </button>
           </li>
           <li class="popover-item">
             <button class="popover-action" type="button">
               <span class="popover-label">Archive task</span>
-              <span class="popover-meta">Archive</span>
             </button>
           </li>
         </ul>
