@@ -23,21 +23,21 @@
         justify-content: center;
         overflow: clip;
         transition:
-          width 0.82s var(--spring-anchor),
+          width 0.8s var(--spring-default),
           border-color 0.2s;
 
-        .search__icon {
+        .search-icon {
           width: 40px;
           height: 40px;
           display: grid;
           place-items: center;
           translate: 0 0;
           transition:
-            translate 0.82s var(--spring-anchor),
+            translate 0.8s var(--spring-default),
             color 0.2s;
         }
 
-        .search__input {
+        .search-input {
           flex: 1;
           max-width: 0;
           min-width: 0;
@@ -48,9 +48,9 @@
           opacity: 0;
           pointer-events: none;
           transition:
-            max-width 0.7s var(--spring-anchor),
-            padding-inline 0.7s var(--spring-anchor),
-            opacity 0.16s linear 0.08s;
+            max-width 0.7s var(--spring-default),
+            padding-inline 0.7s var(--spring-default),
+            opacity 0.2s linear 0.1s;
 
           &::-webkit-search-cancel-button,
           &::-webkit-search-decoration {
@@ -59,16 +59,17 @@
           }
         }
 
-        &:has(.search__input:focus) {
+        /* Only the shell springs. The field fades in after that so close does not look squashed. */
+        &:has(.search-input:focus) {
           justify-content: flex-start;
           width: min(420px, calc(100vw - 32px));
           border-color: var(--accent);
 
-          .search__icon {
+          .search-icon {
             translate: 1px 0;
           }
 
-          .search__input {
+          .search-input {
             max-width: 320px;
             opacity: 1;
             padding-inline: 12px;
@@ -83,8 +84,8 @@
     <main class="page">
       <section class="stage">
         <label class="search">
-          <span class="search__icon">Q</span>
-          <input class="search__input" type="search" placeholder="Search projects" />
+          <span class="search-icon">Q</span>
+          <input class="search-input" type="search" placeholder="Search projects" />
         </label>
       </section>
     </main>

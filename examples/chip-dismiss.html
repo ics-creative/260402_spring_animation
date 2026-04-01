@@ -34,9 +34,7 @@
           border-radius: 10px;
           background: transparent;
           cursor: pointer;
-          transition:
-            background-color 0.18s,
-            color 0.18s;
+          transition: all 0.2s;
 
           &:hover {
             transform: none;
@@ -52,7 +50,7 @@
             left: 5px;
             width: 12px;
             height: 2px;
-            background: currentColor;
+            background: currentcolor;
           }
 
           &::before {
@@ -90,7 +88,7 @@
       const row = document.querySelector("[data-row]");
 
       const spring = getComputedStyle(document.documentElement)
-        .getPropertyValue("--spring-anchor")
+        .getPropertyValue("--spring-bouncy")
         .replace(/\s+/g, " ")
         .trim();
 
@@ -112,6 +110,7 @@
 
       const animateGhost = (chip) => {
         const rect = chip.getBoundingClientRect();
+        // A fixed ghost preserves the exit motion while the live row can reflow immediately.
         const ghost = chip.cloneNode(true);
         ghost.classList.add("chip-ghost");
         ghost.style.top = `${rect.top}px`;

@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./common.css" />
     <style>
+      .launcher-anchor-1 {
+        anchor-name: --dialog-1;
+      }
+
+      .launcher-anchor-2 {
+        anchor-name: --dialog-2;
+      }
+
+      .launcher-anchor-3 {
+        anchor-name: --dialog-3;
+      }
+
       .dialog {
         margin: 0;
         padding: 0;
@@ -18,13 +30,15 @@
         translate: -50% -50%;
         opacity: 0;
         scale: 0.12;
+
+        /* Anchor positioning gives the dialog a believable launch point before it settles at center. */
         transition:
-          opacity 0.24s,
-          scale 1.2s var(--spring-anchor),
-          left 1.2s var(--spring-anchor),
-          top 1.2s var(--spring-anchor),
-          display 0.24s allow-discrete,
-          overlay 0.24s allow-discrete;
+          opacity 0.2s,
+          scale 1.2s var(--spring-default),
+          left 1.2s var(--spring-default),
+          top 1.2s var(--spring-default),
+          display 0.2s allow-discrete,
+          overlay 0.2s allow-discrete;
 
         &[open] {
           left: 50%;
@@ -43,7 +57,7 @@
         &::backdrop {
           background: rgb(0 0 0 / 40%);
           opacity: 0;
-          transition: opacity 0.24s;
+          transition: opacity 0.2s;
         }
 
         &[open]::backdrop {
@@ -55,7 +69,7 @@
         }
       }
 
-      .dialog__inner {
+      .dialog-inner {
         width: min(420px, calc(100vw - 24px));
         padding: 20px;
         border: 1px solid var(--line);
@@ -69,25 +83,31 @@
           margin: 0;
         }
       }
+
+      .dialog-anchor-1 {
+        --dialog-anchor: --dialog-1;
+      }
+
+      .dialog-anchor-2 {
+        --dialog-anchor: --dialog-2;
+      }
+
+      .dialog-anchor-3 {
+        --dialog-anchor: --dialog-3;
+      }
     </style>
   </head>
   <body>
     <main class="page">
       <section class="stage">
         <div class="row">
-          <button class="button launcher" commandfor="dialog-1" command="show-modal" style="anchor-name: --dialog-1">
-            Profile
-          </button>
-          <button class="button launcher" commandfor="dialog-2" command="show-modal" style="anchor-name: --dialog-2">
-            Billing
-          </button>
-          <button class="button launcher" commandfor="dialog-3" command="show-modal" style="anchor-name: --dialog-3">
-            Review
-          </button>
+          <button class="button launcher launcher-anchor-1" commandfor="dialog-1" command="show-modal">Profile</button>
+          <button class="button launcher launcher-anchor-2" commandfor="dialog-2" command="show-modal">Billing</button>
+          <button class="button launcher launcher-anchor-3" commandfor="dialog-3" command="show-modal">Review</button>
         </div>
       </section>
-      <dialog class="dialog" id="dialog-1" closedby="any" style="--dialog-anchor: --dialog-1">
-        <div class="dialog__inner">
+      <dialog class="dialog dialog-anchor-1" id="dialog-1" closedby="any">
+        <div class="dialog-inner">
           <h2>Profile updated</h2>
           <p>This panel grows from the pressed button, then settles at center.</p>
           <div class="row">
@@ -95,8 +115,8 @@
           </div>
         </div>
       </dialog>
-      <dialog class="dialog" id="dialog-2" closedby="any" style="--dialog-anchor: --dialog-2">
-        <div class="dialog__inner">
+      <dialog class="dialog dialog-anchor-2" id="dialog-2" closedby="any">
+        <div class="dialog-inner">
           <h2>Invoice sent</h2>
           <p>This panel grows from the pressed button, then settles at center.</p>
           <div class="row">
@@ -104,8 +124,8 @@
           </div>
         </div>
       </dialog>
-      <dialog class="dialog" id="dialog-3" closedby="any" style="--dialog-anchor: --dialog-3">
-        <div class="dialog__inner">
+      <dialog class="dialog dialog-anchor-3" id="dialog-3" closedby="any">
+        <div class="dialog-inner">
           <h2>Review requested</h2>
           <p>This panel grows from the pressed button, then settles at center.</p>
           <div class="row">

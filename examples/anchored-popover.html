@@ -9,6 +9,18 @@
         align-content: center;
       }
 
+      .action-anchor-1 {
+        anchor-name: --action-1;
+      }
+
+      .action-anchor-2 {
+        anchor-name: --action-2;
+      }
+
+      .action-anchor-3 {
+        anchor-name: --action-3;
+      }
+
       .popover {
         position: fixed;
         inset: auto;
@@ -29,21 +41,30 @@
           flip-block flip-inline;
         transform-origin: center top;
         opacity: 0;
-        translate: 0 -24px;
-        scale: 0.82;
+        translate: 0 -8px;
+        scale: 0.96;
         transition:
-          opacity 0.24s linear,
-          inset 0.32s ease,
-          margin 0.32s ease,
-          translate 0.82s var(--spring-anchor),
-          scale 0.82s var(--spring-anchor),
-          display 0.24s allow-discrete,
-          overlay 0.24s allow-discrete;
+          opacity 0.2s linear,
+          inset 0.3s ease,
+          margin 0.3s ease,
+          translate 0.2s ease,
+          scale 0.2s ease,
+          display 0.2s allow-discrete,
+          overlay 0.2s allow-discrete;
 
+        /* Opening gets the spring. Closing stays short and plain so the menu does not bounce away. */
         &:popover-open {
           opacity: 1;
           translate: 0 0;
           scale: 1;
+          transition:
+            opacity 0.2s linear,
+            inset 0.3s ease,
+            margin 0.3s ease,
+            translate 0.8s var(--spring-strong),
+            scale 0.8s var(--spring-strong),
+            display 0.2s allow-discrete,
+            overlay 0.2s allow-discrete;
 
           @starting-style {
             opacity: 0;
@@ -53,7 +74,7 @@
         }
       }
 
-      .popover__menu {
+      .popover-menu {
         margin: 0;
         padding: 0;
         list-style: none;
@@ -61,11 +82,11 @@
         gap: 1px;
       }
 
-      .popover__item {
+      .popover-item {
         min-width: 0;
       }
 
-      .popover__action {
+      .popover-action {
         width: 100%;
         min-height: 40px;
         padding: 0 12px;
@@ -75,9 +96,7 @@
         justify-content: flex-start;
         gap: 12px;
         color: var(--text);
-        transition:
-          background-color 0.16s,
-          color 0.16s;
+        transition: all 0.2s;
 
         &:hover {
           background: color-mix(in srgb, var(--surface) 94%, var(--text) 6%);
@@ -88,21 +107,33 @@
         }
       }
 
-      .popover__label,
-      .popover__meta {
+      .popover-label,
+      .popover-meta {
         display: block;
         margin: 0;
       }
 
-      .popover__label {
+      .popover-label {
         font-size: 0.9rem;
         font-weight: 500;
         letter-spacing: -0.01em;
       }
 
-      .popover__meta {
+      .popover-meta {
         font-size: 0.75rem;
         color: var(--muted);
+      }
+
+      .popover-anchor-1 {
+        --current-anchor: --action-1;
+      }
+
+      .popover-anchor-2 {
+        --current-anchor: --action-2;
+      }
+
+      .popover-anchor-3 {
+        --current-anchor: --action-3;
       }
     </style>
   </head>
@@ -110,79 +141,73 @@
     <main class="page">
       <section class="stage">
         <div class="row">
-          <button class="button action" commandfor="popover-1" command="toggle-popover" style="anchor-name: --action-1">
-            Share
-          </button>
-          <button class="button action" commandfor="popover-2" command="toggle-popover" style="anchor-name: --action-2">
-            Invite
-          </button>
-          <button class="button action" commandfor="popover-3" command="toggle-popover" style="anchor-name: --action-3">
-            Move
-          </button>
+          <button class="button action action-anchor-1" commandfor="popover-1" command="toggle-popover">Share</button>
+          <button class="button action action-anchor-2" commandfor="popover-2" command="toggle-popover">Invite</button>
+          <button class="button action action-anchor-3" commandfor="popover-3" command="toggle-popover">Move</button>
         </div>
       </section>
-      <div class="popover" id="popover-1" popover style="--current-anchor: --action-1">
-        <ul class="popover__menu">
-          <li class="popover__item">
-            <button class="popover__action" type="button">
-              <span class="popover__label">Copy link</span>
-              <span class="popover__meta">Cmd+C</span>
+      <div class="popover popover-anchor-1" id="popover-1" popover>
+        <ul class="popover-menu">
+          <li class="popover-item">
+            <button class="popover-action" type="button">
+              <span class="popover-label">Copy link</span>
+              <span class="popover-meta">Cmd+C</span>
             </button>
           </li>
-          <li class="popover__item">
-            <button class="popover__action" type="button">
-              <span class="popover__label">Send by email</span>
-              <span class="popover__meta">Open</span>
+          <li class="popover-item">
+            <button class="popover-action" type="button">
+              <span class="popover-label">Send by email</span>
+              <span class="popover-meta">Open</span>
             </button>
           </li>
-          <li class="popover__item">
-            <button class="popover__action" type="button">
-              <span class="popover__label">Manage access</span>
-              <span class="popover__meta">More</span>
-            </button>
-          </li>
-        </ul>
-      </div>
-      <div class="popover" id="popover-2" popover style="--current-anchor: --action-2">
-        <ul class="popover__menu">
-          <li class="popover__item">
-            <button class="popover__action" type="button">
-              <span class="popover__label">Add reviewer</span>
-              <span class="popover__meta">Add</span>
-            </button>
-          </li>
-          <li class="popover__item">
-            <button class="popover__action" type="button">
-              <span class="popover__label">Copy invite</span>
-              <span class="popover__meta">Cmd+C</span>
-            </button>
-          </li>
-          <li class="popover__item">
-            <button class="popover__action" type="button">
-              <span class="popover__label">View guests</span>
-              <span class="popover__meta">Open</span>
+          <li class="popover-item">
+            <button class="popover-action" type="button">
+              <span class="popover-label">Manage access</span>
+              <span class="popover-meta">More</span>
             </button>
           </li>
         </ul>
       </div>
-      <div class="popover" id="popover-3" popover style="--current-anchor: --action-3">
-        <ul class="popover__menu">
-          <li class="popover__item">
-            <button class="popover__action" type="button">
-              <span class="popover__label">Move to next</span>
-              <span class="popover__meta">Next</span>
+      <div class="popover popover-anchor-2" id="popover-2" popover>
+        <ul class="popover-menu">
+          <li class="popover-item">
+            <button class="popover-action" type="button">
+              <span class="popover-label">Add reviewer</span>
+              <span class="popover-meta">Add</span>
             </button>
           </li>
-          <li class="popover__item">
-            <button class="popover__action" type="button">
-              <span class="popover__label">Send to backlog</span>
-              <span class="popover__meta">Backlog</span>
+          <li class="popover-item">
+            <button class="popover-action" type="button">
+              <span class="popover-label">Copy invite</span>
+              <span class="popover-meta">Cmd+C</span>
             </button>
           </li>
-          <li class="popover__item">
-            <button class="popover__action" type="button">
-              <span class="popover__label">Archive task</span>
-              <span class="popover__meta">Archive</span>
+          <li class="popover-item">
+            <button class="popover-action" type="button">
+              <span class="popover-label">View guests</span>
+              <span class="popover-meta">Open</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="popover popover-anchor-3" id="popover-3" popover>
+        <ul class="popover-menu">
+          <li class="popover-item">
+            <button class="popover-action" type="button">
+              <span class="popover-label">Move to next</span>
+              <span class="popover-meta">Next</span>
+            </button>
+          </li>
+          <li class="popover-item">
+            <button class="popover-action" type="button">
+              <span class="popover-label">Send to backlog</span>
+              <span class="popover-meta">Backlog</span>
+            </button>
+          </li>
+          <li class="popover-item">
+            <button class="popover-action" type="button">
+              <span class="popover-label">Archive task</span>
+              <span class="popover-meta">Archive</span>
             </button>
           </li>
         </ul>

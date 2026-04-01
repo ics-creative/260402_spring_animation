@@ -46,6 +46,7 @@
         .fab-item {
           --item-index: calc(sibling-index() - 1);
           --item-angle: calc(var(--item-index) * 45deg);
+
           width: 56px;
           height: 56px;
           display: grid;
@@ -55,16 +56,16 @@
           scale: 0.2;
           translate: 0 0;
           transition:
-            opacity 0.18s,
-            scale 0.8s var(--spring-anchor),
-            translate 0.8s var(--spring-anchor);
+            opacity 0.2s,
+            scale 0.8s var(--spring-bouncy),
+            translate 0.8s var(--spring-bouncy);
         }
 
-        .fab-main__icon {
+        .fab-main-icon {
           position: relative;
           width: 20px;
           height: 20px;
-          transition: rotate 0.8s var(--spring-anchor);
+          transition: rotate 0.8s var(--spring-bouncy);
 
           &::before,
           &::after {
@@ -83,7 +84,7 @@
         }
 
         &[open] {
-          .fab-main__icon {
+          .fab-main-icon {
             rotate: 135deg;
           }
 
@@ -104,7 +105,7 @@
           <a class="fab-item" href="#">B</a>
           <a class="fab-item" href="#">C</a>
           <summary class="fab-main">
-            <span class="fab-main__icon"></span>
+            <span class="fab-main-icon"></span>
           </summary>
         </details>
       </section>

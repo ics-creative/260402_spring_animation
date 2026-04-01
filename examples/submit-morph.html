@@ -18,69 +18,70 @@
         padding: 0;
         overflow: clip;
         transition:
-          width 0.68s var(--spring-anchor),
-          border-radius 0.68s var(--spring-anchor),
-          scale 0.68s var(--spring-anchor),
-          translate 0.68s var(--spring-soft),
+          width 0.7s var(--spring-default),
+          border-radius 0.7s var(--spring-default),
+          scale 0.7s var(--spring-default),
+          translate 0.7s var(--spring-default),
           background-color 0.2s,
           color 0.2s;
 
-        .submit__label,
-        .submit__icon,
-        .submit__spinner {
+        .submit-label,
+        .submit-icon,
+        .submit-spinner {
           position: absolute;
           inset: 0;
           display: grid;
           place-items: center;
         }
 
-        .submit__label,
-        .submit__icon,
-        .submit__spinner::before {
+        .submit-label,
+        .submit-icon,
+        .submit-spinner::before {
           transition:
-            opacity 0.18s,
-            scale 0.46s var(--spring-anchor),
-            translate 0.46s var(--spring-soft),
-            rotate 0.46s var(--spring-anchor);
+            opacity 0.2s,
+            scale 0.5s var(--spring-default),
+            translate 0.5s var(--spring-default),
+            rotate 0.5s var(--spring-default);
         }
 
-        .submit__icon,
-        .submit__spinner {
+        .submit-icon,
+        .submit-spinner {
           opacity: 0;
           scale: 0.55;
         }
 
-        .submit__icon svg {
+        .submit-icon svg {
           width: 22px;
           height: 22px;
           scale: 0.82;
-          stroke: currentColor;
+          stroke: currentcolor;
           stroke-width: 2.75;
           stroke-linecap: round;
           stroke-linejoin: round;
           fill: none;
           transform-box: fill-box;
           transform-origin: center;
-          transition: scale 0.34s var(--spring-soft);
+          transition: scale 0.3s var(--spring-default);
         }
 
-        .submit__icon path {
+        .submit-icon path {
           stroke-dasharray: 24;
           stroke-dashoffset: 24;
-          transition: stroke-dashoffset 0.36s ease-out 0.04s;
+          transition: stroke-dashoffset 0.4s ease-out 0.1s;
         }
 
-        .submit__spinner::before {
+        .submit-spinner::before {
           content: "";
           width: 22px;
           height: 22px;
-          border: 2px solid currentColor;
+          border: 2px solid currentcolor;
           border-right-color: transparent;
           border-radius: 50%;
           rotate: -90deg;
           scale: 0.92;
         }
 
+        /* Loading and done share the same circle so the morph reads as one shape, not a jump cut. */
         &[data-state="loading"],
         &[data-state="done"] {
           width: 56px;
@@ -92,21 +93,21 @@
           scale: 1;
           translate: 0 0;
 
-          .submit__label {
+          .submit-label {
             opacity: 0;
             scale: 0.45;
             translate: 0 -10px;
           }
 
-          .submit__spinner {
+          .submit-spinner {
             opacity: 1;
             scale: 1;
           }
 
-          .submit__spinner::before {
+          .submit-spinner::before {
             rotate: 0deg;
             scale: 1.06;
-            animation: submit-spinner-rotate 0.72s linear infinite;
+            animation: submit-spinner-rotate 0.7s linear infinite;
           }
         }
 
@@ -117,24 +118,24 @@
           scale: 1;
           translate: 0 0;
 
-          .submit__label,
-          .submit__spinner {
+          .submit-label,
+          .submit-spinner {
             opacity: 0;
             scale: 0.42;
             translate: 0 10px;
           }
 
-          .submit__icon {
+          .submit-icon {
             opacity: 1;
             scale: 1;
             translate: 0 0;
           }
 
-          .submit__icon svg {
+          .submit-icon svg {
             scale: 1;
           }
 
-          .submit__icon path {
+          .submit-icon path {
             stroke-dashoffset: 0;
           }
         }
@@ -162,9 +163,9 @@
     <main class="page">
       <section class="stage">
         <button class="button submit" data-submit data-state="idle">
-          <span class="submit__label">Submit</span>
-          <span class="submit__spinner"></span>
-          <span class="submit__icon" aria-hidden="true">
+          <span class="submit-label">Submit</span>
+          <span class="submit-spinner"></span>
+          <span class="submit-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24">
               <path d="M5 12.5l4.2 4.2L19 7.4"></path>
             </svg>

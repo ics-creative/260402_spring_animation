@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .stage {
+        align-content: center;
+      }
+
+      .compare {
+        width: min(760px, 100%);
+        display: grid;
+        gap: 16px;
+      }
+
+      .compare-controls {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .lane {
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--surface);
+      }
+
+      .lane-body {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 16px;
+        align-items: center;
+      }
+
+      .lane-label {
+        margin: 0;
+        font-size: 0.84rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .lane-curve {
+        inline-size: 112px;
+        block-size: 112px;
+        display: block;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--surface);
+      }
+
+      .lane-curve-guide {
+        fill: none;
+        stroke: color-mix(in srgb, var(--line) 82%, transparent);
+        stroke-width: 1;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .lane-curve-line {
+        fill: none;
+        stroke: color-mix(in srgb, var(--accent) 42%, var(--line));
+        stroke-width: 1.75;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .lane-track {
+        position: relative;
+        height: 72px;
+        border: 1px solid var(--line);
+        border-radius: 36px;
+        background: var(--surface);
+        overflow: clip;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: calc(50% - 1px);
+          left: 28px;
+          right: 28px;
+          height: 2px;
+          background: color-mix(in srgb, var(--line) 72%, transparent);
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 16px;
+          right: 28px;
+          bottom: 16px;
+          width: 2px;
+          background: color-mix(in srgb, var(--line) 72%, transparent);
+        }
+      }
+
+      .lane-block {
+        position: absolute;
+        top: 20px;
+        left: 28px;
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        background: var(--text);
+        translate: 0 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="stage">
+        <div class="compare">
+          <div class="compare-controls">
+            <button class="button" data-replay>Replay</button>
+          </div>
+
+          <section class="lane">
+            <p class="lane-label">Elastic</p>
+            <div class="lane-body">
+              <svg class="lane-curve" viewBox="0 0 120 120" aria-hidden="true">
+                <path class="lane-curve-guide" d="M18 18V102H102"></path>
+                <path class="lane-curve-line" data-curve="elastic"></path>
+              </svg>
+              <div class="lane-track" data-track>
+                <div class="lane-block" data-kind="elastic"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="lane">
+            <p class="lane-label">Spring</p>
+            <div class="lane-body">
+              <svg class="lane-curve" viewBox="0 0 120 120" aria-hidden="true">
+                <path class="lane-curve-guide" d="M18 18V102H102"></path>
+                <path class="lane-curve-line" data-curve="spring"></path>
+              </svg>
+              <div class="lane-track" data-track>
+                <div class="lane-block" data-kind="spring"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script type="module">
+      import { animate, eases, spring } from "https://cdn.jsdelivr.net/npm/animejs/+esm";
+
+      const templates = {
+        elastic: document.querySelector('[data-kind="elastic"]').cloneNode(true),
+        spring: document.querySelector('[data-kind="spring"]').cloneNode(true),
+      };
+      const elasticEase = eases.outElastic();
+      const springEase = spring();
+      const elasticDuration = springEase.duration;
+
+      const resetBlock = (block) => {
+        block.style.translate = "0 0";
+      };
+
+      const createBlock = (name) => {
+        const block = templates[name].cloneNode(true);
+        block.dataset.kind = name;
+        resetBlock(block);
+        return block;
+      };
+
+      const getTravelX = (block) => {
+        const track = block.closest("[data-track]");
+        return track.clientWidth - block.offsetWidth - 56;
+      };
+
+      const resolveEase = (ease) => (typeof ease === "function" ? ease : (ease?.ease ?? ((time) => time)));
+
+      const drawCurve = (path, ease) => {
+        // Use the exact same easing function for the graph and the moving knob so the comparison stays honest.
+        const sample = resolveEase(ease);
+        const width = 84;
+        const height = 84;
+        const insetX = 18;
+        const insetY = 18;
+        const minY = -0.08;
+        const maxY = 1.2;
+        const points = Array.from({ length: 61 }, (_, index) => {
+          const t = index / 60;
+          const value = sample(t);
+          const x = insetX + width * t;
+          const y = insetY + height - ((value - minY) / (maxY - minY)) * height;
+          return `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
+        });
+        path.setAttribute("d", points.join(" "));
+      };
+
+      const replay = () => {
+        const elastic = createBlock("elastic");
+        const springBlock = createBlock("spring");
+
+        document.querySelector('[data-kind="elastic"]').replaceWith(elastic);
+        document.querySelector('[data-kind="spring"]').replaceWith(springBlock);
+
+        requestAnimationFrame(() => {
+          animate(elastic, {
+            x: getTravelX(elastic),
+            duration: elasticDuration,
+            ease: elasticEase,
+          });
+
+          animate(springBlock, {
+            x: getTravelX(springBlock),
+            ease: springEase,
+          });
+        });
+      };
+
+      drawCurve(document.querySelector('[data-curve="elastic"]'), elasticEase);
+      drawCurve(document.querySelector('[data-curve="spring"]'), springEase);
+      document.querySelector("[data-replay]").addEventListener("click", replay);
+      window.addEventListener("resize", replay);
+      replay();
+    </script>
+  </body>
+</html>

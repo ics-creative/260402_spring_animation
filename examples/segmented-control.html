@@ -7,6 +7,7 @@
     <style>
       .segmented {
         --active-anchor: --segment-1;
+
         position: relative;
         display: flex;
         flex-wrap: wrap;
@@ -16,6 +17,7 @@
         border: 1px solid var(--line);
         border-radius: 999px;
 
+        /* Move one shared background so the state change reads through shape motion, not text motion. */
         &::before {
           content: "";
           position: absolute;
@@ -26,7 +28,7 @@
           height: anchor-size(height);
           border-radius: 999px;
           background: var(--accent);
-          transition: 1s var(--spring-anchor);
+          transition: 1s var(--spring-default);
         }
 
         &:has(#segment-2:checked) {
@@ -69,7 +71,18 @@
         padding-inline: 20px;
         border-radius: 999px;
         cursor: pointer;
-        transition: color 0.2s;
+        transition: all 0.2s;
+
+        &:hover {
+          background: color-mix(in srgb, var(--line) 32%, transparent);
+        }
+      }
+
+      .segmented:has(#segment-1:checked) .segment[for="segment-1"]:hover,
+      .segmented:has(#segment-2:checked) .segment[for="segment-2"]:hover,
+      .segmented:has(#segment-3:checked) .segment[for="segment-3"]:hover,
+      .segmented:has(#segment-4:checked) .segment[for="segment-4"]:hover {
+        background: transparent;
       }
     </style>
   </head>

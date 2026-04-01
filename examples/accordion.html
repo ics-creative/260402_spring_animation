@@ -19,13 +19,15 @@
         gap: 12px;
       }
 
-      .accordion {
-        --spring-close: linear(0, 0.18, 0.42, 0.74, 0.94, 1, 0.965 84%, 1);
-      }
-
       .item {
         border: 1px solid var(--line);
         border-radius: 14px;
+        overflow: clip;
+
+        /* The outer details box owns the height spring. The inner panel only handles copy readability. */
+        transition:
+          block-size 0.8s var(--spring-default),
+          border-color 0.2s;
 
         summary {
           list-style: none;
@@ -35,54 +37,24 @@
           align-items: center;
           justify-content: space-between;
           cursor: pointer;
-          transition: padding-block-end 0.82s var(--spring-anchor);
+          transition: padding-block-end 0.8s var(--spring-default);
 
           &::-webkit-details-marker {
             display: none;
           }
         }
-
-        &[open] {
-          border-color: var(--accent);
-
-          summary {
-            padding-block-end: 4px;
-          }
-
-          .summary__icon {
-            rotate: 45deg;
-          }
-
-          .panel {
-            opacity: 1;
-            translate: 0 0;
-            scale: 1;
-          }
-        }
       }
 
-      .item__content {
-        --content-size: 0px;
-        block-size: 0;
-        opacity: 0;
+      .item-content {
         overflow: clip;
-        transition-property: block-size, opacity;
-        transition-duration: 0.82s, 0.26s;
-        transition-timing-function: var(--spring-close), linear;
       }
 
-      .item[open] .item__content {
-        block-size: var(--content-size);
-        opacity: 1;
-        transition-timing-function: var(--spring-anchor), linear;
-      }
-
-      .summary__icon {
+      .summary-icon {
         position: relative;
         flex: none;
         width: 18px;
         height: 18px;
-        transition: rotate 0.8s var(--spring-anchor);
+        transition: rotate 0.8s var(--spring-default);
 
         &::before,
         &::after {
@@ -92,7 +64,7 @@
           left: 0;
           width: 18px;
           height: 2px;
-          background: currentColor;
+          background: currentcolor;
         }
 
         &::after {
@@ -108,9 +80,27 @@
         scale: 0.96;
         transform-origin: top center;
         transition:
-          opacity 0.24s linear,
-          translate 0.82s var(--spring-anchor),
-          scale 0.82s var(--spring-anchor);
+          opacity 0.2s linear,
+          translate 0.8s var(--spring-default),
+          scale 0.8s var(--spring-default);
+      }
+
+      .item.is-open {
+        border-color: var(--accent);
+
+        summary {
+          padding-block-end: 4px;
+        }
+
+        .summary-icon {
+          rotate: 45deg;
+        }
+
+        .panel {
+          opacity: 1;
+          translate: 0 0;
+          scale: 1;
+        }
       }
     </style>
   </head>
@@ -121,9 +111,9 @@
           <details class="item" open>
             <summary>
               <span>Motion tokens</span>
-              <span class="summary__icon"></span>
+              <span class="summary-icon"></span>
             </summary>
-            <div class="item__content">
+            <div class="item-content">
               <div class="panel">
                 Reusing one spring curve across tabs, popovers, and dialogs makes the whole interface feel connected.
                 The motion reads as one system instead of a set of unrelated component demos.
@@ -133,9 +123,9 @@
           <details class="item">
             <summary>
               <span>Entry timing</span>
-              <span class="summary__icon"></span>
+              <span class="summary-icon"></span>
             </summary>
-            <div class="item__content">
+            <div class="item-content">
               <div class="panel">
                 The first thing that should settle is the large shape or container. After that, labels, counters, and
                 supporting copy can catch up a fraction later without making the transition feel noisy or overproduced.
@@ -145,9 +135,9 @@
           <details class="item">
             <summary>
               <span>Interaction states</span>
-              <span class="summary__icon"></span>
+              <span class="summary-icon"></span>
             </summary>
-            <div class="item__content">
+            <div class="item-content">
               <div class="panel">
                 Small controls still benefit from spring motion, but the travel distance has to stay tight. A short
                 overshoot on open and a clean, readable collapse on close usually feels better than large theatrical
@@ -160,17 +150,60 @@
     </main>
     <script type="module">
       const items = [...document.querySelectorAll(".item")];
+      const animationDuration = 820;
+      const finishTimers = new WeakMap();
+      const getSummarySize = (item) => item.querySelector("summary").offsetHeight;
+      const getOpenSize = (item) => getSummarySize(item) + item.querySelector(".panel").offsetHeight;
 
-      const syncHeights = () => {
-        items.forEach((item) => {
-          const panel = item.querySelector(".panel");
-          item.style.setProperty("--content-size", `${panel.offsetHeight}px`);
-        });
+      const finish = (item) => {
+        const isOpen = item.classList.contains("is-open");
+        item.classList.remove("is-animating");
+        item.style.blockSize = "";
+
+        if (!isOpen) {
+          item.open = false;
+        }
       };
 
-      const resizeObserver = new ResizeObserver(syncHeights);
-      items.forEach((item) => resizeObserver.observe(item.querySelector(".panel")));
-      syncHeights();
+      const scheduleFinish = (item) => {
+        // block-size transitionend is unreliable here, so the timer performs the final open/close cleanup.
+        window.clearTimeout(finishTimers.get(item));
+        const timer = window.setTimeout(() => {
+          finish(item);
+        }, animationDuration + 40);
+        finishTimers.set(item, timer);
+      };
+
+      const animateItem = (item, nextOpen) => {
+        if (item.classList.contains("is-animating")) return;
+        const startSize = item.offsetHeight || getSummarySize(item);
+        item.classList.add("is-animating");
+        item.style.blockSize = `${startSize}px`;
+
+        if (nextOpen) {
+          item.open = true;
+          item.classList.add("is-open");
+        } else {
+          item.classList.remove("is-open");
+        }
+
+        const endSize = nextOpen ? getOpenSize(item) : getSummarySize(item);
+        requestAnimationFrame(() => {
+          item.style.blockSize = `${endSize}px`;
+        });
+        scheduleFinish(item);
+      };
+
+      items.forEach((item) => {
+        if (item.open) {
+          item.classList.add("is-open");
+        }
+
+        item.querySelector("summary").addEventListener("click", (event) => {
+          event.preventDefault();
+          animateItem(item, !item.classList.contains("is-open"));
+        });
+      });
     </script>
   </body>
 </html>

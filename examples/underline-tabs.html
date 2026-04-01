@@ -7,6 +7,7 @@
     <style>
       .tabs {
         --active-anchor: --tab-1;
+
         position: relative;
         display: flex;
         flex-wrap: wrap;
@@ -15,6 +16,7 @@
         padding-bottom: 16px;
         border-bottom: 1px solid var(--line);
 
+        /* The underline follows the checked tab, while the labels themselves stay visually quiet. */
         &::before {
           content: "";
           position: absolute;
@@ -25,7 +27,7 @@
           height: 4px;
           border-radius: 4px;
           background: var(--accent);
-          transition: 1s var(--spring-anchor);
+          transition: 1s var(--spring-default);
         }
 
         &:has(#tab-2:checked) {
@@ -65,7 +67,18 @@
         padding: 0;
         color: var(--muted);
         cursor: pointer;
-        transition: color 0.2s;
+        transition: all 0.2s;
+
+        &:hover {
+          color: color-mix(in srgb, var(--muted) 35%, var(--text));
+        }
+      }
+
+      .tabs:has(#tab-1:checked) .tab[for="tab-1"]:hover,
+      .tabs:has(#tab-2:checked) .tab[for="tab-2"]:hover,
+      .tabs:has(#tab-3:checked) .tab[for="tab-3"]:hover,
+      .tabs:has(#tab-4:checked) .tab[for="tab-4"]:hover {
+        color: var(--accent);
       }
     </style>
   </head>
