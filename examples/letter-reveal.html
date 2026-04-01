@@ -66,16 +66,16 @@
 
         display: inline-block;
         opacity: var(--active);
-        transition: all 0.6s ease-out;
+        transition: all 0.8s ease-out;
         transition-delay: calc(var(--index) * 0.1s);
       }
 
       /* The outer letter only fades, while the inner glyph carries the spring motion. */
       .glyph {
         display: inline-block;
-        translate: 0 calc((1 - var(--active)) * 0.7em);
-        scale: calc(0.76 + (0.24 * var(--active)));
-        transition: all 0.9s var(--spring-strong);
+        translate: 0 calc((1 - var(--active)) * 0.6em);
+        scale: calc(0.8 + (0.2 * var(--active)));
+        transition: all 1.2s var(--spring-default);
         transition-delay: calc(var(--index) * 0.1s);
       }
 

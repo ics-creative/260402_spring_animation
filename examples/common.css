@@ -58,6 +58,7 @@ button {
   border: 0;
   background: none;
   color: inherit;
+  user-select: none;
 }
 
 a {

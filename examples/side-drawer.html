@@ -17,72 +17,37 @@
 
       .drawer {
         position: fixed;
-        inset: 0;
-        width: 100vw;
+        inset: 0 0 0 auto;
+        width: min(436px, 100vw);
         height: 100dvh;
         max-width: none;
         max-height: none;
         margin: 0;
-        padding: 0;
+        padding: 16px 72px 16px 16px;
         border: 0;
-        background: none;
+        border-inline-start: 1px solid var(--line);
+        background: var(--surface);
         overflow: hidden;
+        translate: calc(100% + 64px) 0;
         transition:
-          display 0.2s allow-discrete,
-          overlay 0.2s allow-discrete;
+          translate 1s var(--spring-default),
+          display 1s allow-discrete,
+          overlay 1s allow-discrete;
 
         &::backdrop {
           background: rgb(0 0 0 / 28%);
+          opacity: 0;
+          transition: opacity 0.4s;
         }
 
-        .drawer-viewport {
-          position: fixed;
-          inset: 0;
-          display: flex;
-          justify-content: flex-end;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-          pointer-events: none;
-        }
-
-        .drawer-shell {
-          position: relative;
-          flex: none;
-          width: min(380px, calc(100% - 24px));
-          min-height: 100%;
-          overflow: visible;
-          pointer-events: auto;
-          translate: calc(100% + 24px) 0;
-          z-index: 1;
-          transition: translate 1s var(--spring-strong);
-
-          /* The main surface and the extra right cushion move as one piece with the drawer shell. */
-          &::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-inline-start: 1px solid var(--line);
-            background: var(--surface);
-          }
-
-          &::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: -56px;
-            bottom: 0;
-            width: 56px;
-            background: var(--surface);
-          }
-        }
-
-        .drawer-panel {
-          position: relative;
-          min-height: 100%;
-          padding: 16px;
-          display: grid;
-          gap: 12px;
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          width: 64px;
+          background: var(--surface);
         }
 
         .drawer-nav {
@@ -103,19 +68,23 @@
         }
 
         &[open] {
-          display: block;
+          display: grid;
+          grid-template-rows: 1fr auto;
+          gap: 12px;
+          translate: 128px 0;
 
           @starting-style {
-            display: block;
+              translate: calc(100%) 0;
           }
 
-          .drawer-shell {
-            translate: 0 0;
+          &::backdrop {
+            opacity: 1;
 
             @starting-style {
-              translate: calc(100% + 24px) 0;
+              opacity: 0;
             }
           }
+
         }
       }
     </style>
@@ -126,31 +95,16 @@
         <button class="button" commandfor="side-drawer" command="show-modal">Open Drawer</button>
       </section>
       <dialog class="drawer" id="side-drawer" closedby="any">
-        <div class="drawer-viewport">
-          <div class="drawer-shell">
-            <div class="drawer-panel">
-              <div class="drawer-nav">
-                <button class="button drawer-item">Overview</button>
-                <button class="button drawer-item">Members</button>
-                <button class="button drawer-item">Publishing</button>
-                <button class="button drawer-item">Integrations</button>
-              </div>
-              <div class="drawer-footer">
-                <button class="button" commandfor="side-drawer" command="close">Close</button>
-              </div>
-            </div>
-          </div>
+        <div class="drawer-nav">
+          <button class="button drawer-item">Overview</button>
+          <button class="button drawer-item">Members</button>
+          <button class="button drawer-item">Publishing</button>
+          <button class="button drawer-item">Integrations</button>
+        </div>
+        <div class="drawer-footer">
+          <button class="button" commandfor="side-drawer" command="close">Close</button>
         </div>
       </dialog>
     </main>
-    <script type="module">
-      const drawer = document.querySelector("#side-drawer");
-
-      // closedby="any" should light-dismiss, but this keeps outside click working where that support still falls short.
-      drawer.addEventListener("click", (event) => {
-        if (event.target !== drawer) return;
-        drawer.close();
-      });
-    </script>
   </body>
 </html>

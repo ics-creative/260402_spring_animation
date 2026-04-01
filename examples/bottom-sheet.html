@@ -11,27 +11,29 @@
       }
 
       .sheet {
-        inset: auto 0 0;
-        width: min(380px, calc(100vw - 20px));
-        margin: 0 auto 12px;
-        padding: 0;
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+        max-width: none;
+        max-height: none;
+        margin: 0;
+        padding: 0 10px 12px;
         border: 0;
         background: none;
-        opacity: 0;
-        translate: 0 100%;
+        display: grid;
+        align-content: end;
+        justify-items: center;
+        overflow: hidden;
         transition:
-          opacity 0.2s,
-          translate 0.9s var(--spring-default),
           display 0.2s allow-discrete,
           overlay 0.2s allow-discrete;
 
         &[open] {
-          opacity: 1;
-          translate: 0 0;
+          display: grid;
 
           @starting-style {
-            opacity: 0;
-            translate: 0 100%;
+            display: grid;
           }
         }
 
@@ -51,11 +53,30 @@
       }
 
       .sheet-panel {
+        width: min(380px, 100%);
         display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        max-height: calc(100dvh - 24px);
+        align-self: end;
         overflow: clip;
         border: 1px solid var(--line);
         border-radius: 16px;
         background: var(--surface);
+        opacity: 0;
+        translate: 0 100%;
+        transition:
+          opacity 0.2s,
+          translate 0.9s var(--spring-default);
+      }
+
+      .sheet[open] .sheet-panel {
+        opacity: 1;
+        translate: 0 0;
+
+        @starting-style {
+          opacity: 0;
+          translate: 0 100%;
+        }
       }
 
       .sheet-header {
@@ -94,6 +115,7 @@
       .sheet-actions {
         display: grid;
         padding: 4px 0 0;
+        overflow: auto;
       }
 
       .sheet-action {
@@ -181,7 +203,7 @@
   <body>
     <main class="page">
       <section class="stage">
-        <button class="button" commandfor="bottom-sheet" command="show-modal">Open Action Sheet</button>
+        <button class="button sheet-open" type="button">Open Action Sheet</button>
       </section>
       <dialog class="sheet" id="bottom-sheet">
         <div class="sheet-panel">
@@ -191,28 +213,54 @@
             <p class="sheet-message">Choose what you want to do with this photo.</p>
           </div>
           <div class="sheet-actions">
-            <button class="button sheet-action">
+            <button class="button sheet-action" type="button" value="save">
               <span class="sheet-action-title">Save to Files</span>
               <span class="sheet-action-note">Download a copy to your device.</span>
             </button>
-            <button class="button sheet-action">
+            <button class="button sheet-action" type="button" value="copy">
               <span class="sheet-action-title">Copy Link</span>
               <span class="sheet-action-note">Share the current photo URL.</span>
             </button>
-            <button class="button sheet-action">
+            <button class="button sheet-action" type="button" value="album">
               <span class="sheet-action-title">Add to Album</span>
               <span class="sheet-action-note">Move it into another collection.</span>
             </button>
-            <button class="button sheet-action sheet-action-destructive">
+            <button class="button sheet-action sheet-action-destructive" type="button" value="delete">
               <span class="sheet-action-title">Delete Photo</span>
               <span class="sheet-action-note">Remove it permanently from this workspace.</span>
             </button>
           </div>
           <div class="sheet-footer">
-            <button class="button sheet-cancel" commandfor="bottom-sheet" command="close">Close</button>
+            <button class="button sheet-cancel" type="button" value="close">Close</button>
           </div>
         </div>
       </dialog>
     </main>
+    <script type="module">
+      const sheet = document.querySelector("#bottom-sheet");
+      const openButton = document.querySelector(".sheet-open");
+      const actionButtons = document.querySelectorAll(".sheet-action");
+      const closeButton = document.querySelector(".sheet-cancel");
+
+      openButton.addEventListener("click", () => {
+        sheet.showModal();
+      });
+
+      actionButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          sheet.close(button.value);
+        });
+      });
+
+      closeButton.addEventListener("click", () => {
+        sheet.close(closeButton.value);
+      });
+
+      sheet.addEventListener("click", (event) => {
+        if (event.target === sheet) {
+          sheet.close("dismiss");
+        }
+      });
+    </script>
   </body>
 </html>

@@ -14,7 +14,7 @@
       }
 
       .accordion {
-        width: min(680px, 100%);
+        width: min(520px, calc(100vw - 32px));
         display: grid;
         gap: 12px;
       }
@@ -24,10 +24,16 @@
         border-radius: 14px;
         overflow: clip;
 
-        /* The outer details box owns the height spring. The inner panel only handles copy readability. */
+        /* Opening is the hero motion. Closing stays short so the collapse does not feel theatrical. */
         transition:
-          block-size 0.8s var(--spring-default),
+          block-size 0.3s ease,
           border-color 0.2s;
+
+        &[data-motion="opening"] {
+          transition:
+            block-size 1s var(--spring-strong),
+            border-color 0.2s;
+        }
 
         summary {
           list-style: none;
@@ -37,7 +43,7 @@
           align-items: center;
           justify-content: space-between;
           cursor: pointer;
-          transition: padding-block-end 0.8s var(--spring-default);
+          transition: padding-block-end 0.2s ease;
 
           &::-webkit-details-marker {
             display: none;
@@ -54,17 +60,18 @@
         flex: none;
         width: 18px;
         height: 18px;
-        transition: rotate 0.8s var(--spring-default);
+        transition: rotate 0.2s ease;
 
         &::before,
         &::after {
           content: "";
           position: absolute;
-          top: calc(50% - 1px);
-          left: 0;
+          top: 50%;
+          left: 50%;
           width: 18px;
           height: 2px;
           background: currentcolor;
+          translate: -50% -50%;
         }
 
         &::after {
@@ -76,13 +83,7 @@
         padding: 0 16px 16px;
         color: var(--muted);
         opacity: 0;
-        translate: 0 -12px;
-        scale: 0.96;
-        transform-origin: top center;
-        transition:
-          opacity 0.2s linear,
-          translate 0.8s var(--spring-default),
-          scale 0.8s var(--spring-default);
+        transition: opacity 0.2s linear;
       }
 
       .item.is-open {
@@ -98,8 +99,6 @@
 
         .panel {
           opacity: 1;
-          translate: 0 0;
-          scale: 1;
         }
       }
     </style>
@@ -150,7 +149,8 @@
     </main>
     <script type="module">
       const items = [...document.querySelectorAll(".item")];
-      const animationDuration = 820;
+      const openingDuration = 1020;
+      const closingDuration = 320;
       const finishTimers = new WeakMap();
       const getSummarySize = (item) => item.querySelector("summary").offsetHeight;
       const getOpenSize = (item) => getSummarySize(item) + item.querySelector(".panel").offsetHeight;
@@ -158,6 +158,7 @@
       const finish = (item) => {
         const isOpen = item.classList.contains("is-open");
         item.classList.remove("is-animating");
+        delete item.dataset.motion;
         item.style.blockSize = "";
 
         if (!isOpen) {
@@ -165,33 +166,34 @@
         }
       };
 
-      const scheduleFinish = (item) => {
+      const scheduleFinish = (item, duration) => {
         // block-size transitionend is unreliable here, so the timer performs the final open/close cleanup.
         window.clearTimeout(finishTimers.get(item));
         const timer = window.setTimeout(() => {
           finish(item);
-        }, animationDuration + 40);
+        }, duration + 40);
         finishTimers.set(item, timer);
       };
 
       const animateItem = (item, nextOpen) => {
         if (item.classList.contains("is-animating")) return;
+        const duration = nextOpen ? openingDuration : closingDuration;
         const startSize = item.offsetHeight || getSummarySize(item);
         item.classList.add("is-animating");
+        item.dataset.motion = nextOpen ? "opening" : "closing";
         item.style.blockSize = `${startSize}px`;
+        void item.offsetHeight;
 
         if (nextOpen) {
           item.open = true;
-          item.classList.add("is-open");
-        } else {
-          item.classList.remove("is-open");
         }
 
         const endSize = nextOpen ? getOpenSize(item) : getSummarySize(item);
         requestAnimationFrame(() => {
+          item.classList.toggle("is-open", nextOpen);
           item.style.blockSize = `${endSize}px`;
         });
-        scheduleFinish(item);
+        scheduleFinish(item, duration);
       };
 
       items.forEach((item) => {
