@@ -85,15 +85,6 @@
           gap: 8px;
           min-width: 0;
           justify-items: center;
-
-          .lane-panel-label {
-            margin: 0;
-            font-size: 0.76rem;
-            font-weight: 600;
-            color: var(--color-muted);
-            letter-spacing: -0.01em;
-            text-align: center;
-          }
         }
 
         .lane-scale-stage {
@@ -168,7 +159,7 @@
       const CURVE = {
         inset: 18,
         size: 84,
-        min: -0.08,
+        min: 0,
         max: 1.2,
         samples: 60,
       };
@@ -193,7 +184,6 @@
             <p class="lane-label">${label}</p>
             <div class="lane-body">
               <div class="lane-panel" data-panel="curve">
-                <p class="lane-panel-label">Curve</p>
                 <!-- 📈 -->
                 <svg class="lane-curve" viewBox="0 0 120 120">
                   <path class="lane-curve-guide"></path>
@@ -201,13 +191,11 @@
                 </svg>
               </div>
               <div class="lane-panel" data-panel="scale">
-                <p class="lane-panel-label">Scale</p>
                 <div class="lane-scale-stage">
                   <div class="lane-block" data-block data-kind="${key}" data-motion="scale"></div>
                 </div>
               </div>
               <div class="lane-panel" data-panel="y">
-                <p class="lane-panel-label">Y Motion</p>
                 <div class="lane-track" data-track>
                   <div class="lane-block" data-block data-kind="${key}" data-motion="y"></div>
                 </div>
