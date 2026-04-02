@@ -6,8 +6,6 @@
     <link rel="stylesheet" href="./common.css" />
     <style>
       .stage {
-        --trigger-width: clamp(124px, 32vw, 144px);
-
         align-content: center;
         justify-items: center;
 
@@ -20,7 +18,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
-        width: var(--trigger-width);
+        width: 144px;
 
         .action-trigger {
           width: 100%;
@@ -64,7 +62,7 @@
         position: absolute;
         inset: auto;
         margin: 0;
-        width: min(220px, calc(100vw - 48px - var(--trigger-width)));
+        width: min(220px, calc(100vw - 192px));
         padding: 8px;
         border: 1px solid var(--color-line);
         border-radius: 12px;
