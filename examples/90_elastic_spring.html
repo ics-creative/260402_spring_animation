@@ -239,7 +239,10 @@
         block.style.translate = "0 0";
         if (block.dataset.motion === "scale") {
           block.style.setProperty("--block-scale", "0");
+          return;
         }
+
+        block.style.removeProperty("transform");
       }
 
       /** Returns the available Y travel inside one track. */
