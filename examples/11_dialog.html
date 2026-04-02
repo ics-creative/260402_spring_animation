@@ -27,12 +27,12 @@
 
         /* Anchor positioning gives the dialog a believable launch point before it settles at center. */
         transition:
-          opacity 0.2s,
+          opacity 0.3s,
           scale 1.2s var(--spring-default),
           left 1.2s var(--spring-default),
           top 1.2s var(--spring-default),
-          display 0.2s allow-discrete,
-          overlay 0.2s allow-discrete;
+          display 0.3s allow-discrete,
+          overlay 0.3s allow-discrete;
 
         &[open] {
           left: 50%;
@@ -49,9 +49,9 @@
         }
 
         &::backdrop {
-          background: rgb(0 0 0 / 40%);
+          background: rgb(0 0 0 / 50%);
           opacity: 0;
-          transition: opacity 0.2s;
+          transition: opacity 0.3s linear;
         }
 
         &[open]::backdrop {
