@@ -12,7 +12,7 @@
       .chip-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 16px;
       }
 
       .chip {
@@ -34,8 +34,8 @@
 
         &.is-shifting {
           transition:
-            translate 1s var(--spring-bouncy),
-            scale 1s var(--spring-bouncy);
+            translate 1.2s var(--spring-bouncy),
+            scale 1.2s var(--spring-bouncy);
         }
 
         button {
@@ -63,7 +63,7 @@
             width: 12px;
             height: 12px;
             rotate: 0deg;
-            transition: rotate 0.8s var(--spring-bouncy);
+            transition: rotate 0.8s var(--spring-default);
             pointer-events: none;
 
             &::before,
@@ -159,7 +159,7 @@
           chip.classList.remove("is-shifting");
           chip.style.setProperty("--shift-x", `${deltaX}px`);
           chip.style.setProperty("--shift-y", `${deltaY}px`);
-          chip.style.setProperty("--shift-scale", "0.9");
+          chip.style.setProperty("--shift-scale", "0.8");
           shifted.push(chip);
         }
 

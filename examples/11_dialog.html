@@ -6,7 +6,11 @@
     <link rel="stylesheet" href="./common.css" />
     <style>
       .launcher-row {
-        gap: 32px 64px;
+        gap: 128px;
+
+        @media (width <= 640px) {
+          flex-flow: column nowrap;
+        }
       }
 
       .dialog {
