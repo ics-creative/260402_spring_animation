@@ -90,24 +90,6 @@
           }
         }
       }
-
-      .chip-ghost {
-        position: fixed;
-        margin: 0;
-        pointer-events: none;
-        z-index: 10;
-        transform-origin: center;
-        opacity: 1;
-        scale: 1;
-        transition:
-          opacity 0.4s ease,
-          scale 0.8s var(--spring-bouncy);
-
-        &.is-exiting {
-          opacity: 0;
-          scale: 0.4;
-        }
-      }
     </style>
   </head>
   <body>
@@ -147,7 +129,7 @@
         </div>
       </div>
     </main>
-    <script type="module">
+    <script>
       const row = document.querySelector("[data-row]");
 
       /**
@@ -187,52 +169,18 @@
         });
       }
 
-      /**
-       * Clones the removed chip into a fixed-position ghost so its exit motion can finish after layout reflows.
-       *
-       * @param {HTMLElement} chip
-       */
-      function animateGhost(chip) {
-        const rect = chip.getBoundingClientRect();
-        // The removed chip itself is not part of the FLIP pass.
-        // We keep its exit visible with a fixed ghost so the row can reflow immediately.
-        const ghost = chip.cloneNode(true);
-        ghost.classList.add("chip-ghost");
-        ghost.style.top = `${rect.top}px`;
-        ghost.style.left = `${rect.left}px`;
-        ghost.style.width = `${rect.width}px`;
-        ghost.style.height = `${rect.height}px`;
-        ghost.style.transformOrigin = "center";
-        document.body.append(ghost);
-
-        const removeGhost = (event) => {
-          if (event.propertyName !== "opacity") return;
-          ghost.removeEventListener("transitionend", removeGhost);
-          ghost.remove();
-        };
-
-        ghost.addEventListener("transitionend", removeGhost);
-        requestAnimationFrame(() => {
-          ghost.classList.add("is-exiting");
-        });
-      }
-
       function handleRowClick(event) {
         const button = event.target.closest("button");
         if (!button) return;
         const chip = button.closest(".chip");
         if (row.children.length === 1) {
-          animateGhost(chip);
-          chip.remove();
-          setTimeout(() => {
-            location.reload();
-          }, 450);
+          // Refresh for demo 😁
+          location.reload();
           return;
         }
 
         // First: capture the chips before removal so animateShift() can run the FLIP delta.
         const before = new Map([...row.children].map((item) => [item, item.getBoundingClientRect()]));
-        animateGhost(chip);
         chip.remove();
         animateShift(before);
       }
