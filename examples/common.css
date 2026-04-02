@@ -114,9 +114,11 @@ a {
     color 0.2s,
     border-color 0.2s;
 
-  &:hover {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
+  @media (any-hover: hover) {
+    &:hover {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
   }
 
   &:active {
@@ -170,8 +172,10 @@ a {
     }
   }
 
-  &:hover .replay-icon::before {
-    animation: replay-spin 0.5s;
+  @media (any-hover: hover) {
+    &:hover .replay-icon::before {
+      animation: replay-spin 0.5s;
+    }
   }
 }
 
@@ -219,8 +223,10 @@ a {
   transition: rotate 0.8s var(--spring-bouncy);
   pointer-events: none;
 
-  .close-button:hover & {
-    rotate: 90deg;
+  @media (any-hover: hover) {
+    .close-button:hover & {
+      rotate: 90deg;
+    }
   }
 
   &::before,

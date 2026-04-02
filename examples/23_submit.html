@@ -33,9 +33,11 @@
           color 0.2s,
           border-color 0.2s;
 
-        &[data-state="idle"]:hover {
-          color: var(--color-accent);
-          border-color: var(--color-accent);
+        @media (any-hover: hover) {
+          &[data-state="idle"]:hover {
+            color: var(--color-accent);
+            border-color: var(--color-accent);
+          }
         }
 
         .submit-label,
@@ -97,10 +99,12 @@
           border-radius: 32px;
           cursor: default;
 
-          &:hover {
-            transform: none;
-            color: inherit;
-            border-color: inherit;
+          @media (any-hover: hover) {
+            &:hover {
+              transform: none;
+              color: inherit;
+              border-color: inherit;
+            }
           }
         }
 

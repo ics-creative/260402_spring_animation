@@ -28,8 +28,10 @@
         overflow: clip;
         transition: border-color 0.2s ease;
 
-        &:hover {
-          border-color: var(--color-accent);
+        @media (any-hover: hover) {
+          &:hover {
+            border-color: var(--color-accent);
+          }
         }
 
         &[open] {
@@ -84,8 +86,10 @@
             }
           }
 
-          &:hover .summary-icon {
-            color: var(--color-accent);
+          @media (any-hover: hover) {
+            &:hover .summary-icon {
+              color: var(--color-accent);
+            }
           }
         }
 

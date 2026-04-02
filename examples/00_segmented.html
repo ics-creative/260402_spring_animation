@@ -52,8 +52,10 @@
           cursor: pointer;
           transition: all 0.2s;
 
-          &:hover {
-            background: var(--color-surface-muted);
+          @media (any-hover: hover) {
+            &:hover {
+              background: var(--color-surface-muted);
+            }
           }
         }
 
@@ -69,11 +71,13 @@
           position-anchor: --segment-4;
         }
 
-        &:has(#segment-1:checked) .segment[for="segment-1"]:hover,
-        &:has(#segment-2:checked) .segment[for="segment-2"]:hover,
-        &:has(#segment-3:checked) .segment[for="segment-3"]:hover,
-        &:has(#segment-4:checked) .segment[for="segment-4"]:hover {
-          background: transparent;
+        @media (any-hover: hover) {
+          &:has(#segment-1:checked) .segment[for="segment-1"]:hover,
+          &:has(#segment-2:checked) .segment[for="segment-2"]:hover,
+          &:has(#segment-3:checked) .segment[for="segment-3"]:hover,
+          &:has(#segment-4:checked) .segment[for="segment-4"]:hover {
+            background: transparent;
+          }
         }
 
         @media (width < 578px) {

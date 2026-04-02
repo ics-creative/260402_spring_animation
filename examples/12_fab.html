@@ -45,9 +45,15 @@
             display: none;
           }
 
-          &:is(:hover, :focus-visible) {
+          &:focus-visible {
             border-color: var(--color-accent);
             outline: none;
+          }
+
+          @media (any-hover: hover) {
+            &:hover {
+              border-color: var(--color-accent);
+            }
           }
         }
 
@@ -71,10 +77,17 @@
             scale 0.8s var(--spring-bouncy),
             translate 0.8s var(--spring-bouncy);
 
-          &:is(:hover, :focus-visible) {
+          &:focus-visible {
             border-color: var(--color-accent);
             color: var(--color-accent);
             outline: none;
+          }
+
+          @media (any-hover: hover) {
+            &:hover {
+              border-color: var(--color-accent);
+              color: var(--color-accent);
+            }
           }
         }
 

@@ -73,8 +73,10 @@
         }
 
         /* Only the shell springs. The field fades in after that so close does not look squashed. */
-        &:has(.search-icon:hover) {
-          border-color: var(--color-accent);
+        @media (any-hover: hover) {
+          &:has(.search-icon:hover) {
+            border-color: var(--color-accent);
+          }
         }
 
         &:has(.search-input:focus) {

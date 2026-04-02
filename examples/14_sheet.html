@@ -122,11 +122,13 @@
             text-align: left;
             transition: all 0.2s;
 
-            &:hover {
-              transform: none;
-              color: var(--color-text);
-              border-color: transparent;
-              background: var(--color-surface-hover);
+            @media (any-hover: hover) {
+              &:hover {
+                transform: none;
+                color: var(--color-text);
+                border-color: transparent;
+                background: var(--color-surface-hover);
+              }
             }
 
             &:active {
@@ -136,10 +138,12 @@
             &.sheet-action-destructive {
               color: var(--color-text);
 
-              &:hover {
-                color: var(--color-text);
-                border-color: transparent;
-                background: var(--color-surface-hover);
+              @media (any-hover: hover) {
+                &:hover {
+                  color: var(--color-text);
+                  border-color: transparent;
+                  background: var(--color-surface-hover);
+                }
               }
             }
 

@@ -48,8 +48,10 @@
             }
           }
 
-          &:hover .action-caret {
-            translate: 2px 0;
+          @media (any-hover: hover) {
+            &:hover .action-caret {
+              translate: 2px 0;
+            }
           }
         }
       }
@@ -112,8 +114,10 @@
           color: var(--color-text);
           transition: all 0.2s;
 
-          &:hover {
-            background: var(--color-surface-hover);
+          @media (any-hover: hover) {
+            &:hover {
+              background: var(--color-surface-hover);
+            }
           }
 
           &:active {

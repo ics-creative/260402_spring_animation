@@ -52,8 +52,10 @@
           color: var(--color-muted);
           transition: color 0.2s;
 
-          &:hover {
-            color: var(--color-accent);
+          @media (any-hover: hover) {
+            &:hover {
+              color: var(--color-accent);
+            }
           }
 
           .chip-dismiss-icon {
@@ -85,8 +87,10 @@
             }
           }
 
-          &:hover .chip-dismiss-icon {
-            rotate: 90deg;
+          @media (any-hover: hover) {
+            &:hover .chip-dismiss-icon {
+              rotate: 90deg;
+            }
           }
         }
       }
