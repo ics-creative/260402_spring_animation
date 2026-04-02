@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "fix": "oxfmt . && stylelint \"**/*.{css,html}\" --fix",
-    "check": "oxfmt --check . && stylelint \"**/*.{css,html}\" && tsc --noEmit"
+    "fix": "oxfmt . && stylelint \"**/*.{css,html}\" --fix && tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
