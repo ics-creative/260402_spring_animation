@@ -27,9 +27,9 @@
           position: absolute;
           right: 0;
           bottom: 0;
-          border: 1px solid var(--line);
+          border: 1px solid var(--color-line);
           border-radius: 50%;
-          background: var(--surface);
+          background: var(--color-surface);
           cursor: pointer;
         }
 
@@ -46,7 +46,7 @@
           }
 
           &:is(:hover, :focus-visible) {
-            border-color: var(--accent);
+            border-color: var(--color-accent);
             outline: none;
           }
         }
@@ -59,8 +59,9 @@
           display: grid;
           place-items: center;
           text-decoration: none;
-          color: var(--text);
+          color: var(--color-text);
           opacity: 0;
+          pointer-events: none;
           scale: 0.2;
           translate: 0 0;
           transition:
@@ -71,8 +72,8 @@
             translate 0.8s var(--spring-bouncy);
 
           &:is(:hover, :focus-visible) {
-            border-color: var(--accent);
-            color: var(--accent);
+            border-color: var(--color-accent);
+            color: var(--color-accent);
             outline: none;
           }
         }
@@ -99,7 +100,7 @@
             left: 0;
             width: 20px;
             height: 2px;
-            background: var(--accent);
+            background: var(--color-accent);
           }
 
           &::after {
@@ -114,9 +115,9 @@
 
           .fab-item {
             opacity: 1;
+            pointer-events: auto;
             scale: 1;
-            translate:
-              calc(sin(var(--item-angle)) * var(--item-radius) * -1)
+            translate: calc(sin(var(--item-angle)) * var(--item-radius) * -1)
               calc(cos(var(--item-angle)) * var(--item-radius) * -1);
           }
         }
@@ -125,7 +126,7 @@
   </head>
   <body>
     <main class="page">
-      <section class="stage">
+      <div class="stage">
         <details class="fab">
           <summary class="fab-main">
             <span class="fab-main-icon"></span>
@@ -134,7 +135,7 @@
           <a class="fab-item" href="#">B</a>
           <a class="fab-item" href="#">C</a>
         </details>
-      </section>
+      </div>
     </main>
   </body>
 </html>

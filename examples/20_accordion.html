@@ -20,10 +20,29 @@
       }
 
       .item {
-        border: 1px solid var(--line);
+        --panel-opacity: 0;
+        --summary-rotate: 0deg;
+
+        border: 1px solid var(--color-line);
         border-radius: 14px;
         overflow: clip;
         transition: border-color 0.2s ease;
+
+        &:hover {
+          border-color: var(--color-accent);
+        }
+
+        &[open] {
+          --panel-opacity: 1;
+          --summary-rotate: 45deg;
+
+          &::details-content {
+            block-size: auto;
+            transition:
+              block-size 0.6s var(--spring-default),
+              content-visibility 1s allow-discrete;
+          }
+        }
 
         summary {
           list-style: none;
@@ -37,6 +56,37 @@
           &::-webkit-details-marker {
             display: none;
           }
+
+          .summary-icon {
+            position: relative;
+            flex: none;
+            width: 18px;
+            height: 18px;
+            display: grid;
+            place-items: center;
+            color: inherit;
+            rotate: var(--summary-rotate);
+            transition:
+              rotate 0.45s var(--spring-snappy),
+              color 0.2s ease;
+
+            &::before,
+            &::after {
+              content: "";
+              grid-area: 1 / 1;
+              width: 18px;
+              height: 2px;
+              background: currentcolor;
+            }
+
+            &::after {
+              transform: rotate(90deg);
+            }
+          }
+
+          &:hover .summary-icon {
+            color: var(--color-accent);
+          }
         }
 
         &::details-content {
@@ -46,75 +96,23 @@
             block-size 0.3s ease,
             content-visibility 0.3s allow-discrete;
         }
-      }
 
-      .item:hover {
-        border-color: var(--accent);
-      }
+        .item-content {
+          padding-block-start: 4px;
 
-      .item-content {
-        padding-block-start: 4px;
-      }
-
-      .summary-icon {
-        position: relative;
-        flex: none;
-        width: 18px;
-        height: 18px;
-        display: grid;
-        place-items: center;
-        color: inherit;
-        rotate: 0deg;
-        transition:
-          rotate 0.45s var(--spring-snappy),
-          color 0.2s ease;
-
-        &::before,
-        &::after {
-          content: "";
-          grid-area: 1 / 1;
-          width: 18px;
-          height: 2px;
-          background: currentcolor;
-        }
-
-        &::after {
-          transform: rotate(90deg);
-        }
-      }
-
-      .item > summary:hover .summary-icon {
-        color: var(--accent);
-      }
-
-      .panel {
-        padding: 0 16px 16px;
-        color: var(--muted);
-        opacity: 0;
-        transition: opacity 0.2s linear;
-      }
-
-      .item[open] {
-        &::details-content {
-          block-size: auto;
-          transition:
-            block-size 0.6s var(--spring-default),
-            content-visibility 1s allow-discrete;
-        }
-
-        .summary-icon {
-          rotate: 45deg;
-        }
-
-        .panel {
-          opacity: 1;
+          .panel {
+            padding: 0 16px 16px;
+            color: var(--color-muted);
+            opacity: var(--panel-opacity);
+            transition: opacity 0.2s linear;
+          }
         }
       }
     </style>
   </head>
   <body>
     <main class="page">
-      <section class="stage">
+      <div class="stage">
         <div class="accordion">
           <details class="item" open>
             <summary>
@@ -154,7 +152,7 @@
             </div>
           </details>
         </div>
-      </section>
+      </div>
     </main>
   </body>
 </html>

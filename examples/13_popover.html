@@ -1,0 +1,259 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      .stage {
+        --trigger-width: clamp(124px, 32vw, 144px);
+
+        align-content: center;
+        justify-items: center;
+      }
+
+      .action-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: var(--trigger-width);
+
+        .action-trigger {
+          width: 100%;
+          padding-inline: 14px 12px;
+          justify-content: space-between;
+          gap: 12px;
+          text-align: left;
+
+          .action-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+          }
+
+          .action-caret {
+            display: inline flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            flex: none;
+            translate: 0 0;
+            transition: translate 0.24s var(--spring-snappy);
+
+            .action-caret-icon {
+              width: 100%;
+              height: 100%;
+              overflow: visible;
+            }
+          }
+
+          &:hover .action-caret {
+            translate: 2px 0;
+          }
+        }
+      }
+
+      .popover {
+        position: absolute;
+        inset: auto;
+        margin: 0;
+        width: min(220px, calc(100vw - 48px - var(--trigger-width)));
+        padding: 8px;
+        border: 1px solid var(--color-line);
+        border-radius: 12px;
+        background: var(--color-surface);
+        display: block;
+        block-size: max-content;
+        position-area: inline-end center;
+        margin-inline-start: 12px;
+        position-try: inline-start center;
+        place-self: start start;
+        transform-origin: left top;
+        opacity: 0;
+        translate: -24px 0;
+        scale: 0;
+        transition:
+          opacity 0.2s linear,
+          translate 1s var(--spring-default),
+          scale 1s var(--spring-default),
+          display 1s allow-discrete,
+          overlay 1s allow-discrete;
+
+        /* Opening gets the spring. Closing stays short and plain so the menu does not bounce away. */
+        &:popover-open {
+          opacity: 1;
+          translate: 0 0;
+          scale: 1;
+        }
+
+        .popover-menu {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+        }
+
+        .popover-item {
+          min-width: 0;
+        }
+
+        .popover-action {
+          width: 100%;
+          min-height: 40px;
+          padding: 0 12px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 12px;
+          color: var(--color-text);
+          transition: all 0.2s;
+
+          &:hover {
+            background: var(--color-surface-hover);
+          }
+
+          &:active {
+            scale: 1;
+          }
+
+          .popover-label {
+            display: block;
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="stage">
+        <div class="action-list">
+          <button
+            class="button action-trigger"
+            style="anchor-name: --action-1"
+            commandfor="popover-1"
+            command="toggle-popover"
+          >
+            <span class="action-label">Share</span>
+            <span class="action-caret">
+              <!-- › -->
+              <svg class="action-caret-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M6 3.5 10.5 8 6 12.5"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </button>
+          <button
+            class="button action-trigger"
+            style="anchor-name: --action-2"
+            commandfor="popover-2"
+            command="toggle-popover"
+          >
+            <span class="action-label">Invite</span>
+            <span class="action-caret">
+              <!-- › -->
+              <svg class="action-caret-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M6 3.5 10.5 8 6 12.5"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </button>
+          <button
+            class="button action-trigger"
+            style="anchor-name: --action-3"
+            commandfor="popover-3"
+            command="toggle-popover"
+          >
+            <span class="action-label">Move</span>
+            <span class="action-caret">
+              <!-- › -->
+              <svg class="action-caret-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M6 3.5 10.5 8 6 12.5"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="popover" id="popover-1" style="position-anchor: --action-1" popover>
+        <ul class="popover-menu">
+          <li class="popover-item">
+            <button class="popover-action">
+              <span class="popover-label">Copy link</span>
+            </button>
+          </li>
+          <li class="popover-item">
+            <button class="popover-action">
+              <span class="popover-label">Send by email</span>
+            </button>
+          </li>
+          <li class="popover-item">
+            <button class="popover-action">
+              <span class="popover-label">Manage access</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="popover" id="popover-2" style="position-anchor: --action-2" popover>
+        <ul class="popover-menu">
+          <li class="popover-item">
+            <button class="popover-action">
+              <span class="popover-label">Add reviewer</span>
+            </button>
+          </li>
+          <li class="popover-item">
+            <button class="popover-action">
+              <span class="popover-label">Copy invite</span>
+            </button>
+          </li>
+          <li class="popover-item">
+            <button class="popover-action">
+              <span class="popover-label">View guests</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="popover" id="popover-3" style="position-anchor: --action-3" popover>
+        <ul class="popover-menu">
+          <li class="popover-item">
+            <button class="popover-action">
+              <span class="popover-label">Move to next</span>
+            </button>
+          </li>
+          <li class="popover-item">
+            <button class="popover-action">
+              <span class="popover-label">Send to backlog</span>
+            </button>
+          </li>
+          <li class="popover-item">
+            <button class="popover-action">
+              <span class="popover-label">Archive task</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>

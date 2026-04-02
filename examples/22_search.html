@@ -15,9 +15,9 @@
         width: 56px;
         min-height: 56px;
         padding: 8px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--color-line);
         border-radius: 28px;
-        background: var(--surface);
+        background: var(--color-surface);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -74,13 +74,13 @@
 
         /* Only the shell springs. The field fades in after that so close does not look squashed. */
         &:has(.search-icon:hover) {
-          border-color: var(--accent);
+          border-color: var(--color-accent);
         }
 
         &:has(.search-input:focus) {
           justify-content: flex-start;
           width: min(420px, calc(100vw - 32px));
-          border-color: var(--accent);
+          border-color: var(--color-accent);
 
           .search-icon {
             translate: 1px 0;
@@ -99,17 +99,18 @@
   </head>
   <body>
     <main class="page">
-      <section class="stage">
+      <div class="stage">
         <label class="search">
-          <span class="search-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
+          <span class="search-icon">
+            <!-- 🔍 -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="11" cy="11" r="6.5" />
               <path d="M16 16 L20 20" />
             </svg>
           </span>
           <input class="search-input" type="search" placeholder="Search projects" />
         </label>
-      </section>
+      </div>
     </main>
   </body>
 </html>

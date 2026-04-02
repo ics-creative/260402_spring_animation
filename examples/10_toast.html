@@ -30,9 +30,9 @@
         align-items: center;
         column-gap: 10px;
         padding: 11px 12px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--color-line);
         border-radius: 12px;
-        background: var(--surface);
+        background: var(--color-surface);
         opacity: 1;
         translate: 0 0;
         scale: 1;
@@ -61,51 +61,58 @@
           translate: 0 -8px;
           scale: 0.96;
         }
-      }
 
-      .toast-mark {
-        width: 28px;
-        height: 28px;
-        border: 1px solid color-mix(in srgb, var(--line) 84%, var(--surface));
-        border-radius: 9px;
-        display: grid;
-        place-items: center;
-        font-size: 0.74rem;
-        font-weight: 700;
-        color: var(--text);
-        background: color-mix(in srgb, var(--line) 18%, var(--surface));
-      }
+        .toast-mark {
+          width: 28px;
+          height: 28px;
+          border: 1px solid var(--color-surface-muted);
+          border-radius: 9px;
+          display: grid;
+          place-items: center;
+          font-size: 0.74rem;
+          font-weight: 700;
+          color: var(--color-text);
+          background: var(--color-surface-muted);
+        }
 
-      .toast-copy {
-        min-width: 0;
-      }
+        .toast-copy {
+          min-width: 0;
+        }
 
-      .toast-title {
-        margin: 0;
-        font-size: 0.9rem;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        line-height: 1.2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        .toast-title {
+          margin: 0;
+          font-size: 0.9rem;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
     </style>
   </head>
   <body>
     <main class="page">
-      <section class="stage">
+      <div class="stage">
         <div class="stack" data-stack role="region" aria-label="Notifications"></div>
         <div class="row controls">
           <button class="button" data-add>Add toast</button>
         </div>
-      </section>
+      </div>
     </main>
     <script type="module">
       let count = 0;
       const stack = document.querySelector("[data-stack]");
       let activeToast = null;
       let activeTimer = 0;
+      /**
+       * @typedef {object} ToastMessage
+       * @property {string} mark
+       * @property {string} title
+       */
+
+      /** @type {ToastMessage[]} */
       const messages = [
         {
           mark: "W",
@@ -121,7 +128,13 @@
         },
       ];
 
-      const animateExit = (toast, onFinish) => {
+      /**
+       * Starts the toast exit transition and optionally chains the next toast once removal finishes.
+       *
+       * @param {HTMLElement} toast
+       * @param {() => void} [onFinish]
+       */
+      function animateExit(toast, onFinish) {
         // Keep the real toast in the DOM so the discrete display transition can finish cleanly.
         const handleTransitionEnd = (event) => {
           if (event.propertyName !== "opacity") return;
@@ -132,9 +145,15 @@
 
         toast.addEventListener("transitionend", handleTransitionEnd);
         toast.hidden = true;
-      };
+      }
 
-      const buildToast = (item) => {
+      /**
+       * Builds the DOM node for a single toast message from the demo data.
+       *
+       * @param {ToastMessage} item
+       * @returns {HTMLElement}
+       */
+      function buildToast(item) {
         const toast = document.createElement("article");
         toast.className = "toast";
         toast.innerHTML = `
@@ -144,12 +163,13 @@
           </div>
         `;
         return toast;
-      };
+      }
 
-      document.querySelector("[data-add]").addEventListener("click", () => {
+      function handleAddClick() {
         count += 1;
         const item = messages[(count - 1) % messages.length];
         const toast = buildToast(item);
+
         const showNext = () => {
           stack.replaceChildren(toast);
           activeToast = toast;
@@ -169,7 +189,9 @@
         }
 
         showNext();
-      });
+      }
+
+      document.querySelector("[data-add]").addEventListener("click", handleAddClick);
     </script>
   </body>
 </html>

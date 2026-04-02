@@ -5,21 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./common.css" />
     <style>
-      .launcher-anchor-1 {
-        anchor-name: --dialog-1;
-      }
-
-      .launcher-anchor-2 {
-        anchor-name: --dialog-2;
-      }
-
-      .launcher-anchor-3 {
-        anchor-name: --dialog-3;
-      }
-
       .launcher-row {
-        column-gap: 64px;
-        row-gap: 32px;
+        gap: 32px 64px;
       }
 
       .dialog {
@@ -32,7 +19,6 @@
         background: none;
         position: fixed;
         inset: auto;
-        position-anchor: var(--dialog-anchor);
         left: anchor(center);
         top: anchor(center);
         translate: -50% -50%;
@@ -75,84 +61,97 @@
             opacity: 0;
           }
         }
-      }
 
-      .dialog-inner {
-        width: min(420px, calc(100vw - 24px));
-        min-height: 220px;
-        padding: 20px;
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        background: var(--surface);
-        display: grid;
-        align-content: start;
-        gap: 12px;
+        .dialog-inner {
+          --surface-radius: 16px;
 
-        h2,
-        p {
-          margin: 0;
+          width: min(420px, calc(100vw - 24px));
+          min-height: 220px;
+          padding: 20px;
+          display: grid;
+          align-content: start;
+          gap: 12px;
+
+          h2,
+          p {
+            margin: 0;
+          }
         }
-      }
 
-      .dialog-header {
-        display: flex;
-        align-items: start;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      .dialog-anchor-1 {
-        --dialog-anchor: --dialog-1;
-      }
-
-      .dialog-anchor-2 {
-        --dialog-anchor: --dialog-2;
-      }
-
-      .dialog-anchor-3 {
-        --dialog-anchor: --dialog-3;
+        .dialog-header {
+          display: flex;
+          align-items: start;
+          justify-content: space-between;
+          gap: 12px;
+        }
       }
     </style>
   </head>
   <body>
     <main class="page">
-      <section class="stage">
+      <div class="stage">
         <div class="row launcher-row">
-          <button class="button launcher launcher-anchor-1" commandfor="dialog-1" command="show-modal">Profile</button>
-          <button class="button launcher launcher-anchor-2" commandfor="dialog-2" command="show-modal">Billing</button>
-          <button class="button launcher launcher-anchor-3" commandfor="dialog-3" command="show-modal">Review</button>
+          <button class="button launcher" style="anchor-name: --dialog-1" commandfor="dialog-1" command="show-modal">
+            Profile
+          </button>
+          <button class="button launcher" style="anchor-name: --dialog-2" commandfor="dialog-2" command="show-modal">
+            Billing
+          </button>
+          <button class="button launcher" style="anchor-name: --dialog-3" commandfor="dialog-3" command="show-modal">
+            Review
+          </button>
         </div>
-      </section>
-      <dialog class="dialog dialog-anchor-1" id="dialog-1" closedby="any">
-        <div class="dialog-inner">
+      </div>
+      <dialog class="dialog" id="dialog-1" style="position-anchor: --dialog-1" closedby="any">
+        <div class="dialog-inner surface-card">
           <div class="dialog-header">
             <h2>Profile updated</h2>
-            <button class="button close-button" aria-label="Close dialog" commandfor="dialog-1" command="close">
-              <span class="close-icon" aria-hidden="true"></span>
+            <button
+              class="button close-button"
+              aria-label="Close dialog"
+              title="Close dialog"
+              commandfor="dialog-1"
+              command="close"
+            >
+              <span class="close-icon"></span>
             </button>
           </div>
           <p>This panel grows from the pressed button, then settles at center with a soft spring motion.</p>
-          <p>Use this pattern when you want the next surface to feel clearly connected to the control that launched it.</p>
+          <p>
+            Use this pattern when you want the next surface to feel clearly connected to the control that launched it.
+          </p>
         </div>
       </dialog>
-      <dialog class="dialog dialog-anchor-2" id="dialog-2" closedby="any">
-        <div class="dialog-inner">
+      <dialog class="dialog" id="dialog-2" style="position-anchor: --dialog-2" closedby="any">
+        <div class="dialog-inner surface-card">
           <div class="dialog-header">
             <h2>Invoice sent</h2>
-            <button class="button close-button" aria-label="Close dialog" commandfor="dialog-2" command="close">
-              <span class="close-icon" aria-hidden="true"></span>
+            <button
+              class="button close-button"
+              aria-label="Close dialog"
+              title="Close dialog"
+              commandfor="dialog-2"
+              command="close"
+            >
+              <span class="close-icon"></span>
             </button>
           </div>
           <p>This panel grows from the pressed button, then settles at center with a soft spring motion.</p>
           <p>It works well for short billing confirmations, small follow-up actions, and lightweight status changes.</p>
         </div>
       </dialog>
-      <dialog class="dialog dialog-anchor-3" id="dialog-3" closedby="any">
-        <div class="dialog-inner">
+      <dialog class="dialog" id="dialog-3" style="position-anchor: --dialog-3" closedby="any">
+        <div class="dialog-inner surface-card">
           <div class="dialog-header">
             <h2>Review requested</h2>
-            <button class="button close-button" aria-label="Close dialog" commandfor="dialog-3" command="close">
-              <span class="close-icon" aria-hidden="true"></span>
+            <button
+              class="button close-button"
+              aria-label="Close dialog"
+              title="Close dialog"
+              commandfor="dialog-3"
+              command="close"
+            >
+              <span class="close-icon"></span>
             </button>
           </div>
           <p>This panel grows from the pressed button, then settles at center with a soft spring motion.</p>

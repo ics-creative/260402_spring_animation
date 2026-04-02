@@ -28,8 +28,8 @@
         margin: 0;
         padding: 16px;
         border: 0;
-        border-inline-start: 1px solid var(--line);
-        background: var(--surface);
+        border-inline-start: 1px solid var(--color-line);
+        background: var(--color-surface);
         grid-template-rows: auto 1fr;
         align-content: start;
         gap: 16px;
@@ -53,7 +53,7 @@
           right: -128px;
           bottom: 0;
           width: 128px;
-          background: var(--surface);
+          background: var(--color-surface);
         }
 
         .drawer-nav {
@@ -92,13 +92,19 @@
   </head>
   <body>
     <main class="page">
-      <section class="stage">
+      <div class="stage">
         <button class="button" commandfor="side-drawer" command="show-modal">Open Drawer</button>
-      </section>
+      </div>
       <dialog class="drawer" id="side-drawer" closedby="any">
         <div class="drawer-header">
-          <button class="button close-button" aria-label="Close drawer" commandfor="side-drawer" command="close">
-            <span class="close-icon" aria-hidden="true"></span>
+          <button
+            class="button close-button"
+            aria-label="Close drawer"
+            title="Close drawer"
+            commandfor="side-drawer"
+            command="close"
+          >
+            <span class="close-icon"></span>
           </button>
         </div>
         <div class="drawer-nav">

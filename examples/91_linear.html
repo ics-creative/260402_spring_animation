@@ -10,22 +10,7 @@
       }
 
       .compare {
-        width: min(860px, 100%);
-        min-width: 0;
-        display: grid;
-        gap: 16px;
-
-        > .button {
-          justify-self: end;
-          gap: 8px;
-
-          svg {
-            display: block;
-            width: 18px;
-            height: 18px;
-            flex: none;
-          }
-        }
+        max-width: 860px;
       }
 
       .demo-title {
@@ -35,47 +20,31 @@
       }
 
       .panel {
+        --surface-radius: 18px;
+
         min-width: 0;
         padding: 18px;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        background: var(--surface);
-      }
 
-      .token-label {
-        margin: 0 0 10px;
-        font-size: 0.82rem;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
+        .token-label {
+          margin: 0 0 10px;
+          font-size: 0.82rem;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+          color: var(--color-muted);
+        }
 
-      .token {
-        margin: 0;
-        max-width: 100%;
-        padding: 14px 16px;
-        border-radius: 14px;
-        background: #f7f7f7;
-        font-family: SFMono-Regular, ui-monospace, monospace;
-        font-size: 0.92rem;
-        line-height: 1.6;
-        overflow-x: auto;
-      }
-
-      .visual {
-        min-width: 0;
-        width: 100%;
-        display: grid;
-        justify-items: center;
-      }
-
-      .graph-panel {
-        min-width: 0;
-        width: 100%;
-        display: grid;
-        justify-items: center;
-        gap: 10px;
+        .token {
+          margin: 0;
+          max-width: 100%;
+          padding: 14px 16px;
+          border-radius: 14px;
+          background: #f7f7f7;
+          font-family: SFMono-Regular, ui-monospace, monospace;
+          font-size: 0.92rem;
+          line-height: 1.6;
+          overflow-x: auto;
+        }
       }
 
       .graph {
@@ -83,65 +52,66 @@
         aspect-ratio: 1;
         display: block;
         justify-self: center;
-        border: 1px solid var(--line);
+        border: 1px solid var(--color-line);
         border-radius: 18px;
-        background: var(--surface);
-      }
+        background: var(--color-surface);
 
-      .graph-grid,
-      .graph-axis,
-      .graph-reference,
-      .graph-line {
-        fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
+        .graph-grid,
+        .graph-axis,
+        .graph-reference,
+        .graph-line {
+          fill: none;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
 
-      .graph-grid {
-        stroke: color-mix(in srgb, var(--line) 70%, transparent);
-        stroke-width: 1;
-      }
+        .graph-grid {
+          stroke: var(--color-axis-line);
+          stroke-width: 1;
+        }
 
-      .graph-axis {
-        stroke: color-mix(in srgb, var(--text) 25%, var(--line));
-        stroke-width: 1.2;
-      }
+        .graph-axis {
+          stroke: var(--color-axis-line);
+          stroke-width: 1.2;
+        }
 
-      .graph-reference {
-        stroke: color-mix(in srgb, var(--line) 22%, var(--text));
-        stroke-width: 1.4;
-        stroke-dasharray: 5 6;
-      }
+        .graph-reference {
+          stroke: var(--color-axis-line);
+          stroke-width: 1.4;
+          stroke-dasharray: 5 6;
+        }
 
-      .graph-line {
-        stroke: var(--accent);
-        stroke-width: 3;
-      }
+        .graph-line {
+          stroke: var(--color-accent);
+          stroke-width: 3;
+        }
 
-      .graph-stop {
-        fill: var(--surface);
-        stroke: var(--accent);
-        stroke-width: 2;
-      }
+        .graph-stop {
+          fill: var(--color-surface);
+          stroke: var(--color-accent);
+          stroke-width: 2;
+        }
 
-      .graph-cursor {
-        fill: var(--text);
-        stroke: var(--surface);
-        stroke-width: 3;
-      }
+        .graph-cursor {
+          fill: var(--color-text);
+          stroke: var(--color-surface);
+          stroke-width: 3;
+        }
 
-      .graph-label {
-        fill: var(--muted);
-        font-family: sans-serif;
-        font-size: 10px;
+        .graph-label {
+          fill: var(--color-muted);
+          font-family: sans-serif;
+          font-size: 10px;
+        }
       }
     </style>
   </head>
   <body>
     <main class="page">
-      <section class="stage">
-        <div class="compare">
-          <button class="button" type="button" data-replay>
+      <div class="stage">
+        <div class="compare demo-compare">
+          <button class="button demo-replay" data-replay>
+            <!-- 🔄 -->
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-5.65 4H4.26A8 8 0 1 0 12 5" fill="currentColor" />
             </svg>
@@ -150,13 +120,14 @@
 
           <h1 class="demo-title">`linear()`</h1>
 
-          <section class="panel">
+          <div class="panel surface-card">
             <p class="token-label">サンプル</p>
             <pre class="token"><code data-token></code></pre>
-          </section>
+          </div>
 
-          <section class="panel visual">
-            <div class="graph-panel">
+          <div class="panel surface-card demo-visual">
+            <div class="graph-panel demo-graph-panel">
+              <!-- 📈 -->
               <svg class="graph" viewBox="0 0 240 240" aria-hidden="true">
                 <path class="graph-grid" data-grid></path>
                 <path class="graph-axis" d="M24 24V216H216"></path>
@@ -170,9 +141,9 @@
                 <text class="graph-label" data-goal-label x="10" y="28">1</text>
               </svg>
             </div>
-          </section>
+          </div>
         </div>
-      </section>
+      </div>
     </main>
 
     <script>
@@ -195,9 +166,43 @@
 
       let frameId = 0;
 
-      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      /**
+       * @typedef {object} LinearStop
+       * @property {number} value
+       * @property {number} position
+       */
 
-      const parseLinear = (input) => {
+      /**
+       * @typedef {object} GraphBounds
+       * @property {number} min
+       * @property {number} max
+       */
+
+      /**
+       * @typedef {object} GraphPoint
+       * @property {number} x
+       * @property {number} y
+       */
+
+      /**
+       * Clamps a numeric value into the provided range.
+       *
+       * @param {number} value
+       * @param {number} min
+       * @param {number} max
+       * @returns {number}
+       */
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      /**
+       * Parses a CSS linear() timing function into normalized stop objects with explicit positions.
+       *
+       * @param {string} input
+       * @returns {LinearStop[]}
+       */
+      function parseLinear(input) {
         const match = input.trim().match(/^linear\((.*)\)$/);
 
         if (!match) {
@@ -267,9 +272,16 @@
           value: stop.value,
           position: stop.position,
         }));
-      };
+      }
 
-      const sampleLinear = (points, time) => {
+      /**
+       * Samples the parsed linear() stops at a normalized time between 0 and 1.
+       *
+       * @param {LinearStop[]} points
+       * @param {number} time
+       * @returns {number}
+       */
+      function sampleLinear(points, time) {
         const t = clamp(time, 0, 1);
 
         if (t <= points[0].position) {
@@ -291,9 +303,15 @@
         }
 
         return points.at(-1).value;
-      };
+      }
 
-      const getBounds = (points) => {
+      /**
+       * Expands the graph bounds so overshoot and undershoot remain visible.
+       *
+       * @param {LinearStop[]} points
+       * @returns {GraphBounds}
+       */
+      function getBounds(points) {
         const minValue = Math.min(...points.map((point) => point.value));
         const maxValue = Math.max(...points.map((point) => point.value));
         const topPadding = maxValue > 1 ? Math.max((maxValue - 1) * 0.2, 0.02) : 0;
@@ -301,16 +319,29 @@
           min: minValue < 0 ? minValue : 0,
           max: Math.max(1, maxValue + topPadding),
         };
-      };
+      }
 
-      const toGraphPoint = (time, value, bounds) => {
+      /**
+       * Converts a normalized time/value pair into SVG coordinates within the chart box.
+       *
+       * @param {number} time
+       * @param {number} value
+       * @param {GraphBounds} bounds
+       * @returns {GraphPoint}
+       */
+      function toGraphPoint(time, value, bounds) {
         const x = GRAPH_INSET + GRAPH_SIZE * time;
         const normalized = (value - bounds.min) / (bounds.max - bounds.min);
         const y = GRAPH_INSET + GRAPH_SIZE - GRAPH_SIZE * normalized;
         return { x, y };
-      };
+      }
 
-      const drawGrid = (bounds) => {
+      /**
+       * Draws the chart grid based on the visible vertical range for the current curve.
+       *
+       * @param {GraphBounds} bounds
+       */
+      function drawGrid(bounds) {
         const xStep = GRAPH_SIZE / GRID_DIVISIONS;
         const topY = toGraphPoint(0, 1, bounds).y;
         const bottomY = toGraphPoint(0, 0, bounds).y;
@@ -329,9 +360,15 @@
         }
 
         grid.setAttribute("d", lines.join(" "));
-      };
+      }
 
-      const drawCurve = (points, bounds) => {
+      /**
+       * Samples the curve densely enough to produce a smooth preview line.
+       *
+       * @param {LinearStop[]} points
+       * @param {GraphBounds} bounds
+       */
+      function drawCurve(points, bounds) {
         const samples = Array.from({ length: 81 }, (_, index) => {
           const time = index / 80;
           const value = sampleLinear(points, time);
@@ -340,9 +377,15 @@
         });
 
         curve.setAttribute("d", samples.join(" "));
-      };
+      }
 
-      const drawStops = (points, bounds) => {
+      /**
+       * Renders one marker for each authored stop in the linear() function.
+       *
+       * @param {LinearStop[]} points
+       * @param {GraphBounds} bounds
+       */
+      function drawStops(points, bounds) {
         stopsRoot.replaceChildren(
           ...points.map((point) => {
             const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -354,28 +397,51 @@
             return circle;
           }),
         );
-      };
+      }
 
-      const drawGoal = (bounds) => {
+      /**
+       * Repositions the target label that marks the canonical value of 1.
+       *
+       * @param {GraphBounds} bounds
+       */
+      function drawGoal(bounds) {
         const y = toGraphPoint(0, 1, bounds).y.toFixed(2);
         goalLine.setAttribute("d", "");
         goalLabel.setAttribute("y", Number(y) + 4);
-      };
+      }
 
-      const drawReference = (bounds) => {
+      /**
+       * Draws the straight 0-to-1 reference line used for comparison.
+       *
+       * @param {GraphBounds} bounds
+       */
+      function drawReference(bounds) {
         const start = toGraphPoint(0, 0, bounds);
         const end = toGraphPoint(1, 1, bounds);
         reference.setAttribute("d", `M${start.x} ${start.y}L${end.x} ${end.y}`);
-      };
+      }
 
-      const setCursor = (points, bounds, time) => {
+      /**
+       * Positions the animated cursor at one sampled time along the parsed curve.
+       *
+       * @param {LinearStop[]} points
+       * @param {GraphBounds} bounds
+       * @param {number} time
+       */
+      function setCursor(points, bounds, time) {
         const value = sampleLinear(points, time);
         const position = toGraphPoint(time, value, bounds);
         cursor.setAttribute("cx", position.x.toFixed(2));
         cursor.setAttribute("cy", position.y.toFixed(2));
-      };
+      }
 
-      const animateCursor = (points, bounds) => {
+      /**
+       * Animates the cursor from 0 to 1 using wall-clock time instead of CSS easing.
+       *
+       * @param {LinearStop[]} points
+       * @param {GraphBounds} bounds
+       */
+      function animateCursor(points, bounds) {
         cancelAnimationFrame(frameId);
         const startTime = performance.now();
 
@@ -390,15 +456,16 @@
         };
 
         frameId = requestAnimationFrame(tick);
-      };
+      }
 
       const points = parseLinear(EASE);
       const bounds = getBounds(points);
 
-      const replay = () => {
+      /** Resets the cursor to the origin and replays the sampling animation. */
+      function replay() {
         setCursor(points, bounds, 0);
         animateCursor(points, bounds);
-      };
+      }
 
       token.textContent = EASE;
       drawGoal(bounds);

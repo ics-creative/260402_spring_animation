@@ -16,12 +16,12 @@
         height: 64px;
         min-height: 56px;
         padding: 0;
-        border: 1px solid var(--line);
+        border: 1px solid var(--color-line);
         border-radius: 12px;
-        background: var(--surface);
-        color: var(--text);
+        background: var(--color-surface);
+        color: var(--color-text);
         cursor: pointer;
-        display: inline-flex;
+        display: inline flex;
         align-items: center;
         justify-content: center;
         overflow: clip;
@@ -34,8 +34,8 @@
           border-color 0.2s;
 
         &[data-state="idle"]:hover {
-          color: var(--accent);
-          border-color: var(--accent);
+          color: var(--color-accent);
+          border-color: var(--color-accent);
         }
 
         .submit-label,
@@ -125,9 +125,9 @@
         }
 
         &[data-state="done"] {
-          background: var(--accent);
-          border-color: var(--accent);
-          color: var(--accent-contrast);
+          background: var(--color-accent);
+          border-color: var(--color-accent);
+          color: var(--color-accent-contrast);
           scale: 1;
           translate: 0 0;
 
@@ -167,26 +167,33 @@
   </head>
   <body>
     <main class="page">
-      <section class="stage">
+      <div class="stage">
         <button class="submit" data-submit data-state="idle">
           <span class="submit-label">Submit</span>
-          <span class="submit-spinner" aria-hidden="true"><span class="submit-spinner-ring"></span></span>
-          <span class="submit-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
+          <span class="submit-spinner"><span class="submit-spinner-ring"></span></span>
+          <span class="submit-icon">
+            <!-- ✓ -->
+            <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 12.5l4.2 4.2L19 7.4"></path>
             </svg>
           </span>
         </button>
-      </section>
+      </div>
     </main>
     <script type="module">
       const button = document.querySelector("[data-submit]");
-      const setState = (state) => {
+
+      /**
+       * Switches the demo button between idle, loading, and done states.
+       *
+       * @param {"idle" | "loading" | "done"} state
+       */
+      function setState(state) {
         button.dataset.state = state;
         button.disabled = state !== "idle";
-      };
+      }
 
-      button.addEventListener("click", () => {
+      function handleSubmitClick() {
         if (button.dataset.state !== "idle") return;
         setState("loading");
         setTimeout(() => {
@@ -195,7 +202,9 @@
         setTimeout(() => {
           setState("idle");
         }, 2200);
-      });
+      }
+
+      button.addEventListener("click", handleSubmitClick);
     </script>
   </body>
 </html>

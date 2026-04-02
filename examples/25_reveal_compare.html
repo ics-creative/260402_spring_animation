@@ -13,22 +13,7 @@
       }
 
       .compare {
-        width: 100%;
         max-width: 960px;
-        display: grid;
-        gap: 16px;
-
-        > .button {
-          justify-self: end;
-          gap: 8px;
-
-          svg {
-            display: block;
-            width: 18px;
-            height: 18px;
-            flex: none;
-          }
-        }
 
         .compare-grid {
           display: grid;
@@ -42,9 +27,9 @@
 
         min-height: 320px;
         padding: 20px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--color-line);
         border-radius: 24px;
-        background: var(--surface);
+        background: var(--color-surface);
         display: grid;
         grid-template-rows: auto 1fr;
         gap: 16px;
@@ -75,7 +60,7 @@
         }
 
         .glyph {
-          display: inline-flex;
+          display: inline flex;
           opacity: 0;
           translate: 0 84px;
           scale: 0.22;
@@ -105,8 +90,9 @@
   <body>
     <main class="page">
       <div class="stage">
-        <div class="compare">
-          <button class="button" data-replay>
+        <div class="compare demo-compare">
+          <button class="button demo-replay" data-replay>
+            <!-- 🔄 -->
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-5.65 4H4.26A8 8 0 1 0 12 5" fill="currentColor" />
             </svg>
@@ -135,7 +121,12 @@
       const panels = Array.from(document.querySelectorAll(".motion-panel"));
       const replayButton = document.querySelector("[data-replay]");
 
-      const buildHeadline = (root) => {
+      /**
+       * Rebuilds one headline so each glyph starts from a fresh DOM node before the reveal animation runs.
+       *
+       * @param {HTMLElement} root
+       */
+      function buildHeadline(root) {
         root.replaceChildren();
 
         Array.from(text).forEach((character) => {
@@ -144,9 +135,10 @@
           glyph.textContent = character;
           root.append(glyph);
         });
-      };
+      }
 
-      const reveal = () => {
+      /** Resets both panels to their initial state and then restarts the staggered glyph reveal. */
+      function reveal() {
         panels.forEach((panel) => {
           panel.dataset.state = "idle";
           buildHeadline(panel.querySelector("[data-headline]"));
@@ -158,7 +150,7 @@
         panels.forEach((panel) => {
           panel.dataset.state = "active";
         });
-      };
+      }
 
       replayButton.addEventListener("click", reveal);
       reveal();

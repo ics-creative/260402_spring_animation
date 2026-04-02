@@ -1,12 +1,16 @@
 :root {
   color-scheme: light;
 
-  --surface: #fff;
-  --line: #ddd;
-  --text: #222;
-  --muted: #666;
-  --accent: #3223b3;
-  --accent-contrast: #fff;
+  /* Shared UI colors. */
+  --color-surface: #fff;
+  --color-line: #ddd;
+  --color-text: #222;
+  --color-muted: #666;
+  --color-accent: #3223b3;
+  --color-accent-contrast: #fff;
+  --color-surface-hover: color-mix(in oklab, var(--color-surface) 95%, var(--color-text) 5%);
+  --color-surface-muted: color-mix(in oklab, var(--color-line) 20%, var(--color-surface));
+  --color-axis-line: color-mix(in oklab, var(--color-text) 25%, var(--color-line));
 
   /* Reuse a small set of spring tokens so the demos compare UI patterns, not mismatched easing curves. */
 
@@ -45,7 +49,7 @@ body {
   min-height: 100vh;
   font-family: sans-serif;
   font-size: 1rem;
-  color: var(--text);
+  color: var(--color-text);
 }
 
 button,
@@ -77,12 +81,13 @@ a {
   padding: 0;
 }
 
+/* Full-viewport demo frame with centered content. */
 .stage {
   min-height: 100vh;
   padding: 24px;
   border: 0;
   border-radius: 0;
-  background: var(--surface);
+  background: var(--color-surface);
   display: grid;
   align-content: center;
   justify-items: center;
@@ -93,15 +98,16 @@ a {
   }
 }
 
+/* Shared button shell for demo controls. */
 .button {
-  display: inline-flex;
+  display: inline flex;
   align-items: center;
   justify-content: center;
   min-height: 44px;
   padding-inline: 16px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--color-line);
   border-radius: 12px;
-  background: var(--surface);
+  background: var(--color-surface);
   cursor: pointer;
   transition:
     transform 0.3s,
@@ -110,8 +116,8 @@ a {
     border-color 0.2s;
 
   &:hover {
-    color: var(--accent);
-    border-color: var(--accent);
+    color: var(--color-accent);
+    border-color: var(--color-accent);
   }
 
   &:active {
@@ -119,8 +125,72 @@ a {
   }
 }
 
+.surface-card {
+  --surface-radius: 18px;
+
+  min-width: 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--surface-radius);
+  background: var(--color-surface);
+}
+
+/* Shared stack used by demos that place a replay button above the content. */
+.demo-compare {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+
+  > .button {
+    justify-self: end;
+  }
+}
+
+/* Shared replay button treatment: icon spacing, centered pivot, and hover spin. */
+.demo-replay {
+  gap: 8px;
+
+  svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex: none;
+    transform-box: view-box;
+    transform-origin: center;
+  }
+
+  &:hover svg {
+    animation: replay-spin 0.5s;
+  }
+}
+
+/* One counter-clockwise turn for replay icons. */
+@keyframes replay-spin {
+  to {
+    rotate: -1turn;
+  }
+}
+
+/* Centers one visual block inside a comparison panel. */
+.demo-visual {
+  min-width: 0;
+  width: 100%;
+  display: grid;
+  justify-items: center;
+}
+
+/* Centers chart content and preserves the shared label-to-chart gap. */
+.demo-graph-panel {
+  min-width: 0;
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+/* Shared icon-only close control. */
 .close-button {
-  display: inline-grid;
+  display: inline grid;
   place-items: center;
   inline-size: 40px;
   block-size: 40px;
@@ -137,32 +207,33 @@ a {
   rotate: 0deg;
   transition: rotate 0.8s var(--spring-bouncy);
   pointer-events: none;
+
+  .close-button:hover & {
+    rotate: 90deg;
+  }
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 14px;
+    height: 2px;
+    background: currentcolor;
+  }
+
+  &::before {
+    rotate: 45deg;
+  }
+
+  &::after {
+    rotate: -45deg;
+  }
 }
 
-.close-button:hover .close-icon {
-  rotate: 90deg;
-}
-
-.close-icon::before,
-.close-icon::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  width: 14px;
-  height: 2px;
-  background: currentcolor;
-}
-
-.close-icon::before {
-  rotate: 45deg;
-}
-
-.close-icon::after {
-  rotate: -45deg;
-}
-
+/* Wrapped control row. */
 .row {
   display: flex;
   flex-wrap: wrap;

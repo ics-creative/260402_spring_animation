@@ -20,14 +20,14 @@
         --shift-y: 0px;
         --shift-scale: 1;
 
-        display: inline-flex;
+        display: inline flex;
         align-items: center;
         gap: 8px;
         min-height: 44px;
         padding-inline: 14px;
-        border: 1px solid var(--line);
+        border: 1px solid var(--color-line);
         border-radius: 999px;
-        background: var(--surface);
+        background: var(--color-surface);
         user-select: none;
         translate: var(--shift-x) var(--shift-y);
         scale: var(--shift-scale);
@@ -40,7 +40,7 @@
 
         button {
           position: relative;
-          display: inline-grid;
+          display: inline grid;
           place-items: center;
           width: 24px;
           height: 24px;
@@ -49,11 +49,11 @@
           border-radius: 10px;
           background: transparent;
           cursor: pointer;
-          color: var(--muted);
+          color: var(--color-muted);
           transition: color 0.2s;
 
           &:hover {
-            color: var(--accent);
+            color: var(--color-accent);
           }
 
           .chip-dismiss-icon {
@@ -63,31 +63,31 @@
             rotate: 0deg;
             transition: rotate 0.8s var(--spring-bouncy);
             pointer-events: none;
+
+            &::before,
+            &::after {
+              content: "";
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              translate: -50% -50%;
+              width: 12px;
+              height: 2px;
+              background: currentcolor;
+            }
+
+            &::before {
+              rotate: 45deg;
+            }
+
+            &::after {
+              rotate: -45deg;
+            }
           }
 
           &:hover .chip-dismiss-icon {
             rotate: 90deg;
           }
-        }
-
-        .chip-dismiss-icon::before,
-        .chip-dismiss-icon::after {
-          content: "";
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          translate: -50% -50%;
-          width: 12px;
-          height: 2px;
-          background: currentcolor;
-        }
-
-        .chip-dismiss-icon::before {
-          rotate: 45deg;
-        }
-
-        .chip-dismiss-icon::after {
-          rotate: -45deg;
         }
       }
 
@@ -112,20 +112,50 @@
   </head>
   <body>
     <main class="page">
-      <section class="stage">
+      <div class="stage">
         <div class="chip-row" data-row>
-          <div class="chip"><span>Motion</span><button type="button" aria-label="Dismiss Motion"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
-          <div class="chip"><span>Popover</span><button type="button" aria-label="Dismiss Popover"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
-          <div class="chip"><span>Dialog</span><button type="button" aria-label="Dismiss Dialog"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
-          <div class="chip"><span>Anchor</span><button type="button" aria-label="Dismiss Anchor"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
-          <div class="chip"><span>Spring</span><button type="button" aria-label="Dismiss Spring"><span class="chip-dismiss-icon" aria-hidden="true"></span></button></div>
+          <div class="chip">
+            <span>Motion</span
+            ><button aria-label="Dismiss Motion" title="Dismiss Motion">
+              <span class="chip-dismiss-icon"></span>
+            </button>
+          </div>
+          <div class="chip">
+            <span>Popover</span
+            ><button aria-label="Dismiss Popover" title="Dismiss Popover">
+              <span class="chip-dismiss-icon"></span>
+            </button>
+          </div>
+          <div class="chip">
+            <span>Dialog</span
+            ><button aria-label="Dismiss Dialog" title="Dismiss Dialog">
+              <span class="chip-dismiss-icon"></span>
+            </button>
+          </div>
+          <div class="chip">
+            <span>Anchor</span
+            ><button aria-label="Dismiss Anchor" title="Dismiss Anchor">
+              <span class="chip-dismiss-icon"></span>
+            </button>
+          </div>
+          <div class="chip">
+            <span>Spring</span
+            ><button aria-label="Dismiss Spring" title="Dismiss Spring">
+              <span class="chip-dismiss-icon"></span>
+            </button>
+          </div>
         </div>
-      </section>
+      </div>
     </main>
     <script type="module">
       const row = document.querySelector("[data-row]");
 
-      const animateShift = (before) => {
+      /**
+       * Replays the FLIP delta on every surviving chip after one chip has been removed.
+       *
+       * @param {Map<Element, DOMRect>} before
+       */
+      function animateShift(before) {
         const shifted = [];
 
         // This demo uses FLIP for the remaining chips:
@@ -155,9 +185,14 @@
             chip.style.setProperty("--shift-scale", "1");
           }
         });
-      };
+      }
 
-      const animateGhost = (chip) => {
+      /**
+       * Clones the removed chip into a fixed-position ghost so its exit motion can finish after layout reflows.
+       *
+       * @param {HTMLElement} chip
+       */
+      function animateGhost(chip) {
         const rect = chip.getBoundingClientRect();
         // The removed chip itself is not part of the FLIP pass.
         // We keep its exit visible with a fixed ghost so the row can reflow immediately.
@@ -169,18 +204,20 @@
         ghost.style.height = `${rect.height}px`;
         ghost.style.transformOrigin = "center";
         document.body.append(ghost);
+
         const removeGhost = (event) => {
           if (event.propertyName !== "opacity") return;
           ghost.removeEventListener("transitionend", removeGhost);
           ghost.remove();
         };
+
         ghost.addEventListener("transitionend", removeGhost);
         requestAnimationFrame(() => {
           ghost.classList.add("is-exiting");
         });
-      };
+      }
 
-      row.addEventListener("click", (event) => {
+      function handleRowClick(event) {
         const button = event.target.closest("button");
         if (!button) return;
         const chip = button.closest(".chip");
@@ -198,7 +235,9 @@
         animateGhost(chip);
         chip.remove();
         animateShift(before);
-      });
+      }
+
+      row.addEventListener("click", handleRowClick);
     </script>
   </body>
 </html>
