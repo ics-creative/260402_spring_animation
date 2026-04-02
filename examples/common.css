@@ -110,7 +110,6 @@ a {
   background: var(--color-surface);
   cursor: pointer;
   transition:
-    transform 0.3s,
     scale 0.3s,
     color 0.2s,
     border-color 0.2s;
@@ -150,16 +149,28 @@ a {
 .demo-replay {
   gap: 8px;
 
-  svg {
-    display: block;
+  .replay-icon {
+    display: grid;
+    place-items: center;
     width: 18px;
     height: 18px;
     flex: none;
-    transform-box: view-box;
-    transform-origin: center;
+
+    &::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      background: currentcolor;
+      transform-origin: center;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6 0 .34-.03.67-.08 1h2.02c.04-.33.06-.66.06-1 0-4.42-3.58-8-8-8Zm-6 6c0-.34.03-.67.08-1H4.06A8.93 8.93 0 0 0 4 11c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6Z' fill='black'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+      /* stylelint-disable-next-line property-no-vendor-prefix */
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6 0 .34-.03.67-.08 1h2.02c.04-.33.06-.66.06-1 0-4.42-3.58-8-8-8Zm-6 6c0-.34.03-.67.08-1H4.06A8.93 8.93 0 0 0 4 11c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6Z' fill='black'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    }
   }
 
-  &:hover svg {
+  &:hover .replay-icon::before {
     animation: replay-spin 0.5s;
   }
 }
