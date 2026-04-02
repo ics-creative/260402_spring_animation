@@ -8,10 +8,6 @@
       .stage {
         align-content: center;
         justify-items: center;
-
-        @media (width <= 640px) {
-          justify-items: start;
-        }
       }
 
       .action-list {
@@ -19,6 +15,10 @@
         flex-direction: column;
         gap: 12px;
         width: 144px;
+
+        @media (width <= 640px) {
+          margin-right: auto;
+        }
 
         .action-trigger {
           width: 100%;
