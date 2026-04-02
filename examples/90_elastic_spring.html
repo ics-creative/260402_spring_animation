@@ -34,7 +34,7 @@
 
         .lane-body {
           display: grid;
-          grid-template-columns: 168px 112px 72px;
+          grid-template-columns: max-content;
           gap: 12px;
           justify-content: center;
           place-items: start center;
@@ -142,24 +142,6 @@
             border-radius: 999px;
             transform: scale(var(--block-scale));
             transform-origin: center;
-          }
-        }
-
-        @container (width <= 320px) {
-          .lane-body {
-            grid-template-columns: max-content;
-            justify-content: center;
-          }
-        }
-
-        @container (320px < width <= 420px) {
-          .lane-body {
-            grid-template-columns: repeat(2, max-content);
-            justify-content: center;
-          }
-
-          .lane-panel[data-panel="y"] {
-            grid-column: 1 / -1;
           }
         }
       }
