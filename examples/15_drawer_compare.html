@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      :root {
+        /* anime.js spring default: https://animejs.com/easing-editor/spring/default */
+
+        /* prettier-ignore */
+        --ease-spring: linear(0, 0.0107, 0.0398, 0.0834, 0.138, 0.2003, 0.2677, 0.3379, 0.4089, 0.4791, 0.5471, 0.612, 0.6731, 0.7297, 0.7815, 0.8283, 0.87, 0.9068, 0.9388, 0.9662, 0.9892, 1.0083, 1.0237, 1.0357, 1.0449, 1.0514, 1.0556, 1.058, 1.0587, 1.0581, 1.0563, 1.0538, 1.0506, 1.0469, 1.043, 1.0388, 1.0347, 1.0306, 1.0266, 1.0228, 1.0192, 1.0159, 1.0128, 1.0101, 1.0076, 1.0055, 1.0036, 1.002, 1.0006, 0.9995, 0.9986, 0.9979, 0.9974, 0.997, 0.9967, 0.9966, 0.9966, 0.9966, 0.9967, 0.9968, 0.997, 0.9972, 0.9975, 0.9977, 0.998, 0.9982, 0.9984, 0.9987, 0.9989, 0.9991, 0.9992, 0.9994, 0.9996, 0.9997, 0.9998, 0.9999, 1, 1, 1.0001, 1.0001, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0001, 1.0001, 1.0001, 1.0001, 1.0001, 1.0001, 1.0001, 1.0001, 1, 1, 1);
+        --ease-current: var(--ease-spring);
+        --duration-current: 1s;
+
+        /* anime.js spring bouncy: https://animejs.com/easing-editor/spring/bouncy */
+
+        /* prettier-ignore */
+        --spring-bouncy: linear(0, 0.0222, 0.0833, 0.1743, 0.2867, 0.4123, 0.5436, 0.6739, 0.7978, 0.911, 1.0102, 1.0934, 1.1594, 1.2082, 1.2403, 1.2569, 1.2599, 1.2511, 1.2328, 1.2074, 1.177, 1.1437, 1.1095, 1.0759, 1.0443, 1.0157, 0.991, 0.9705, 0.9546, 0.9431, 0.9359, 0.9326, 0.9327, 0.9357, 0.941, 0.9481, 0.9562, 0.965, 0.9739, 0.9826, 0.9906, 0.9978, 1.0039, 1.0089, 1.0128, 1.0154, 1.017, 1.0176, 1.0174, 1.0164, 1.0149, 1.013, 1.0108, 1.0085, 1.0062, 1.0039, 1.0019, 1.0001, 0.9986, 0.9974, 0.9965, 0.9958, 0.9955, 0.9954, 0.9955, 0.9958, 0.9963, 0.9968, 0.9974, 0.998, 0.9986, 0.9991, 0.9996, 1.0001, 1.0005, 1.0008, 1.001, 1.0011, 1.0012, 1.0012, 1.0011, 1.0011, 1.0009, 1.0008, 1.0006, 1.0005, 1.0003, 1.0002, 1.0001, 0.9999, 0.9999, 0.9998, 0.9997, 0.9997, 0.9997, 0.9997, 0.9997, 0.9997, 0.9998, 0.9998, 1);
+      }
+
+      :root:has(#ease-linear:checked) {
+        --ease-current: linear;
+        --duration-current: 0.5s;
+      }
+
+      :root:has(#ease-out:checked) {
+        --ease-current: ease-out;
+        --duration-current: 0.5s;
+      }
+
+      :root:has(#ease-ease:checked) {
+        --ease-current: ease;
+        --duration-current: 0.5s;
+      }
+
+      :root:has(#ease-spring:checked) {
+        --ease-current: var(--ease-spring);
+        --duration-current: 1.2s;
+      }
+
+      html,
+      body {
+        overflow-x: hidden;
+      }
+
+      .stage {
+        align-content: center;
+        justify-items: center;
+      }
+
+      .drawer {
+        position: fixed;
+        inset: 0 0 0 auto;
+        width: min(436px, 100vw);
+        height: 100dvh;
+        max-width: none;
+        max-height: none;
+
+        /* オーバーシュート時に見切れないように右側の座布団を表示させる */
+        overflow: visible;
+        margin: 0;
+        padding: 16px;
+        border: 0;
+        border-inline-start: 1px solid var(--color-line);
+        background: var(--color-surface);
+        grid-template-rows: auto 1fr;
+        align-content: start;
+        gap: 16px;
+        translate: calc(100%) 0;
+        transition:
+          translate var(--duration-current) var(--ease-current),
+          display var(--duration-current) allow-discrete,
+          overlay var(--duration-current) allow-discrete;
+
+        &::backdrop {
+          background: rgb(0 0 0 / 28%);
+          opacity: 0;
+          transition: opacity 0.4s;
+        }
+
+        /* オーバーシュート時に見切れないように右側に座布団を設ける */
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: -128px;
+          bottom: 0;
+          width: 128px;
+          background: var(--color-surface);
+        }
+
+        .drawer-nav {
+          display: grid;
+          align-content: start;
+          gap: 12px;
+        }
+
+        .drawer-header {
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .drawer-item {
+          justify-content: flex-start;
+        }
+
+        &[open] {
+          display: grid;
+          translate: 0 0;
+
+          @starting-style {
+            translate: calc(100%) 0;
+          }
+
+          &::backdrop {
+            opacity: 1;
+
+            @starting-style {
+              opacity: 0;
+            }
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <fieldset class="demo-picker">
+        <legend>Easing</legend>
+        <label><input id="ease-linear" name="easing" type="radio" />linear</label>
+        <label><input id="ease-out" name="easing" type="radio" />ease-out</label>
+        <label><input id="ease-ease" name="easing" type="radio" />ease</label>
+        <label><input id="ease-spring" name="easing" type="radio" checked />--ease-spring</label>
+      </fieldset>
+
+      <div class="stage">
+        <button class="button" commandfor="side-drawer" command="show-modal">Open Drawer</button>
+      </div>
+      <dialog class="drawer" id="side-drawer" closedby="any">
+        <div class="drawer-header">
+          <button class="button close-button" title="Close drawer" commandfor="side-drawer" command="close">
+            <span class="close-icon"></span>
+          </button>
+        </div>
+        <div class="drawer-nav">
+          <button class="button drawer-item">Overview</button>
+          <button class="button drawer-item">Members</button>
+          <button class="button drawer-item">Publishing</button>
+          <button class="button drawer-item">Integrations</button>
+        </div>
+      </dialog>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      :root {
+        /* anime.js spring default: https://animejs.com/easing-editor/spring/default */
+
+        /* prettier-ignore */
+        --ease-spring: linear(0, 0.0107, 0.0398, 0.0834, 0.138, 0.2003, 0.2677, 0.3379, 0.4089, 0.4791, 0.5471, 0.612, 0.6731, 0.7297, 0.7815, 0.8283, 0.87, 0.9068, 0.9388, 0.9662, 0.9892, 1.0083, 1.0237, 1.0357, 1.0449, 1.0514, 1.0556, 1.058, 1.0587, 1.0581, 1.0563, 1.0538, 1.0506, 1.0469, 1.043, 1.0388, 1.0347, 1.0306, 1.0266, 1.0228, 1.0192, 1.0159, 1.0128, 1.0101, 1.0076, 1.0055, 1.0036, 1.002, 1.0006, 0.9995, 0.9986, 0.9979, 0.9974, 0.997, 0.9967, 0.9966, 0.9966, 0.9966, 0.9967, 0.9968, 0.997, 0.9972, 0.9975, 0.9977, 0.998, 0.9982, 0.9984, 0.9987, 0.9989, 0.9991, 0.9992, 0.9994, 0.9996, 0.9997, 0.9998, 0.9999, 1, 1, 1.0001, 1.0001, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0002, 1.0001, 1.0001, 1.0001, 1.0001, 1.0001, 1.0001, 1.0001, 1.0001, 1, 1, 1);
+        --ease-current: var(--ease-spring);
+        --duration-current: 1s;
+      }
+
+      :root:has(#ease-linear:checked) {
+        --ease-current: linear;
+        --duration-current: 0.28s;
+      }
+
+      :root:has(#ease-out:checked) {
+        --ease-current: ease-out;
+        --duration-current: 0.28s;
+      }
+
+      :root:has(#ease-ease:checked) {
+        --ease-current: ease;
+        --duration-current: 0.28s;
+      }
+
+      :root:has(#ease-spring:checked) {
+        --ease-current: var(--ease-spring);
+        --duration-current: 1s;
+      }
+
+      .segmented {
+        --selected-anchor: --segment-1;
+
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        width: fit-content;
+        max-width: 100%;
+        padding: 8px;
+        border: 1px solid var(--color-line);
+        border-radius: 999px;
+
+        .segment-indicator {
+          position: absolute;
+          position-anchor: var(--selected-anchor);
+          top: anchor(top);
+          left: anchor(left);
+          width: anchor-size(width);
+          height: anchor-size(height);
+          border-radius: 999px;
+          background: var(--color-accent);
+          pointer-events: none;
+          transition:
+            top var(--duration-current) var(--ease-current),
+            left var(--duration-current) var(--ease-current),
+            width var(--duration-current) var(--ease-current),
+            height var(--duration-current) var(--ease-current);
+        }
+
+        .segment {
+          position: relative;
+          z-index: 1;
+          display: inline flex;
+          align-items: center;
+          min-height: 48px;
+          padding-inline: 20px;
+          border-radius: 999px;
+          cursor: pointer;
+          user-select: none;
+          transition: all 0.2s;
+
+          @media (any-hover: hover) {
+            &:hover {
+              background: var(--color-surface-muted);
+            }
+          }
+        }
+
+        .segment-input:checked + .segment {
+          color: var(--color-accent-contrast);
+        }
+
+        &:has(#segment-2:checked) {
+          --selected-anchor: --segment-2;
+        }
+
+        &:has(#segment-3:checked) {
+          --selected-anchor: --segment-3;
+        }
+
+        &:has(#segment-4:checked) {
+          --selected-anchor: --segment-4;
+        }
+
+        @media (any-hover: hover) {
+          .segment-input:checked + .segment:hover {
+            background: transparent;
+          }
+        }
+
+        @media (width < 578px) {
+          width: 100%;
+          flex-direction: column;
+          border-radius: 24px;
+
+          .segment {
+            width: 100%;
+            justify-content: center;
+            padding-inline: 16px;
+          }
+        }
+      }
+
+      .segment-input {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <fieldset class="demo-picker">
+        <legend>Easing</legend>
+        <label><input id="ease-linear" name="easing" type="radio" />linear</label>
+        <label><input id="ease-out" name="easing" type="radio" />ease-out</label>
+        <label><input id="ease-ease" name="easing" type="radio" />ease</label>
+        <label><input id="ease-spring" name="easing" type="radio" checked />--ease-spring</label>
+      </fieldset>
+
+      <div class="stage">
+        <div class="segmented">
+          <span class="segment-indicator"></span>
+          <input class="segment-input" id="segment-1" name="segment" type="radio" checked />
+          <label class="segment" for="segment-1" style="anchor-name: --segment-1">All</label>
+          <input class="segment-input" id="segment-2" name="segment" type="radio" />
+          <label class="segment" for="segment-2" style="anchor-name: --segment-2">Unread</label>
+          <input class="segment-input" id="segment-3" name="segment" type="radio" />
+          <label class="segment" for="segment-3" style="anchor-name: --segment-3">Saved</label>
+          <input class="segment-input" id="segment-4" name="segment" type="radio" />
+          <label class="segment" for="segment-4" style="anchor-name: --segment-4">Archive</label>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
