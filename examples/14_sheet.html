@@ -78,7 +78,7 @@
           grid-template-columns: 1fr auto;
           align-items: start;
           gap: 4px 12px;
-          padding: 18px 18px 10px;
+          padding: 20px 20px 12px;
           text-align: left;
 
           .sheet-eyebrow,
@@ -88,17 +88,15 @@
           }
 
           .sheet-eyebrow {
-            font-size: 0.72rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: bold;
             color: var(--color-muted);
-            letter-spacing: 0.04em;
             text-transform: uppercase;
           }
 
           .sheet-title {
-            font-size: 1.05rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
+            font-size: 1rem;
+            font-weight: bold;
           }
 
           .sheet-message {
@@ -120,7 +118,7 @@
           .sheet-action {
             width: 100%;
             min-height: 56px;
-            padding: 14px 18px;
+            padding: 16px 20px;
             border: 0;
             border-top: 1px solid var(--color-line);
             border-radius: 0;
@@ -128,7 +126,6 @@
             place-items: start start;
             background: var(--color-surface);
             color: var(--color-text);
-            font-weight: 500;
             display: grid;
             gap: 1px;
             text-align: left;
@@ -165,13 +162,12 @@
             }
 
             .sheet-action-title {
-              font-size: 0.96rem;
-              font-weight: 600;
-              letter-spacing: -0.01em;
+              font-size: 1rem;
+              font-weight: bold;
             }
 
             .sheet-action-note {
-              font-size: 0.8rem;
+              font-size: 0.75rem;
               color: var(--color-muted);
               line-height: 1.35;
               text-align: left;
@@ -189,13 +185,7 @@
       <dialog class="sheet surface-card" id="bottom-sheet" closedby="any">
         <div class="sheet-header">
           <p class="sheet-eyebrow">Photo</p>
-          <button
-            class="button close-button"
-            aria-label="Close sheet"
-            title="Close sheet"
-            commandfor="bottom-sheet"
-            command="close"
-          >
+          <button class="button close-button" title="Close sheet" commandfor="bottom-sheet" command="close">
             <span class="close-icon"></span>
           </button>
           <p class="sheet-title">Photo Actions</p>
