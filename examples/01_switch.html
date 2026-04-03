@@ -37,6 +37,22 @@
           translate: 0 0;
           transition: all 0.8s var(--spring-default);
         }
+
+        .stage:has(.switch-input:focus-visible) & {
+          outline: 2px solid var(--color-accent);
+          outline-offset: 4px;
+        }
+
+        .stage:has(.switch-input:checked) & {
+          .track {
+            background: var(--color-accent);
+          }
+
+          .knob {
+            translate: 34px 0;
+            scale: 1.06;
+          }
+        }
       }
 
       .switch-input {
@@ -48,22 +64,6 @@
         border: 0;
         overflow: hidden;
         clip-path: inset(50%);
-
-        &:focus-visible + .switch {
-          outline: 2px solid var(--color-accent);
-          outline-offset: 4px;
-        }
-
-        &:checked + .switch {
-          .track {
-            background: var(--color-accent);
-          }
-
-          .knob {
-            translate: 34px 0;
-            scale: 1.06;
-          }
-        }
       }
     </style>
   </head>

@@ -80,26 +80,15 @@
           animation-trigger: --reveal play-forwards play-backwards;
 
           .line {
+            --offset: 0;
+
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 0.04em;
-
-            &.line-offset-4 {
-              --offset: 4;
-            }
-
-            &.line-offset-5 {
-              --offset: 5;
-            }
-
-            &.line-offset-6 {
-              --offset: 6;
-            }
           }
 
           .letter {
-            --offset: 0;
             --index: calc(var(--offset) + sibling-index() - 1);
 
             display: inline-block;
@@ -140,7 +129,9 @@
                   <span class="letter"><span class="glyph">L</span></span>
                   <span class="letter"><span class="glyph">L</span></span>
                 </span>
-                <span class="line line-offset-6">
+                <span class="line" style="
+
+--offset: 6">
                   <span class="letter"><span class="glyph">D</span></span>
                   <span class="letter"><span class="glyph">O</span></span>
                   <span class="letter"><span class="glyph">W</span></span>
@@ -159,7 +150,9 @@
                   <span class="letter"><span class="glyph">A</span></span>
                   <span class="letter"><span class="glyph">P</span></span>
                 </span>
-                <span class="line line-offset-4">
+                <span class="line" style="
+
+--offset: 4">
                   <span class="letter"><span class="glyph">O</span></span>
                   <span class="letter"><span class="glyph">P</span></span>
                   <span class="letter"><span class="glyph">E</span></span>
@@ -179,7 +172,9 @@
                   <span class="letter"><span class="glyph">A</span></span>
                   <span class="letter"><span class="glyph">N</span></span>
                 </span>
-                <span class="line line-offset-5">
+                <span class="line" style="
+
+--offset: 5">
                   <span class="letter"><span class="glyph">E</span></span>
                   <span class="letter"><span class="glyph">X</span></span>
                   <span class="letter"><span class="glyph">I</span></span>

@@ -149,8 +149,8 @@
     <main class="page">
       <div class="stage">
         <div class="demo">
-          <div class="visual demo-visual">
-            <div class="graph-panel demo-graph-panel">
+          <div class="demo-visual">
+            <div class="demo-graph-panel">
               <!-- 📈 -->
               <svg class="graph" viewBox="0 0 1200 545">
                 <path class="graph-minor-grid" data-minor-grid></path>
@@ -366,11 +366,9 @@
 
       /**
        * Returns the SVG Y coordinate for the zero baseline.
-       *
-       * @param {GraphBounds} bounds
        * @returns {number}
        */
-      function getGraphZeroY(bounds) {
+      function getGraphZeroY() {
         return GRAPH_TOP + GRAPH_ZERO_HEIGHT;
       }
 
@@ -381,7 +379,7 @@
        * @returns {number}
        */
       function getGraphOneY(bounds) {
-        return getGraphZeroY(bounds) - (GRAPH_ZERO_HEIGHT * (1 - bounds.min)) / (bounds.max - bounds.min);
+        return getGraphZeroY() - (GRAPH_ZERO_HEIGHT * (1 - bounds.min)) / (bounds.max - bounds.min);
       }
 
       /**
@@ -391,7 +389,7 @@
        * @returns {number}
        */
       function getGraphBottomY(bounds) {
-        const zeroY = getGraphZeroY(bounds);
+        const zeroY = getGraphZeroY();
         const oneY = getGraphOneY(bounds);
         const majorStep = (zeroY - oneY) / Y_MAJOR_DIVISIONS;
         return zeroY + majorStep * NEGATIVE_MAJOR_STEPS;
@@ -407,7 +405,7 @@
        */
       function toGraphPoint(time, value, bounds) {
         const x = GRAPH_LEFT + GRAPH_WIDTH * time;
-        const zeroY = getGraphZeroY(bounds);
+        const zeroY = getGraphZeroY();
         const y = zeroY - (GRAPH_ZERO_HEIGHT * (value - bounds.min)) / (bounds.max - bounds.min);
         return { x, y };
       }
@@ -422,7 +420,7 @@
        */
       function drawGridLayer(target, xDivisions, yDivisions, bounds) {
         const oneY = getGraphOneY(bounds);
-        const zeroY = getGraphZeroY(bounds);
+        const zeroY = getGraphZeroY();
         const bottomY = getGraphBottomY(bounds);
         const xStep = GRAPH_WIDTH / xDivisions;
         const yStep = (zeroY - oneY) / yDivisions;
@@ -451,7 +449,7 @@
        * @param {GraphBounds} bounds
        */
       function drawAxis(bounds) {
-        const zeroY = getGraphZeroY(bounds);
+        const zeroY = getGraphZeroY();
         const bottomY = getGraphBottomY(bounds);
         axis.setAttribute("d", `M${GRAPH_LEFT} ${GRAPH_TOP}V${bottomY.toFixed(2)}`);
         zeroLabel.setAttribute("x", GRAPH_LEFT);
@@ -468,7 +466,7 @@
        * @param {GraphBounds} bounds
        */
       function drawTicks(bounds) {
-        const zeroY = getGraphZeroY(bounds);
+        const zeroY = getGraphZeroY();
         const bottomY = getGraphBottomY(bounds);
         const oneY = getGraphOneY(bounds);
         const xStep = GRAPH_WIDTH / X_MINOR_DIVISIONS;
@@ -511,7 +509,7 @@
        * @param {GraphBounds} bounds
        */
       function drawZeroBaseline(bounds) {
-        const y = getGraphZeroY(bounds);
+        const y = getGraphZeroY();
         zeroBaseline.setAttribute("d", `M${GRAPH_LEFT} ${y.toFixed(2)}H${GRAPH_LEFT + GRAPH_WIDTH}`);
       }
 

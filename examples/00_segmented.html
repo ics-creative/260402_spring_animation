@@ -13,6 +13,8 @@
       }
 
       .segmented {
+        --selected-anchor: --segment-1;
+
         position: relative;
         display: flex;
         flex-wrap: wrap;
@@ -24,16 +26,9 @@
         border: 1px solid var(--color-line);
         border-radius: 999px;
 
-        &:has(#segment-1:checked) label[for="segment-1"],
-        &:has(#segment-2:checked) label[for="segment-2"],
-        &:has(#segment-3:checked) label[for="segment-3"],
-        &:has(#segment-4:checked) label[for="segment-4"] {
-          color: var(--color-accent-contrast);
-        }
-
         .segment-indicator {
           position: absolute;
-          position-anchor: --segment-1;
+          position-anchor: var(--selected-anchor);
           top: anchor(top);
           left: anchor(left);
           width: anchor-size(width);
@@ -67,23 +62,24 @@
           }
         }
 
-        &:has(#segment-2:checked) .segment-indicator {
-          position-anchor: --segment-2;
+        .segment-input:checked + .segment {
+          color: var(--color-accent-contrast);
         }
 
-        &:has(#segment-3:checked) .segment-indicator {
-          position-anchor: --segment-3;
+        &:has(#segment-2:checked) {
+          --selected-anchor: --segment-2;
         }
 
-        &:has(#segment-4:checked) .segment-indicator {
-          position-anchor: --segment-4;
+        &:has(#segment-3:checked) {
+          --selected-anchor: --segment-3;
+        }
+
+        &:has(#segment-4:checked) {
+          --selected-anchor: --segment-4;
         }
 
         @media (any-hover: hover) {
-          &:has(#segment-1:checked) .segment[for="segment-1"]:hover,
-          &:has(#segment-2:checked) .segment[for="segment-2"]:hover,
-          &:has(#segment-3:checked) .segment[for="segment-3"]:hover,
-          &:has(#segment-4:checked) .segment[for="segment-4"]:hover {
+          .segment-input:checked + .segment:hover {
             background: transparent;
           }
         }

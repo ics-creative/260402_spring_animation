@@ -65,7 +65,7 @@
         }
 
         .fab-item {
-          --item-angle: 0deg;
+          --item-angle: calc((sibling-index() - 2) * 45deg);
 
           width: 56px;
           height: 56px;
@@ -96,14 +96,6 @@
               color: var(--color-accent);
             }
           }
-        }
-
-        .fab-item:nth-of-type(2) {
-          --item-angle: 45deg;
-        }
-
-        .fab-item:nth-of-type(3) {
-          --item-angle: 90deg;
         }
 
         .fab-main-icon {
